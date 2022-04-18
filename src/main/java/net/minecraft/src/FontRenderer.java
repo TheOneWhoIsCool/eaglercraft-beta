@@ -17,7 +17,6 @@ public class FontRenderer {
 	public FontRenderer(GameSettings gamesettings, String s, RenderEngine renderengine) {
 		charWidth = new int[256];
 		fontTextureName = 0;
-		buffer = GLAllocation.createDirectIntBuffer(1024 /* GL_FRONT_LEFT */);
 		BufferedImage bufferedimage;
 		try {
 			bufferedimage = ImageIO.read((RenderEngine.class).getResourceAsStream(s));
@@ -74,7 +73,6 @@ public class FontRenderer {
 			tessellator.addVertexWithUV(0.0F + f, 0.0D, 0.0D, ((float) l1 + f) / 128F + f1, (float) k2 / 128F + f2);
 			tessellator.addVertexWithUV(0.0D, 0.0D, 0.0D, (float) l1 / 128F + f1, (float) k2 / 128F + f2);
 			tessellator.draw();
-			EaglerAdapter.glTranslatef(charWidth[i1], 0.0F, 0.0F);
 			EaglerAdapter.glEndList();
 		}
 
@@ -134,7 +132,6 @@ public class FontRenderer {
 			f3 = 1.0F;
 		}
 		EaglerAdapter.glColor4f(f, f1, f2, f3);
-		buffer.clear();
 		EaglerAdapter.glPushMatrix();
 		EaglerAdapter.glTranslatef(i, j, 0.0F);
 		for (int i1 = 0; i1 < s.length(); i1++) {
@@ -143,29 +140,19 @@ public class FontRenderer {
 				if (j1 < 0 || j1 > 15) {
 					j1 = 15;
 				}
-				buffer.put(fontDisplayLists + 256 + j1 + (flag ? 16 : 0));
-				if (buffer.remaining() == 0) {
-					buffer.flip();
-					EaglerAdapter.glCallLists(buffer);
-					buffer.clear();
-				}
+				EaglerAdapter.glCallList(fontDisplayLists + 256 + j1 + (flag ? 16 : 0));
+				EaglerAdapter.glTranslatef(charWidth[256 + j1 + (flag ? 16 : 0)] * 0.5f, 0.0F, 0.0F);
 			}
 
 			if (i1 < s.length()) {
 				int k1 = FontAllowedCharacters.allowedCharacters.indexOf(s.charAt(i1));
 				if (k1 >= 0) {
-					buffer.put(fontDisplayLists + k1 + 32);
+					EaglerAdapter.glCallList(fontDisplayLists + k1 + 32);
+					EaglerAdapter.glTranslatef(charWidth[k1 + 32], 0.0F, 0.0F);
 				}
 			}
-			if (buffer.remaining() == 0) {
-				buffer.flip();
-				EaglerAdapter.glCallLists(buffer);
-				buffer.clear();
-			}
 		}
-
-		buffer.flip();
-		EaglerAdapter.glCallLists(buffer);
+		
 		EaglerAdapter.glPopMatrix();
 	}
 

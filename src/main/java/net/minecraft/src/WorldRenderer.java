@@ -40,9 +40,9 @@ public class WorldRenderer {
 			field_1746_q = i + sizeWidth / 2;
 			field_1743_r = j + sizeHeight / 2;
 			field_1741_s = k + sizeDepth / 2;
-			field_1752_l = i & 0x3ff;
+			field_1752_l = i;// & 0x3ff;
 			field_1751_m = j;
-			field_1750_n = k & 0x3ff;
+			field_1750_n = k;// & 0x3ff;
 			field_1755_i = i - field_1752_l;
 			field_1754_j = j - field_1751_m;
 			field_1753_k = k - field_1750_n;
@@ -103,16 +103,19 @@ public class WorldRenderer {
 						if (!flag2) {
 							flag2 = true;
 							EaglerAdapter.glNewList(glRenderList + i2, 4864 /* GL_COMPILE */);
-							EaglerAdapter.glPushMatrix();
-							setupGLTranslation();
+							//EaglerAdapter.glPushMatrix();
+							//tessellator.setTranslationF(field_1752_l, field_1751_m, field_1750_n);
+							//setupGLTranslation();
+							/*
 							float f = 1.000001F;
 							EaglerAdapter.glTranslatef((float) (-sizeDepth) / 2.0F, (float) (-sizeHeight) / 2.0F,
 									(float) (-sizeDepth) / 2.0F);
 							EaglerAdapter.glScalef(f, f, f);
 							EaglerAdapter.glTranslatef((float) sizeDepth / 2.0F, (float) sizeHeight / 2.0F,
 									(float) sizeDepth / 2.0F);
+							*/
 							tessellator.startDrawingQuads();
-							tessellator.setTranslationD(-posX, -posY, -posZ);
+							//tessellator.setTranslationD(-posX, -posY, -posZ);
 						}
 						if (i2 == 0 && Block.isBlockContainer[i3]) {
 							TileEntity tileentity = chunkcache.getBlockTileEntity(l2, j2, k2);
@@ -137,7 +140,7 @@ public class WorldRenderer {
 
 			if (flag2) {
 				tessellator.draw();
-				EaglerAdapter.glPopMatrix();
+				//EaglerAdapter.glPopMatrix();
 				EaglerAdapter.glEndList();
 				tessellator.setTranslationD(0.0D, 0.0D, 0.0D);
 			} else {

@@ -19,12 +19,15 @@ public class Minecraft implements Runnable {
 		instance = this;
 		fullscreen = false;
 		timer = new Timer(20F);
-		session = null;
+		session = new Session("fuck", "shit");
 		hideQuitButton = true;
 		isWorldLoaded = false;
 		currentScreen = null;
+		displayWidth = EaglerAdapter.getCanvasWidth();
+		displayHeight = EaglerAdapter.getCanvasHeight();
 		loadingScreen = new LoadingScreenRenderer(this);
 		entityRenderer = new EntityRenderer(this);
+		mouseHelper = new MouseHelper();
 		ticksRan = 0;
 		field_6282_S = 0;
 		field_6307_v = false;

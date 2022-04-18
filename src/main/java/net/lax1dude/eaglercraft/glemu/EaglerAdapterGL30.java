@@ -65,7 +65,7 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 	public static final int GL_FRONT = RealOpenGLEnums.GL_FRONT;
 	public static final int GL_COMPILE = RealOpenGLEnums.GL_COMPILE;
 	public static final int GL_NEAREST = RealOpenGLEnums.GL_NEAREST;
-	public static final int GL_CLAMP = RealOpenGLEnums.GL_CLAMP;
+	public static final int GL_CLAMP = RealOpenGLEnums.GL_CLAMP_TO_EDGE;
 	public static final int GL_TEXTURE_WRAP_S = RealOpenGLEnums.GL_TEXTURE_WRAP_S;
 	public static final int GL_TEXTURE_WRAP_T = RealOpenGLEnums.GL_TEXTURE_WRAP_T;
 	public static final int GL_REPEAT = RealOpenGLEnums.GL_REPEAT;
@@ -354,7 +354,7 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		deevis.set(p1, p2, p3);
 		getMatrix().translate(deevis);
 		if (isCompilingDisplayList) {
-			System.err.println("matrix is not supported while recording display list use tessellator class instead");
+			throw new IllegalArgumentException("matrix is not supported while recording display list use tessellator class instead");
 		}
 	}
 
@@ -506,7 +506,7 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		deevis.set(p2, p3, p4);
 		getMatrix().rotate(p1 * toRad, deevis);
 		if (isCompilingDisplayList) {
-			System.err.println("matrix is not supported while recording display list use tessellator class instead");
+			throw new IllegalArgumentException("matrix is not supported while recording display list use tessellator class instead");
 		}
 	}
 
@@ -563,7 +563,7 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		deevis.set(p1, p2, p3);
 		getMatrix().scale(deevis);
 		if (isCompilingDisplayList) {
-			System.err.println("matrix is not supported while recording display list use tessellator class instead");
+			throw new IllegalArgumentException("matrix is not supported while recording display list use tessellator class instead");
 		}
 	}
 

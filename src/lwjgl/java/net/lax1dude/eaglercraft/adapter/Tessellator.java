@@ -278,7 +278,7 @@ public class Tessellator {
 		if (this.addedVertices > 65534)
 			return;
 		++this.addedVertices;
-
+		
 		this.rawBuffer[this.rawBufferIndex + 0] = Float.floatToRawIntBits((float) (par1 + this.xOffset));
 		this.rawBuffer[this.rawBufferIndex + 1] = Float.floatToRawIntBits((float) (par3 + this.yOffset));
 		this.rawBuffer[this.rawBufferIndex + 2] = Float.floatToRawIntBits((float) (par5 + this.zOffset));
@@ -358,4 +358,17 @@ public class Tessellator {
 		this.yOffset += (double) par2;
 		this.zOffset += (double) par3;
 	}
+	
+	public double debugGetTranslationX() {
+		return xOffset;
+	}
+	
+	public double debugGetTranslationY() {
+		return yOffset;
+	}
+	
+	public double debugGetTranslationZ() {
+		return zOffset;
+	}
+	
 }

@@ -5,8 +5,9 @@ package net.minecraft.src;
 // Decompiler options: packimports(3) braces deadcode 
 
 import java.io.*;
+
+import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.input.Keyboard;
 
 public class GameSettings {
 
@@ -91,7 +92,7 @@ public class GameSettings {
 	}
 
 	public String getOptionDisplayString(int i) {
-		return Keyboard.getKeyName(keyBindings[i].keyCode);
+		return EaglerAdapter.getKeyName(keyBindings[i].keyCode);
 	}
 
 	public void setKeyBinding(int i, int j) {

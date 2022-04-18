@@ -59,8 +59,7 @@ public class FixedFunctionShader {
 			if ((i & UNIT0) == UNIT0) {
 				CC_unit0 = true;
 			}
-			s = new FixedFunctionShader(i, CC_a_color, CC_a_normal, CC_a_texture0, CC_lighting, CC_fog, CC_alphatest,
-					CC_unit0);
+			s = new FixedFunctionShader(i, CC_a_color, CC_a_normal, CC_a_texture0, CC_lighting, CC_fog, CC_alphatest, CC_unit0);
 			instances[i] = s;
 		}
 		return s;

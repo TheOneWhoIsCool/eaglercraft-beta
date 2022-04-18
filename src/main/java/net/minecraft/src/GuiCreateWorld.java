@@ -6,8 +6,9 @@ package net.minecraft.src;
 
 import java.util.List;
 import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.input.Keyboard;
 
 public class GuiCreateWorld extends GuiScreen {
 
@@ -22,7 +23,7 @@ public class GuiCreateWorld extends GuiScreen {
 
 	public void initGui() {
 		StringTranslate stringtranslate = StringTranslate.getInstance();
-		Keyboard.enableRepeatEvents(true);
+		EaglerAdapter.enableRepeatEvents(true);
 		controlList.clear();
 		controlList.add(new GuiButton(0, width / 2 - 100, height / 4 + 96 + 12,
 				stringtranslate.translateKey("selectWorld.create")));
@@ -55,7 +56,7 @@ public class GuiCreateWorld extends GuiScreen {
 	}
 
 	public void onGuiClosed() {
-		Keyboard.enableRepeatEvents(false);
+		EaglerAdapter.enableRepeatEvents(false);
 	}
 
 	protected void actionPerformed(GuiButton guibutton) {

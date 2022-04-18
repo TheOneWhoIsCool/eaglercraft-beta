@@ -5,8 +5,9 @@ package net.minecraft.src;
 // Decompiler options: packimports(3) braces deadcode 
 
 import java.util.List;
+
+import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.input.Keyboard;
 
 public class GuiMultiplayer extends GuiScreen {
 
@@ -20,7 +21,7 @@ public class GuiMultiplayer extends GuiScreen {
 
 	public void initGui() {
 		StringTranslate stringtranslate = StringTranslate.getInstance();
-		Keyboard.enableRepeatEvents(true);
+		EaglerAdapter.enableRepeatEvents(true);
 		controlList.clear();
 		controlList.add(new GuiButton(0, width / 2 - 100, height / 4 + 96 + 12,
 				stringtranslate.translateKey("multiplayer.connect")));
@@ -34,7 +35,7 @@ public class GuiMultiplayer extends GuiScreen {
 	}
 
 	public void onGuiClosed() {
-		Keyboard.enableRepeatEvents(false);
+		EaglerAdapter.enableRepeatEvents(false);
 	}
 
 	protected void actionPerformed(GuiButton guibutton) {

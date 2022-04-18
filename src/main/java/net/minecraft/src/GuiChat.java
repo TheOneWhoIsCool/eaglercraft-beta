@@ -1,8 +1,8 @@
 package net.minecraft.src;
 
+import net.lax1dude.eaglercraft.EaglerAdapter;
+
 // Decompiled with: CFR 0.152
-// Class Version: 5
-import org.lwjgl.input.Keyboard;
 
 public class GuiChat extends GuiScreen {
 	protected String field_985_a = "";
@@ -10,11 +10,11 @@ public class GuiChat extends GuiScreen {
 	private static final String field_20082_i = FontAllowedCharacters.allowedCharacters;
 
 	public void initGui() {
-		Keyboard.enableRepeatEvents(true);
+		EaglerAdapter.enableRepeatEvents(true);
 	}
 
 	public void onGuiClosed() {
-		Keyboard.enableRepeatEvents(false);
+		EaglerAdapter.enableRepeatEvents(false);
 	}
 
 	public void updateScreen() {

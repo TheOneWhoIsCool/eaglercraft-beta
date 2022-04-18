@@ -497,11 +497,11 @@ public class RenderGlobal implements IWorldAccess {
 		double d1 = entityliving.lastTickPosX + (entityliving.posX - entityliving.lastTickPosX) * d;
 		double d2 = entityliving.lastTickPosY + (entityliving.posY - entityliving.lastTickPosY) * d;
 		double d3 = entityliving.lastTickPosZ + (entityliving.posZ - entityliving.lastTickPosZ) * d;
+		/*
 		int k1 = 0;
 		for (int l1 = 0; l1 < field_1414_S.length; l1++) {
 			field_1414_S[l1].func_859_b();
 		}
-
 		for (int i2 = 0; i2 < field_1415_R.size(); i2++) {
 			WorldRenderer worldrenderer = (WorldRenderer) field_1415_R.get(i2);
 			int j2 = -1;
@@ -521,6 +521,16 @@ public class RenderGlobal implements IWorldAccess {
 		}
 
 		func_944_a(k, d);
+		*/
+		
+		for (int i2 = 0; i2 < field_1415_R.size(); i2++) {
+			WorldRenderer worldrenderer = (WorldRenderer) field_1415_R.get(i2);
+			EaglerAdapter.glPushMatrix();
+			EaglerAdapter.glTranslatef((float)(worldrenderer.field_1755_i - d1), (float)(worldrenderer.field_1754_j - d2), (float)(worldrenderer.field_1753_k - d3));
+			EaglerAdapter.glCallList(worldrenderer.getGLCallListForPass(k));
+			EaglerAdapter.glPopMatrix();
+		}
+		
 		return l;
 	}
 
@@ -891,7 +901,7 @@ public class RenderGlobal implements IWorldAccess {
 					aworldrenderer[k2] = worldrenderer1;
 					continue;
 				}
-			} else if (!worldrenderer1.isInFrustum) {
+			}else if (!worldrenderer1.isInFrustum) {
 				continue;
 			}
 			if (arraylist == null) {
