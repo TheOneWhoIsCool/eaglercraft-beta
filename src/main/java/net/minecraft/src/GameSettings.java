@@ -28,7 +28,7 @@ public class GameSettings {
 		keyBindBack = new KeyBinding("key.back", 31);
 		keyBindRight = new KeyBinding("key.right", 32);
 		keyBindJump = new KeyBinding("key.jump", 57);
-		keyBindInventory = new KeyBinding("key.inventory", 13);
+		keyBindInventory = new KeyBinding("key.inventory", 8);
 		keyBindDrop = new KeyBinding("key.drop", 16);
 		keyBindChat = new KeyBinding("key.chat", 20);
 		keyBindToggleFog = new KeyBinding("key.fog", 33);

@@ -10,7 +10,8 @@ public abstract class TileEntitySpecialRenderer {
 	}
 
 	public abstract void renderTileEntityAt(TileEntity tileentity, double d, double d1, double d2, float f);
-
+	
+	@Deprecated
 	protected void bindTextureByName(String s) {
 		RenderEngine renderengine = tileEntityRenderer.renderEngine;
 		renderengine.bindTexture(renderengine.getTexture(s));

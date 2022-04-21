@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
@@ -10,6 +11,8 @@ import net.lax1dude.eaglercraft.EaglerAdapter;
 
 public class RenderSquid extends RenderLiving {
 
+	private static final TextureLocation squidTexture = new TextureLocation("/mob/squid.png");
+	
 	public RenderSquid(ModelBase modelbase, float f) {
 		super(modelbase, f);
 	}
@@ -54,5 +57,11 @@ public class RenderSquid extends RenderLiving {
 
 	public void doRender(Entity entity, double d, double d1, double d2, float f, float f1) {
 		func_21008_a((EntitySquid) entity, d, d1, d2, f, f1);
+	}
+
+	@Override
+	protected boolean loadDownloadableImageTexture(String s, String s1) {
+		squidTexture.bindTexture();
+		return true;
 	}
 }

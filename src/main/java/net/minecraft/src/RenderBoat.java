@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
@@ -9,6 +10,9 @@ import net.lax1dude.eaglercraft.EaglerAdapter;
 
 
 public class RenderBoat extends Render {
+	
+	private static final TextureLocation terrainTexture = new TextureLocation("/terrain.png");
+	private static final TextureLocation boatTexture = new TextureLocation("/item/boat.png");
 
 	public RenderBoat() {
 		shadowSize = 0.5F;
@@ -27,11 +31,11 @@ public class RenderBoat extends Render {
 		if (f2 > 0.0F) {
 			EaglerAdapter.glRotatef(((MathHelper.sin(f2) * f2 * f3) / 10F) * (float) entityboat.field_808_c, 1.0F, 0.0F, 0.0F);
 		}
-		loadTexture("/terrain.png");
+		terrainTexture.bindTexture();
 		float f4 = 0.75F;
 		EaglerAdapter.glScalef(f4, f4, f4);
 		EaglerAdapter.glScalef(1.0F / f4, 1.0F / f4, 1.0F / f4);
-		loadTexture("/item/boat.png");
+		boatTexture.bindTexture();
 		EaglerAdapter.glScalef(-1F, -1F, 1.0F);
 		modelBoat.render(0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		EaglerAdapter.glPopMatrix();
@@ -42,4 +46,9 @@ public class RenderBoat extends Render {
 	}
 
 	protected ModelBase modelBoat;
+
+	@Override
+	protected boolean loadDownloadableImageTexture(String s, String s1) {
+		return true;
+	}
 }

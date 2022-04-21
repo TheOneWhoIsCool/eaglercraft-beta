@@ -10,7 +10,7 @@ public class EntitySpider extends EntityMobs {
 
 	public EntitySpider(World world) {
 		super(world);
-		texture = "/mob/spider.png";
+		//texture = "/mob/spider.png";
 		setSize(1.4F, 0.9F);
 		moveSpeed = 0.8F;
 	}

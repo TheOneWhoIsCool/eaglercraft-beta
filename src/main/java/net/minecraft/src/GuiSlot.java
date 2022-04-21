@@ -7,10 +7,13 @@ package net.minecraft.src;
 import java.util.List;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 import net.minecraft.client.Minecraft;
 
 public abstract class GuiSlot {
+	
+	private static final TextureLocation backgroundTexture = new TextureLocation("/gui/background.png");
 
 	public GuiSlot(Minecraft minecraft, int i, int j, int k, int l, int i1) {
 		field_22254_k = -2F;
@@ -119,7 +122,7 @@ public abstract class GuiSlot {
 		EaglerAdapter.glDisable(2896 /* GL_LIGHTING */);
 		EaglerAdapter.glDisable(2912 /* GL_FOG */);
 		Tessellator tessellator = Tessellator.instance;
-		EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, field_22264_a.renderEngine.getTexture("/gui/background.png"));
+		backgroundTexture.bindTexture();
 		EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		float f1 = 32F;
 		tessellator.startDrawingQuads();
@@ -226,7 +229,7 @@ public abstract class GuiSlot {
 
 	private void func_22239_a(int i, int j, int k, int l) {
 		Tessellator tessellator = Tessellator.instance;
-		EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, field_22264_a.renderEngine.getTexture("/gui/background.png"));
+		backgroundTexture.bindTexture();
 		EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		float f = 32F;
 		tessellator.startDrawingQuads();

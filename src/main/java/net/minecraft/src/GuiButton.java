@@ -2,6 +2,7 @@ package net.minecraft.src;
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
@@ -9,6 +10,8 @@ import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.minecraft.client.Minecraft;
 
 public class GuiButton extends Gui {
+
+	private static final TextureLocation buttonsTexture = new TextureLocation("/gui/gui.png");
 
 	public GuiButton(int i, int j, int k, String s) {
 		this(i, j, k, 200, 20, s);
@@ -42,7 +45,7 @@ public class GuiButton extends Gui {
 			return;
 		}
 		FontRenderer fontrenderer = minecraft.fontRenderer;
-		EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, minecraft.renderEngine.getTexture("/gui/gui.png"));
+		buttonsTexture.bindTexture();
 		EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		boolean flag = i >= xPosition && j >= yPosition && i < xPosition + width && j < yPosition + height;
 		int k = getHoverState(flag);

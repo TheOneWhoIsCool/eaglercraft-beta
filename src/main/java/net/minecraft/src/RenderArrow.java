@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
@@ -10,12 +11,14 @@ import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 
 public class RenderArrow extends Render {
+	
+	private static final TextureLocation arrowsTexture = new TextureLocation("/item/arrows.png");
 
 	public RenderArrow() {
 	}
 
 	public void func_154_a(EntityArrow entityarrow, double d, double d1, double d2, float f, float f1) {
-		loadTexture("/item/arrows.png");
+		arrowsTexture.bindTexture();
 		EaglerAdapter.glPushMatrix();
 		EaglerAdapter.glTranslatef((float) d, (float) d1, (float) d2);
 		EaglerAdapter.glRotatef(
@@ -74,5 +77,10 @@ public class RenderArrow extends Render {
 
 	public void doRender(Entity entity, double d, double d1, double d2, float f, float f1) {
 		func_154_a((EntityArrow) entity, d, d1, d2, f, f1);
+	}
+
+	@Override
+	protected boolean loadDownloadableImageTexture(String s, String s1) {
+		return true;
 	}
 }

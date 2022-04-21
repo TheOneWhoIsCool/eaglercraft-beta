@@ -13,7 +13,7 @@ public class EntityPigZombie extends EntityZombie {
 		super(world);
 		angerLevel = 0;
 		randomSoundDelay = 0;
-		texture = "/mob/pigzombie.png";
+		//texture = "/mob/pigzombie.png";
 		moveSpeed = 0.5F;
 		attackStrength = 5;
 		isImmuneToFire = true;

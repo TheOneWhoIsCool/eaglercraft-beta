@@ -24,7 +24,7 @@ public class EntitySquid extends EntityWaterMob {
 		field_21078_n = 0.0F;
 		field_21077_o = 0.0F;
 		field_21076_p = 0.0F;
-		texture = "/mob/squid.png";
+		//texture = "/mob/squid.png";
 		setSize(0.95F, 0.95F);
 		field_21080_l = (1.0F / (rand.nextFloat() + 1.0F)) * 0.2F;
 	}

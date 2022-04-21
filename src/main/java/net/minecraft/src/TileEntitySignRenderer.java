@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
@@ -9,6 +10,8 @@ import net.lax1dude.eaglercraft.EaglerAdapter;
 
 
 public class TileEntitySignRenderer extends TileEntitySpecialRenderer {
+	
+	private static final TextureLocation signTexture = new TextureLocation("/item/sign.png");
 
 	public TileEntitySignRenderer() {
 		signModel = new SignModel();
@@ -40,7 +43,7 @@ public class TileEntitySignRenderer extends TileEntitySpecialRenderer {
 			EaglerAdapter.glTranslatef(0.0F, -0.3125F, -0.4375F);
 			signModel.field_1345_b.showModel = false;
 		}
-		bindTextureByName("/item/sign.png");
+		signTexture.bindTexture();
 		EaglerAdapter.glPushMatrix();
 		EaglerAdapter.glScalef(f1, -f1, -f1);
 		signModel.func_887_a();

@@ -7,10 +7,15 @@ package net.minecraft.src;
 import java.util.*;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 public class EffectRenderer {
-
+	
+	private static final TextureLocation particlesTexture = new TextureLocation("/particles.png");
+	private static final TextureLocation terrainTexture = new TextureLocation("/terrain.png");
+	private static final TextureLocation itemsTexture = new TextureLocation("/gui/items.png");
+	
 	public EffectRenderer(World world, RenderEngine renderengine) {
 		fxLayers = new List[4];
 		rand = new Random();
@@ -56,17 +61,15 @@ public class EffectRenderer {
 			if (fxLayers[i].size() == 0) {
 				continue;
 			}
-			int j = 0;
 			if (i == 0) {
-				j = renderer.getTexture("/particles.png");
+				particlesTexture.bindTexture();
 			}
 			if (i == 1) {
-				j = renderer.getTexture("/terrain.png");
+				terrainTexture.bindTexture();
 			}
 			if (i == 2) {
-				j = renderer.getTexture("/gui/items.png");
+				itemsTexture.bindTexture();
 			}
-			EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, j);
 			Tessellator tessellator = Tessellator.instance;
 			tessellator.startDrawingQuads();
 			for (int k = 0; k < fxLayers[i].size(); k++) {

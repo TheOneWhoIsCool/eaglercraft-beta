@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
@@ -9,6 +10,8 @@ import net.lax1dude.eaglercraft.EaglerAdapter;
 
 
 public class RenderZombieSimple extends RenderLiving {
+	
+	private static final TextureLocation zombieTexture = new TextureLocation("/mob/zombie.png");
 
 	public RenderZombieSimple(ModelBase modelbase, float f, float f1) {
 		super(modelbase, f * f1);
@@ -24,4 +27,10 @@ public class RenderZombieSimple extends RenderLiving {
 	}
 
 	private float scale;
+
+	@Override
+	protected boolean loadDownloadableImageTexture(String s, String s1) {
+		zombieTexture.bindTexture();
+		return true;
+	}
 }

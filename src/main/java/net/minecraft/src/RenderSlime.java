@@ -1,12 +1,15 @@
 package net.minecraft.src;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
 public class RenderSlime extends RenderLiving {
+	
+	private static final TextureLocation slimeTexture = new TextureLocation("/mob/slime.png");
 
 	public RenderSlime(ModelBase modelbase, ModelBase modelbase1, float f) {
 		super(modelbase, f);
@@ -45,4 +48,10 @@ public class RenderSlime extends RenderLiving {
 	}
 
 	private ModelBase scaleAmount;
+
+	@Override
+	protected boolean loadDownloadableImageTexture(String s, String s1) {
+		slimeTexture.bindTexture();
+		return true;
+	}
 }

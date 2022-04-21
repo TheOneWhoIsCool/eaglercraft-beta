@@ -10,7 +10,7 @@ public class EntitySheep extends EntityAnimals {
 
 	public EntitySheep(World world) {
 		super(world);
-		texture = "/mob/sheep.png";
+		//texture = "/mob/sheep.png";
 		setSize(0.9F, 1.3F);
 	}
 

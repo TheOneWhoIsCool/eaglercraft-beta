@@ -10,10 +10,13 @@ import java.util.zip.ZipFile;
 import javax.imageio.ImageIO;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 import net.minecraft.client.Minecraft;
 
 public class TexturePackCustom extends TexturePackBase {
 
+	private static final TextureLocation unknownPack = new TextureLocation("/gui/unknown_pack.png");
+	
 	public TexturePackCustom(File file) {
 		texturePackName = -1;
 		texturePackFileName = file.getName();
@@ -76,7 +79,7 @@ public class TexturePackCustom extends TexturePackBase {
 		if (texturePackThumbnail != null) {
 			minecraft.renderEngine.bindTexture(texturePackName);
 		} else {
-			EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, minecraft.renderEngine.getTexture("/gui/unknown_pack.png"));
+			unknownPack.bindTexture();
 		}
 	}
 

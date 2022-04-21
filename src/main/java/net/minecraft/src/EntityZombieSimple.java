@@ -8,7 +8,7 @@ public class EntityZombieSimple extends EntityMobs {
 
 	public EntityZombieSimple(World world) {
 		super(world);
-		texture = "/mob/zombie.png";
+		//texture = "/mob/zombie.png";
 		moveSpeed = 0.5F;
 		attackStrength = 50;
 		health *= 10;

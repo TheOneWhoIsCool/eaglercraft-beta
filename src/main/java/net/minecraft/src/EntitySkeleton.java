@@ -10,7 +10,7 @@ public class EntitySkeleton extends EntityMobs {
 
 	public EntitySkeleton(World world) {
 		super(world);
-		texture = "/mob/skeleton.png";
+		//texture = "/mob/skeleton.png";
 	}
 
 	protected String getLivingSound() {

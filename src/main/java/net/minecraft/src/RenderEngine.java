@@ -20,6 +20,7 @@ import java.util.Set;
 import javax.imageio.ImageIO;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 
 public class RenderEngine {
 
@@ -27,7 +28,9 @@ public class RenderEngine {
 		textureMap = new HashMap();
 		textureNameToImageMap = new HashMap();
 		singleIntBuffer = GLAllocation.createDirectIntBuffer(1);
-		imageData = GLAllocation.createDirectByteBuffer(0x100000);
+		imageDataA = GLAllocation.createDirectByteBuffer(0x100000);
+		imageDataB1 = GLAllocation.createDirectByteBuffer(0x100000);
+		imageDataB2 = GLAllocation.createDirectByteBuffer(0x100000);
 		textureList = new ArrayList();
 		urlToImageDataMap = new HashMap();
 		clampTexture = false;
@@ -57,7 +60,11 @@ public class RenderEngine {
 				setupTexture(readTextureImage(texturepackbase.func_6481_a(s.substring(6))), i);
 				blurTexture = false;
 			} else {
+				if(s.equals("/terrain.png")) {
+					useMipmaps = true;
+				}
 				setupTexture(readTextureImage(texturepackbase.func_6481_a(s)), i);
+				useMipmaps = false;
 			}
 			textureMap.put(s, Integer.valueOf(i));
 			return i;
@@ -90,9 +97,9 @@ public class RenderEngine {
 	public void setupTexture(BufferedImage bufferedimage, int i) {
 		EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, i);
 		if (useMipmaps) {
-			EaglerAdapter.glTexParameteri(3553 /* GL_TEXTURE_2D */, 10241 /* GL_TEXTURE_MIN_FILTER */,
-					9987 /* GL_LINEAR_MIPMAP_LINEAR */);
-			EaglerAdapter.glTexParameteri(3553 /* GL_TEXTURE_2D */, 10240 /* GL_TEXTURE_MAG_FILTER */, 9729 /* GL_LINEAR */);
+			EaglerAdapter.glTexParameteri(3553 /* GL_TEXTURE_2D */, 10241 /* GL_TEXTURE_MIN_FILTER */, EaglerAdapter.GL_NEAREST_MIPMAP_LINEAR);
+			EaglerAdapter.glTexParameteri(3553 /* GL_TEXTURE_2D */, 10240 /* GL_TEXTURE_MAG_FILTER */, EaglerAdapter.GL_NEAREST /* GL_LINEAR */);
+			EaglerAdapter.glTexParameteri(3553 /* GL_TEXTURE_2D */, EaglerAdapter.GL_TEXTURE_MAX_LEVEL, 4);
 		} else {
 			EaglerAdapter.glTexParameteri(3553 /* GL_TEXTURE_2D */, 10241 /* GL_TEXTURE_MIN_FILTER */, 9728 /* GL_NEAREST */);
 			EaglerAdapter.glTexParameteri(3553 /* GL_TEXTURE_2D */, 10240 /* GL_TEXTURE_MAG_FILTER */, 9728 /* GL_NEAREST */);
@@ -132,30 +139,34 @@ public class RenderEngine {
 			abyte0[l * 4 + 3] = (byte) j1;
 		}
 
-		imageData.clear();
-		imageData.put(abyte0);
-		imageData.position(0).limit(abyte0.length);
+		imageDataB1.clear();
+		imageDataB1.put(abyte0);
+		imageDataB1.position(0).limit(abyte0.length);
 		EaglerAdapter.glTexImage2D(3553 /* GL_TEXTURE_2D */, 0, 6408 /* GL_RGBA */, j, k, 0, 6408 /* GL_RGBA */,
-				5121 /* GL_UNSIGNED_BYTE */, imageData);
+				5121 /* GL_UNSIGNED_BYTE */, imageDataB1);
 		if (useMipmaps) {
 			for (int i1 = 1; i1 <= 4; i1++) {
 				int k1 = j >> i1 - 1;
 				int i2 = j >> i1;
 				int k2 = k >> i1;
+				imageDataB2.clear();
 				for (int i3 = 0; i3 < i2; i3++) {
 					for (int k3 = 0; k3 < k2; k3++) {
-						int i4 = imageData.getInt((i3 * 2 + 0 + (k3 * 2 + 0) * k1) * 4);
-						int k4 = imageData.getInt((i3 * 2 + 1 + (k3 * 2 + 0) * k1) * 4);
-						int l4 = imageData.getInt((i3 * 2 + 1 + (k3 * 2 + 1) * k1) * 4);
-						int i5 = imageData.getInt((i3 * 2 + 0 + (k3 * 2 + 1) * k1) * 4);
-						int j5 = weightedAverageColor(weightedAverageColor(i4, k4), weightedAverageColor(l4, i5));
-						imageData.putInt((i3 + k3 * i2) * 4, j5);
+						int i4 = imageDataB1.getInt((i3 * 2 + 0 + (k3 * 2 + 0) * k1) * 4);
+						int k4 = imageDataB1.getInt((i3 * 2 + 1 + (k3 * 2 + 0) * k1) * 4);
+						int l4 = imageDataB1.getInt((i3 * 2 + 1 + (k3 * 2 + 1) * k1) * 4);
+						int i5 = imageDataB1.getInt((i3 * 2 + 0 + (k3 * 2 + 1) * k1) * 4);
+						int j5 = averageColor(averageColor(i4, k4), averageColor(l4, i5));
+						imageDataB2.putInt((i3 + k3 * i2) * 4, j5);
 					}
 
 				}
-
+				
 				EaglerAdapter.glTexImage2D(3553 /* GL_TEXTURE_2D */, i1, 6408 /* GL_RGBA */, i2, k2, 0, 6408 /* GL_RGBA */,
-						5121 /* GL_UNSIGNED_BYTE */, imageData);
+						5121 /* GL_UNSIGNED_BYTE */, imageDataB2);
+				ByteBuffer tmp = imageDataB1;
+				imageDataB1 = imageDataB2;
+				imageDataB2 = tmp;
 			}
 
 		}
@@ -178,7 +189,7 @@ public class RenderEngine {
 		}
 		if (threaddownloadimagedata == null || threaddownloadimagedata.textureName < 0) {
 			if (s1 == null) {
-				return -1;
+				return getTexture("/mob/char.png");
 			} else {
 				return getTexture(s1);
 			}
@@ -215,91 +226,98 @@ public class RenderEngine {
 		texturefx.onTick();
 	}
 
-	public void func_1067_a() {
+	public void updateTerrainTextures() {
 		for (int i = 0; i < textureList.size(); i++) {
 			TextureFX texturefx = (TextureFX) textureList.get(i);
 			texturefx.anaglyphEnabled = options.anaglyph;
 			texturefx.onTick();
-			imageData.clear();
-			imageData.put(texturefx.imageData);
-			imageData.position(0).limit(texturefx.imageData.length);
+			int tileSize = 16 * 16 * 4;
+			imageDataA.clear();
+			imageDataA.put(texturefx.imageData);
+			imageDataA.position(0).limit(tileSize);
 			texturefx.bindImage(this);
 			for (int k = 0; k < texturefx.tileSize; k++) {
 				label0: for (int i1 = 0; i1 < texturefx.tileSize; i1++) {
-					EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, 0, (texturefx.iconIndex % 16) * 16 + k * 16,
-							(texturefx.iconIndex / 16) * 16 + i1 * 16, 16, 16, 6408 /* GL_RGBA */,
-							5121 /* GL_UNSIGNED_BYTE */, imageData);
-					if (!useMipmaps) {
-						continue;
-					}
-					int k1 = 1;
-					do {
-						if (k1 > 4) {
-							continue label0;
-						}
-						int i2 = 16 >> k1 - 1;
-						int k2 = 16 >> k1;
-						for (int i3 = 0; i3 < k2; i3++) {
-							for (int k3 = 0; k3 < k2; k3++) {
-								int i4 = imageData.getInt((i3 * 2 + 0 + (k3 * 2 + 0) * i2) * 4);
-								int k4 = imageData.getInt((i3 * 2 + 1 + (k3 * 2 + 0) * i2) * 4);
-								int i5 = imageData.getInt((i3 * 2 + 1 + (k3 * 2 + 1) * i2) * 4);
-								int k5 = imageData.getInt((i3 * 2 + 0 + (k3 * 2 + 1) * i2) * 4);
-								int l5 = averageColor(averageColor(i4, k4), averageColor(i5, k5));
-								imageData.putInt((i3 + k3 * k2) * 4, l5);
+					int idx = texturefx.iconIndex + k + i1 * 16;
+					imageDataA.position(0).limit(tileSize);
+					EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, 0, (idx % 16) * 16, (idx / 16) * 16, 16, 16, 6408 /* GL_RGBA */,
+							5121 /* GL_UNSIGNED_BYTE */, imageDataA);
+					if(texturefx.tileImage == 0) {
+						imageDataA.position(0).limit(tileSize);
+						imageDataB1.clear();
+						imageDataB1.put(imageDataA);
+						imageDataB1.flip();
+						int k1 = 1;
+						do {
+							if (k1 > 4) {
+								continue label0;
 							}
-
-						}
-
-						EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, k1, (texturefx.iconIndex % 16) * k2,
-								(texturefx.iconIndex / 16) * k2, k2, k2, 6408 /* GL_RGBA */,
-								5121 /* GL_UNSIGNED_BYTE */, imageData);
-						k1++;
-					} while (true);
-				}
-
-			}
-
-		}
-
-		label1: for (int j = 0; j < textureList.size(); j++) {
-			TextureFX texturefx1 = (TextureFX) textureList.get(j);
-			if (texturefx1.field_1130_d <= 0) {
-				continue;
-			}
-			imageData.clear();
-			imageData.put(texturefx1.imageData);
-			imageData.position(0).limit(texturefx1.imageData.length);
-			EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, texturefx1.field_1130_d);
-			EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, 0, 0, 0, 16, 16, 6408 /* GL_RGBA */,
-					5121 /* GL_UNSIGNED_BYTE */, imageData);
-			if (!useMipmaps) {
-				continue;
-			}
-			int l = 1;
-			do {
-				if (l > 4) {
-					continue label1;
-				}
-				int j1 = 16 >> l - 1;
-				int l1 = 16 >> l;
-				for (int j2 = 0; j2 < l1; j2++) {
-					for (int l2 = 0; l2 < l1; l2++) {
-						int j3 = imageData.getInt((j2 * 2 + 0 + (l2 * 2 + 0) * j1) * 4);
-						int l3 = imageData.getInt((j2 * 2 + 1 + (l2 * 2 + 0) * j1) * 4);
-						int j4 = imageData.getInt((j2 * 2 + 1 + (l2 * 2 + 1) * j1) * 4);
-						int l4 = imageData.getInt((j2 * 2 + 0 + (l2 * 2 + 1) * j1) * 4);
-						int j5 = averageColor(averageColor(j3, l3), averageColor(j4, l4));
-						imageData.putInt((j2 + l2 * l1) * 4, j5);
+							int i2 = 16 >> k1 - 1;
+							int k2 = 16 >> k1;
+							imageDataB2.clear();
+							for (int i3 = 0; i3 < k2; i3++) {
+								for (int k3 = 0; k3 < k2; k3++) {
+									int i4 = imageDataB1.getInt((i3 * 2 + 0 + (k3 * 2 + 0) * i2) * 4);
+									int k4 = imageDataB1.getInt((i3 * 2 + 1 + (k3 * 2 + 0) * i2) * 4);
+									int i5 = imageDataB1.getInt((i3 * 2 + 1 + (k3 * 2 + 1) * i2) * 4);
+									int k5 = imageDataB1.getInt((i3 * 2 + 0 + (k3 * 2 + 1) * i2) * 4);
+									int l5 = averageColor(averageColor(i4, k4), averageColor(i5, k5));
+									imageDataB2.putInt((i3 + k3 * k2) * 4, l5);
+								}
+							}
+							EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, k1, (idx % 16) * k2, (idx / 16) * k2, k2, k2, 6408 /* GL_RGBA */,
+									5121 /* GL_UNSIGNED_BYTE */, imageDataB2);
+							k1++;
+							ByteBuffer tmp = imageDataB1;
+							imageDataB1 = imageDataB2;
+							imageDataB2 = tmp;
+						} while (true);
 					}
-
 				}
+			}
 
-				EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, l, 0, 0, l1, l1, 6408 /* GL_RGBA */,
-						5121 /* GL_UNSIGNED_BYTE */, imageData);
-				l++;
-			} while (true);
 		}
+
+//		label1: for (int j = 0; j < textureList.size(); j++) {
+//			TextureFX texturefx1 = (TextureFX) textureList.get(j);
+//			if (texturefx1.field_1130_d <= 0) {
+//				continue;
+//			}
+//			imageDataA.clear();
+//			imageDataA.put(texturefx1.imageData);
+//			imageDataA.position(0).limit(texturefx1.imageData.length);
+//			EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, texturefx1.field_1130_d);
+//			EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, 0, 0, 0, 16, 16, 6408 /* GL_RGBA */,
+//					5121 /* GL_UNSIGNED_BYTE */, imageDataA);
+//			if(texturefx1.tileImage == 0) {
+//				int l = 1;
+//				do {
+//					if (l > 4) {
+//						continue label1;
+//					}
+//					int j1 = 16 >> l - 1;
+//					int l1 = 16 >> l;
+//					for (int j2 = 0; j2 < l1; j2++) {
+//						for (int l2 = 0; l2 < l1; l2++) {
+//							int j3 = imageDataA.getInt((j2 * 2 + 0 + (l2 * 2 + 0) * j1) * 4);
+//							int l3 = imageDataA.getInt((j2 * 2 + 1 + (l2 * 2 + 0) * j1) * 4);
+//							int j4 = imageDataA.getInt((j2 * 2 + 1 + (l2 * 2 + 1) * j1) * 4);
+//							int l4 = imageDataA.getInt((j2 * 2 + 0 + (l2 * 2 + 1) * j1) * 4);
+//							int j5 = averageColor(averageColor(j3, l3), averageColor(j4, l4));
+//							imageDataB.putInt((j2 + l2 * l1) * 4, j5);
+//						}
+//	
+//					}
+//	
+//					EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, l, 0, 0, l1, l1, 6408 /* GL_RGBA */,
+//							5121 /* GL_UNSIGNED_BYTE */, imageDataB);
+//					ByteBuffer tmp = imageDataA;
+//					imageDataA = imageDataB;
+//					imageDataB = tmp;
+//					l++;
+//				} while (true);
+//			}
+//		}
 
 	}
 
@@ -307,6 +325,7 @@ public class RenderEngine {
 		int k = (i & 0xff000000) >> 24 & 0xff;
 		int l = (j & 0xff000000) >> 24 & 0xff;
 		return ((k + l >> 1) << 24) + ((i & 0xfefefe) + (j & 0xfefefe) >> 1);
+		
 	}
 
 	private int weightedAverageColor(int i, int j) {
@@ -331,6 +350,7 @@ public class RenderEngine {
 	}
 
 	public void refreshTextures() {
+		TextureLocation.freeTextures();
 		TexturePackBase texturepackbase = field_6527_k.selectedTexturePack;
 		int i;
 		BufferedImage bufferedimage;
@@ -391,7 +411,9 @@ public class RenderEngine {
 	private HashMap textureMap;
 	private HashMap textureNameToImageMap;
 	private IntBuffer singleIntBuffer;
-	private ByteBuffer imageData;
+	private ByteBuffer imageDataA;
+	private ByteBuffer imageDataB1;
+	private ByteBuffer imageDataB2;
 	private java.util.List textureList;
 	private Map urlToImageDataMap;
 	private GameSettings options;

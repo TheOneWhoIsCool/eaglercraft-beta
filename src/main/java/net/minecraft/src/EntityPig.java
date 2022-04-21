@@ -8,7 +8,7 @@ public class EntityPig extends EntityAnimals {
 
 	public EntityPig(World world) {
 		super(world);
-		texture = "/mob/pig.png";
+		//texture = "/mob/pig.png";
 		setSize(0.9F, 0.9F);
 	}
 

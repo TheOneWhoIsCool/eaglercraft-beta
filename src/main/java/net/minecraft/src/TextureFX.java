@@ -4,8 +4,12 @@ package net.minecraft.src;
 // Decompiler options: packimports(3) braces deadcode 
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 
 public class TextureFX {
+
+	private static final TextureLocation terrainTexture = new TextureLocation("/terrain.png");
+	private static final TextureLocation itemsTexture = new TextureLocation("/gui/items.png");
 
 	public TextureFX(int i) {
 		imageData = new byte[1024 /* GL_FRONT_LEFT */];
@@ -21,9 +25,9 @@ public class TextureFX {
 
 	public void bindImage(RenderEngine renderengine) {
 		if (tileImage == 0) {
-			EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, renderengine.getTexture("/terrain.png"));
+			terrainTexture.bindTexture();
 		} else if (tileImage == 1) {
-			EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, renderengine.getTexture("/gui/items.png"));
+			itemsTexture.bindTexture();
 		}
 	}
 

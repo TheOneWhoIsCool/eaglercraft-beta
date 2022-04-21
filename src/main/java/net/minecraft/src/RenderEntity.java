@@ -19,4 +19,9 @@ public class RenderEntity extends Render {
 				d2 - entity.lastTickPosZ);
 		EaglerAdapter.glPopMatrix();
 	}
+
+	@Override
+	protected boolean loadDownloadableImageTexture(String s, String s1) {
+		return true;
+	}
 }

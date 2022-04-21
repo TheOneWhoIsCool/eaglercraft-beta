@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
@@ -9,6 +10,8 @@ import net.lax1dude.eaglercraft.EaglerAdapter;
 
 
 public class RenderTNTPrimed extends Render {
+	
+	private static final TextureLocation terrainTexture = new TextureLocation("/terrain.png");
 
 	public RenderTNTPrimed() {
 		field_196_d = new RenderBlocks();
@@ -32,7 +35,7 @@ public class RenderTNTPrimed extends Render {
 			EaglerAdapter.glScalef(f4, f4, f4);
 		}
 		float f3 = (1.0F - (((float) entitytntprimed.fuse - f1) + 1.0F) / 100F) * 0.8F;
-		loadTexture("/terrain.png");
+		terrainTexture.bindTexture();
 		field_196_d.func_1227_a(Block.tnt, 0);
 		if ((entitytntprimed.fuse / 5) % 2 == 0) {
 			EaglerAdapter.glDisable(3553 /* GL_TEXTURE_2D */);
@@ -54,4 +57,9 @@ public class RenderTNTPrimed extends Render {
 	}
 
 	private RenderBlocks field_196_d;
+
+	@Override
+	protected boolean loadDownloadableImageTexture(String s, String s1) {
+		return true;
+	}
 }

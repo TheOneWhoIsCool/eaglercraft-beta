@@ -8,11 +8,18 @@ import java.util.Random;
 
 import net.lax1dude.eaglercraft.AWTColor;
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 import net.minecraft.client.Minecraft;
 
 public class GuiIngame extends Gui {
-
+	
+	private static final TextureLocation guiTexture = new TextureLocation("/gui/gui.png");
+	private static final TextureLocation iconsTexture = new TextureLocation("/gui/icons.png");
+	private static final TextureLocation pumpkinBlur = new TextureLocation("%blur%/misc/pumpkinblur.png");
+	private static final TextureLocation vignette = new TextureLocation("%blur%/misc/vignette.png");
+	private static final TextureLocation terrainTexture = new TextureLocation("/terrain.png");
+	
 	public GuiIngame(Minecraft minecraft) {
 		chatMessageList = new ArrayList();
 		rand = new Random();
@@ -44,12 +51,12 @@ public class GuiIngame extends Gui {
 			renderPortalOverlay(f1, k, l);
 		}
 		EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, mc.renderEngine.getTexture("/gui/gui.png"));
+		guiTexture.bindTexture();
 		InventoryPlayer inventoryplayer = mc.thePlayer.inventory;
 		zLevel = -90F;
 		drawTexturedModalRect(k / 2 - 91, l - 22, 0, 0, 182, 22);
 		drawTexturedModalRect((k / 2 - 91 - 1) + inventoryplayer.currentItem * 20, l - 22 - 1, 0, 22, 24, 22);
-		EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, mc.renderEngine.getTexture("/gui/icons.png"));
+		iconsTexture.bindTexture();
 		EaglerAdapter.glEnable(3042 /* GL_BLEND */);
 		EaglerAdapter.glBlendFunc(775, 769);
 		drawTexturedModalRect(k / 2 - 7, l / 2 - 7, 0, 0, 16, 16);
@@ -240,7 +247,7 @@ public class GuiIngame extends Gui {
 		EaglerAdapter.glBlendFunc(770, 771);
 		EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		EaglerAdapter.glDisable(3008 /* GL_ALPHA_TEST */);
-		EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, mc.renderEngine.getTexture("%blur%/misc/pumpkinblur.png"));
+		pumpkinBlur.bindTexture();
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
 		tessellator.addVertexWithUV(0.0D, j, -90D, 0.0D, 1.0D);
@@ -267,7 +274,7 @@ public class GuiIngame extends Gui {
 		EaglerAdapter.glDepthMask(false);
 		EaglerAdapter.glBlendFunc(0, 769);
 		EaglerAdapter.glColor4f(prevVignetteBrightness, prevVignetteBrightness, prevVignetteBrightness, 1.0F);
-		EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, mc.renderEngine.getTexture("%blur%/misc/vignette.png"));
+		vignette.bindTexture();
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
 		tessellator.addVertexWithUV(0.0D, j, -90D, 0.0D, 1.0D);
@@ -290,7 +297,7 @@ public class GuiIngame extends Gui {
 		EaglerAdapter.glDepthMask(false);
 		EaglerAdapter.glBlendFunc(770, 771);
 		EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, f);
-		EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, mc.renderEngine.getTexture("/terrain.png"));
+		terrainTexture.bindTexture();
 		float f1 = (float) (Block.portal.blockIndexInTexture % 16) / 16F;
 		float f2 = (float) (Block.portal.blockIndexInTexture / 16) / 16F;
 		float f3 = (float) (Block.portal.blockIndexInTexture % 16 + 1) / 16F;

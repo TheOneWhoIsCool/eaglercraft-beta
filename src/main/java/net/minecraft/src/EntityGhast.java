@@ -16,7 +16,7 @@ public class EntityGhast extends EntityFlying implements IMobs {
 		aggroCooldown = 0;
 		prevAttackCounter = 0;
 		attackCounter = 0;
-		texture = "/mob/ghast.png";
+		//texture = "/mob/ghast.png";
 		setSize(4F, 4F);
 		isImmuneToFire = true;
 	}
@@ -90,7 +90,6 @@ public class EntityGhast extends EntityFlying implements IMobs {
 				attackCounter--;
 			}
 		}
-		texture = attackCounter <= 10 ? "/mob/ghast.png" : "/mob/ghast_fire.png";
 	}
 
 	private boolean isCourseTraversable(double d, double d1, double d2, double d3) {

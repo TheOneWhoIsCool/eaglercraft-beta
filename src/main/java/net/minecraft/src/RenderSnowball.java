@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
@@ -10,6 +11,8 @@ import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 
 public class RenderSnowball extends Render {
+	
+	private static final TextureLocation itemTexture = new TextureLocation("/gui/items.png");
 
 	public RenderSnowball(int i) {
 		field_20003_a = i;
@@ -20,7 +23,7 @@ public class RenderSnowball extends Render {
 		EaglerAdapter.glTranslatef((float) d, (float) d1, (float) d2);
 		EaglerAdapter.glEnable(32826 /* GL_RESCALE_NORMAL_EXT */);
 		EaglerAdapter.glScalef(0.5F, 0.5F, 0.5F);
-		loadTexture("/gui/items.png");
+		itemTexture.bindTexture();
 		Tessellator tessellator = Tessellator.instance;
 		float f2 = (float) ((field_20003_a % 16) * 16 + 0) / 256F;
 		float f3 = (float) ((field_20003_a % 16) * 16 + 16) / 256F;
@@ -43,4 +46,9 @@ public class RenderSnowball extends Render {
 	}
 
 	private int field_20003_a;
+
+	@Override
+	protected boolean loadDownloadableImageTexture(String s, String s1) {
+		return true;
+	}
 }

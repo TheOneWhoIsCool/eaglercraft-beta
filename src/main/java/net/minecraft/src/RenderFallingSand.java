@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
@@ -9,6 +10,8 @@ import net.lax1dude.eaglercraft.EaglerAdapter;
 
 
 public class RenderFallingSand extends Render {
+	
+	private static final TextureLocation terrainTexture = new TextureLocation("/terrain.png");
 
 	public RenderFallingSand() {
 		field_197_d = new RenderBlocks();
@@ -18,7 +21,7 @@ public class RenderFallingSand extends Render {
 	public void func_156_a(EntityFallingSand entityfallingsand, double d, double d1, double d2, float f, float f1) {
 		EaglerAdapter.glPushMatrix();
 		EaglerAdapter.glTranslatef((float) d, (float) d1, (float) d2);
-		loadTexture("/terrain.png");
+		terrainTexture.bindTexture();
 		Block block = Block.blocksList[entityfallingsand.blockID];
 		World world = entityfallingsand.func_465_i();
 		EaglerAdapter.glDisable(2896 /* GL_LIGHTING */);
@@ -33,4 +36,9 @@ public class RenderFallingSand extends Render {
 	}
 
 	private RenderBlocks field_197_d;
+
+	@Override
+	protected boolean loadDownloadableImageTexture(String s, String s1) {
+		return true;
+	}
 }

@@ -10,13 +10,19 @@ import java.nio.charset.Charset;
 import java.util.*;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 public class GuiMainMenu extends GuiScreen {
 
+	private static final TextureLocation logoTexture = new TextureLocation("/gui/logo.png");
+	private static final TextureLocation blackTexture = new TextureLocation("/title/black.png");
+	private static final TextureLocation terrainTexture = new TextureLocation("/terrain.png");
+	
 	public GuiMainMenu() {
 		updateCounter = 0.0F;
-		splashText = "missingno";
+		splashText = "Singleplayer!";
+		/*
 		try {
 			ArrayList arraylist = new ArrayList();
 			BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(
@@ -35,6 +41,7 @@ public class GuiMainMenu extends GuiScreen {
 			splashText = (String) arraylist.get(rand.nextInt(arraylist.size()));
 		} catch (Exception exception) {
 		}
+		*/
 	}
 
 	public void updateScreen() {
@@ -56,14 +63,8 @@ public class GuiMainMenu extends GuiScreen {
 	public void initGui() {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(new Date());
-		if (calendar.get(2) + 1 == 11 && calendar.get(5) == 9) {
-			splashText = "Happy birthday, ez!";
-		} else if (calendar.get(2) + 1 == 6 && calendar.get(5) == 1) {
-			splashText = "Happy birthday, Notch!";
-		} else if (calendar.get(2) + 1 == 12 && calendar.get(5) == 24) {
-			splashText = "Merry X-mas!";
-		} else if (calendar.get(2) + 1 == 1 && calendar.get(5) == 1) {
-			splashText = "Happy new year!";
+		if (calendar.get(2) + 1 == 11 && calendar.get(5) == 19) {
+			splashText = "Happy birthday, lax1dude!";
 		}
 		StringTranslate stringtranslate = StringTranslate.getInstance();
 		int i = height / 4 + 48;
@@ -73,10 +74,8 @@ public class GuiMainMenu extends GuiScreen {
 		if (mc.hideQuitButton) {
 			controlList.add(new GuiButton(0, width / 2 - 100, i + 72, stringtranslate.translateKey("menu.options")));
 		} else {
-			controlList.add(new GuiButton(0, width / 2 - 100, i + 72 + 12, 98, 20,
-					stringtranslate.translateKey("menu.options")));
-			controlList.add(
-					new GuiButton(4, width / 2 + 2, i + 72 + 12, 98, 20, stringtranslate.translateKey("menu.quit")));
+			controlList.add(new GuiButton(0, width / 2 - 100, i + 72 + 12, 98, 20, stringtranslate.translateKey("menu.options")));
+			controlList.add(new GuiButton(4, width / 2 + 2, i + 72 + 12, 98, 20, stringtranslate.translateKey("menu.quit")));
 		}
 		if (mc.session == null) {
 			((GuiButton) controlList.get(1)).enabled = false;
@@ -105,20 +104,20 @@ public class GuiMainMenu extends GuiScreen {
 		drawDefaultBackground();
 		Tessellator tessellator = Tessellator.instance;
 		drawLogo(f);
-		EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, mc.renderEngine.getTexture("/gui/logo.png"));
+		logoTexture.bindTexture();
 		EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		tessellator.setColorOpaque_I(0xffffff);
 		EaglerAdapter.glPushMatrix();
 		EaglerAdapter.glTranslatef(width / 2 + 90, 70F, 0.0F);
 		EaglerAdapter.glRotatef(-20F, 0.0F, 0.0F, 1.0F);
-		float f1 = 1.8F - MathHelper
-				.abs(MathHelper.sin(((float) (System.currentTimeMillis() % 1000L) / 1000F) * 3.141593F * 2.0F) * 0.1F);
-		f1 = (f1 * 100F) / (float) (fontRenderer.getStringWidth(splashText) + 32);
+		float f1 = 1.8F - MathHelper.abs(MathHelper.sin(((float) (System.currentTimeMillis() % 1000L) / 1000F) * 3.141593F * 2.0F) * 0.1F);
+		f1 = (f1 * 80F) / (float) (fontRenderer.getStringWidth(splashText) + 32);
 		EaglerAdapter.glScalef(f1, f1, f1);
 		drawCenteredString(fontRenderer, splashText, 0, -8, 0xffff00);
 		EaglerAdapter.glPopMatrix();
 		drawString(fontRenderer, "Minecraft Beta 1.3_01", 2, 2, 0x505050);
-		String s = "Copyright Mojang AB. Do not distribute.";
+		//String s = "Copyright Mojang AB. Do not distribute.";
+		String s = "site resources - Copyright Mojang AB.";
 		drawString(fontRenderer, s, width - fontRenderer.getStringWidth(s) - 2, height - 10, 0xffffff);
 		super.drawScreen(i, j, f);
 	}
@@ -171,9 +170,10 @@ public class GuiMainMenu extends GuiScreen {
 			EaglerAdapter.glScalef(0.89F, 1.0F, 0.4F);
 			EaglerAdapter.glTranslatef((float) (-minecraftLogo[0].length()) * 0.5F, (float) (-minecraftLogo.length) * 0.5F,
 					0.0F);
-			EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, mc.renderEngine.getTexture("/terrain.png"));
 			if (l == 0) {
-				EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, mc.renderEngine.getTexture("/title/black.png"));
+				blackTexture.bindTexture();
+			}else {
+				terrainTexture.bindTexture();
 			}
 			for (int i1 = 0; i1 < minecraftLogo.length; i1++) {
 				for (int j1 = 0; j1 < minecraftLogo[i1].length(); j1++) {
@@ -219,11 +219,20 @@ public class GuiMainMenu extends GuiScreen {
 	}
 
 	private static final Random rand = new Random();
-	String minecraftLogo[] = {  " *   * * *   * *** *** *** *** *** ***",
-			                    " ** ** * **  * *   *   * * * * *    * ",
-								" * * * * * * * **  *   **  *** **   * ",
-								" *   * * *  ** *   *   * * * * *    * ",
-								" *   * * *   * *** *** * * * * *    * " };
+	/*
+	String minecraftLogo[] = {
+			" *   * * *   * *** *** *** *** *** ***",
+            " ** ** * **  * *   *   * * * * *    * ",
+			" * * * * * * * *   **  **  *** **   * ",
+			" *   * * *  ** *   *   * * * * *    * ",
+			" *   * * *   * *** *** * * * * *    * " };
+	*/
+	String minecraftLogo[] = { 
+			" ### ### ### #   ### ### ### ### ### ### ###",
+            " #   # # #   #   #   # # #   # # # # #    # ",
+			" ##  ### #   #   ##  ##  #   ##  ### ##   # ",
+			" #   # # # # #   #   # # #   # # # # #    # ",
+			" ### # # ### ### ### # # ### # # # # #    # " };
 	private LogoEffectRandomizer logoEffects[][];
 	private float updateCounter;
 	private String splashText;

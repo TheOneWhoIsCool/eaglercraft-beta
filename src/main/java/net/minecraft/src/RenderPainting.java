@@ -7,9 +7,12 @@ package net.minecraft.src;
 import java.util.Random;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 public class RenderPainting extends Render {
+	
+	private static final TextureLocation paintingTexture = new TextureLocation("/art/kz.png");
 
 	public RenderPainting() {
 		rand = new Random();
@@ -21,7 +24,7 @@ public class RenderPainting extends Render {
 		EaglerAdapter.glTranslatef((float) d, (float) d1, (float) d2);
 		EaglerAdapter.glRotatef(f, 0.0F, 1.0F, 0.0F);
 		EaglerAdapter.glEnable(32826 /* GL_RESCALE_NORMAL_EXT */);
-		loadTexture("/art/kz.png");
+		paintingTexture.bindTexture();
 		EnumArt enumart = entitypainting.art;
 		float f2 = 0.0625F;
 		EaglerAdapter.glScalef(f2, f2, f2);
@@ -122,4 +125,9 @@ public class RenderPainting extends Render {
 	}
 
 	private Random rand;
+
+	@Override
+	protected boolean loadDownloadableImageTexture(String s, String s1) {
+		return true;
+	}
 }

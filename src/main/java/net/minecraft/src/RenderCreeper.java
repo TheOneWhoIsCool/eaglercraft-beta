@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
@@ -56,5 +57,13 @@ public class RenderCreeper extends RenderLiving {
 
 	protected int getColorMultiplier(EntityLiving entityliving, float f, float f1) {
 		return updateCreeperColorMultiplier((EntityCreeper) entityliving, f, f1);
+	}
+	
+	private static final TextureLocation texture = new TextureLocation("/mob/creeper.png");
+
+	@Override
+	protected boolean loadDownloadableImageTexture(String s, String s1) {
+		texture.bindTexture();
+		return true;
 	}
 }

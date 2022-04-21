@@ -276,21 +276,7 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 	}
 
 	public static final void glCullFace(int p1) {
-		int f = _wGL_BACK;
-		switch (p1) {
-		case GL_BACK:
-			f = _wGL_BACK;
-			break;
-		case GL_FRONT:
-			f = _wGL_FRONT;
-			break;
-		case GL_FRONT_AND_BACK:
-			f = _wGL_FRONT_AND_BACK;
-			break;
-		default:
-			break;
-		}
-		_wglCullFace(f);
+		_wglCullFace(p1);
 	}
 
 	public static final void glMatrixMode(int p1) {
@@ -318,14 +304,7 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 	}
 
 	public static final void glClear(int p1) {
-		int f = 0;
-		if ((p1 & GL_COLOR_BUFFER_BIT) == GL_COLOR_BUFFER_BIT) {
-			f = f | _wGL_COLOR_BUFFER_BIT;
-		}
-		if ((p1 & GL_DEPTH_BUFFER_BIT) == GL_DEPTH_BUFFER_BIT) {
-			f = f | _wGL_DEPTH_BUFFER_BIT;
-		}
-		_wglClear(f);
+		_wglClear(p1);
 	}
 
 	public static final void glOrtho(float left, float right, float bottom, float top, float zNear, float zFar) {
@@ -406,14 +385,6 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 
 	public static final int glGetError() {
 		int err = _wglGetError();
-		if (err == _wGL_INVALID_ENUM)
-			return GL_INVALID_ENUM;
-		if (err == _wGL_INVALID_OPERATION)
-			return GL_INVALID_OPERATION;
-		if (err == _wGL_INVALID_VALUE)
-			return GL_INVALID_VALUE;
-		if (err == _wGL_OUT_OF_MEMORY)
-			return GL_OUT_OF_MEMORY;
 		if (err == _wGL_CONTEXT_LOST_WEBGL)
 			return GL_CONTEXT_LOST_WEBGL;
 		return err;
@@ -568,70 +539,8 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 	}
 
 	public static final void glBlendFunc(int p1, int p2) {
-		int pp1 = 0;
-		int pp2 = 0;
-		switch (p1) {
-		default:
-		case GL_SRC_ALPHA:
-			pp1 = _wGL_SRC_ALPHA;
-			break;
-		case GL_ONE_MINUS_SRC_ALPHA:
-			pp1 = _wGL_ONE_MINUS_SRC_ALPHA;
-			break;
-		case GL_DST_ALPHA:
-			pp1 = _wGL_DST_ALPHA;
-			break;
-		case GL_DST_COLOR:
-			pp1 = _wGL_DST_COLOR;
-			break;
-		case GL_SRC_COLOR:
-			pp1 = _wGL_SRC_COLOR;
-			break;
-		case GL_ONE_MINUS_SRC_COLOR:
-			pp1 = _wGL_ONE_MINUS_SRC_COLOR;
-			break;
-		case GL_ONE_MINUS_DST_COLOR:
-			pp1 = _wGL_ONE_MINUS_DST_COLOR;
-			break;
-		case GL_ONE:
-			pp1 = _wGL_ONE;
-			break;
-		case GL_ZERO:
-			pp1 = _wGL_ZERO;
-			break;
-		}
-		switch (p2) {
-		default:
-		case GL_SRC_ALPHA:
-			pp2 = _wGL_SRC_ALPHA;
-			break;
-		case GL_ONE_MINUS_SRC_ALPHA:
-			pp2 = _wGL_ONE_MINUS_SRC_ALPHA;
-			break;
-		case GL_DST_ALPHA:
-			pp2 = _wGL_DST_ALPHA;
-			break;
-		case GL_DST_COLOR:
-			pp2 = _wGL_DST_COLOR;
-			break;
-		case GL_SRC_COLOR:
-			pp2 = _wGL_SRC_COLOR;
-			break;
-		case GL_ONE_MINUS_SRC_COLOR:
-			pp2 = _wGL_ONE_MINUS_SRC_COLOR;
-			break;
-		case GL_ONE_MINUS_DST_COLOR:
-			pp1 = _wGL_ONE_MINUS_DST_COLOR;
-			break;
-		case GL_ONE:
-			pp2 = _wGL_ONE;
-			break;
-		case GL_ZERO:
-			pp2 = _wGL_ZERO;
-			break;
-		}
 		fogPremultiply = (p1 == GL_ONE && p2 == GL_ONE_MINUS_SRC_ALPHA);
-		_wglBlendFunc(pp1, pp2);
+		_wglBlendFunc(p1, p2);
 	}
 
 	public static final void glDepthMask(boolean p1) {
@@ -652,64 +561,7 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 	}
 
 	public static final void glTexParameteri(int p1, int p2, int p3) {
-		int pp1 = 0;
-		switch (p1) {
-		default:
-		case GL_TEXTURE_2D:
-			pp1 = _wGL_TEXTURE_2D;
-			break;
-		// case GL_TEXTURE_3D: pp1 = _wGL_TEXTURE_3D; break;
-		}
-		int pp2 = 0;
-		switch (p2) {
-		default:
-		case GL_TEXTURE_MAG_FILTER:
-			pp2 = _wGL_TEXTURE_MAG_FILTER;
-			break;
-		case GL_TEXTURE_MIN_FILTER:
-			pp2 = _wGL_TEXTURE_MIN_FILTER;
-			break;
-		case GL_TEXTURE_WRAP_S:
-			pp2 = _wGL_TEXTURE_WRAP_S;
-			break;
-		case GL_TEXTURE_WRAP_T:
-			pp2 = _wGL_TEXTURE_WRAP_T;
-			break;
-		case GL_TEXTURE_MAX_LEVEL:
-			pp2 = _wGL_TEXTURE_MAX_LEVEL;
-			break;
-		}
-		int pp3 = 0;
-		switch (p3) {
-		default:
-			pp3 = p3;
-			break;
-		case GL_LINEAR:
-			pp3 = _wGL_LINEAR;
-			break;
-		case GL_NEAREST_MIPMAP_LINEAR:
-			pp3 = _wGL_NEAREST_MIPMAP_LINEAR;
-			break;
-		case GL_LINEAR_MIPMAP_LINEAR:
-			pp3 = _wGL_LINEAR_MIPMAP_LINEAR;
-			break;
-		case GL_LINEAR_MIPMAP_NEAREST:
-			pp3 = _wGL_LINEAR_MIPMAP_NEAREST;
-			break;
-		case GL_NEAREST_MIPMAP_NEAREST:
-			pp3 = _wGL_NEAREST_MIPMAP_NEAREST;
-			break;
-		case GL_NEAREST:
-			pp3 = _wGL_NEAREST;
-			break;
-		case GL_REPEAT:
-			pp3 = _wGL_REPEAT;
-			break;
-		case GL_CLAMP:
-			pp3 = _wGL_CLAMP;
-			break;
-		}
-		_wglTexParameteri(pp1, pp2, pp3);
+		_wglTexParameteri(p1, p2, p3);
 	}
 
 	public static final void glTexParameterf(int p1, int p2, float p3) {

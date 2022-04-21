@@ -26,7 +26,9 @@ in vec4 a_color;
 in vec4 a_normal;
 #endif
 
+#ifdef CC_fog
 out vec4 v_position;
+#endif
 #ifdef CC_a_color
 out vec4 v_color;
 #endif
@@ -39,7 +41,9 @@ out vec2 v_texture0;
 
 void main(){
 	vec4 pos = matrix_m * vec4(a_position, 1.0);
+#ifdef CC_fog
 	v_position = pos;
+#endif
 #ifdef CC_a_color
 	v_color = a_color;
 #endif
@@ -80,7 +84,9 @@ uniform vec4 colorUniform;
 uniform float alphaTestF;
 #endif
 
+#ifdef CC_fog
 in vec4 v_position;
+#endif
 #ifdef CC_a_color
 in vec4 v_color;
 #endif

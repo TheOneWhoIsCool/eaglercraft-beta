@@ -11,10 +11,13 @@ import java.awt.datatransfer.Transferable;
 import java.util.ArrayList;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 import net.minecraft.client.Minecraft;
 
 public class GuiScreen extends Gui {
+	
+	private static final TextureLocation backgroundTexture = new TextureLocation("/gui/background.png");
 
 	public GuiScreen() {
 		controlList = new ArrayList();
@@ -136,7 +139,7 @@ public class GuiScreen extends Gui {
 		EaglerAdapter.glDisable(2896 /* GL_LIGHTING */);
 		EaglerAdapter.glDisable(2912 /* GL_FOG */);
 		Tessellator tessellator = Tessellator.instance;
-		EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, mc.renderEngine.getTexture("/gui/background.png"));
+		backgroundTexture.bindTexture();
 		EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		float f = 32F;
 		tessellator.startDrawingQuads();

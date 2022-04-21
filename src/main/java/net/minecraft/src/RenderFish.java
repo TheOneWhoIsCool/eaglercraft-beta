@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
@@ -10,6 +11,8 @@ import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 
 public class RenderFish extends Render {
+	
+	private static final TextureLocation particlesTexture = new TextureLocation("/particles.png");
 
 	public RenderFish() {
 	}
@@ -21,7 +24,7 @@ public class RenderFish extends Render {
 		EaglerAdapter.glScalef(0.5F, 0.5F, 0.5F);
 		int i = 1;
 		byte byte0 = 2;
-		loadTexture("/particles.png");
+		particlesTexture.bindTexture();
 		Tessellator tessellator = Tessellator.instance;
 		float f2 = (float) (i * 8 + 0) / 128F;
 		float f3 = (float) (i * 8 + 8) / 128F;
@@ -97,5 +100,10 @@ public class RenderFish extends Render {
 
 	public void doRender(Entity entity, double d, double d1, double d2, float f, float f1) {
 		func_4011_a((EntityFish) entity, d, d1, d2, f, f1);
+	}
+
+	@Override
+	protected boolean loadDownloadableImageTexture(String s, String s1) {
+		return true;
 	}
 }

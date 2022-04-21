@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
@@ -10,6 +11,8 @@ import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 
 public class RenderFireball extends Render {
+	
+	private static final TextureLocation itemsTexture = new TextureLocation("/gui/items.png");
 
 	public RenderFireball() {
 	}
@@ -21,7 +24,7 @@ public class RenderFireball extends Render {
 		float f2 = 2.0F;
 		EaglerAdapter.glScalef(f2 / 1.0F, f2 / 1.0F, f2 / 1.0F);
 		int i = Item.snowball.getIconIndex(null);
-		loadTexture("/gui/items.png");
+		itemsTexture.bindTexture();
 		Tessellator tessellator = Tessellator.instance;
 		float f3 = (float) ((i % 16) * 16 + 0) / 256F;
 		float f4 = (float) ((i % 16) * 16 + 16) / 256F;
@@ -45,5 +48,10 @@ public class RenderFireball extends Render {
 
 	public void doRender(Entity entity, double d, double d1, double d2, float f, float f1) {
 		func_4012_a((EntityFireball) entity, d, d1, d2, f, f1);
+	}
+
+	@Override
+	protected boolean loadDownloadableImageTexture(String s, String s1) {
+		return true;
 	}
 }

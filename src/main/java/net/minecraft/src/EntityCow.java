@@ -8,7 +8,7 @@ public class EntityCow extends EntityAnimals {
 
 	public EntityCow(World world) {
 		super(world);
-		texture = "/mob/cow.png";
+		//texture = "/mob/cow.png";
 		setSize(0.9F, 1.3F);
 	}
 

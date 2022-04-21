@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
@@ -9,10 +10,13 @@ import net.lax1dude.eaglercraft.EaglerAdapter;
 
 
 public class RenderBiped extends RenderLiving {
+	
+	protected TextureLocation texture;
 
-	public RenderBiped(ModelBiped modelbiped, float f) {
+	public RenderBiped(ModelBiped modelbiped, float f, String tex) {
 		super(modelbiped, f);
 		modelBipedMain = modelbiped;
+		texture = new TextureLocation(tex);
 	}
 
 	protected void renderEquippedItems(EntityLiving entityliving, float f) {
@@ -49,4 +53,10 @@ public class RenderBiped extends RenderLiving {
 	}
 
 	protected ModelBiped modelBipedMain;
+
+	@Override
+	protected boolean loadDownloadableImageTexture(String s, String s1) {
+		texture.bindTexture();
+		return true;
+	}
 }

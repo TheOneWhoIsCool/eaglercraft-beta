@@ -7,6 +7,7 @@ package net.minecraft.client;
 import java.io.*;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 import net.minecraft.src.*;
 
@@ -556,6 +557,8 @@ public class Minecraft implements Runnable {
 			thePlayer.inventory.setCurrentItem(i, false);
 		}
 	}
+	
+	private static final TextureLocation terrainTexture = new TextureLocation("/terrain.png");
 
 	public void runTick() {
 		ingameGUI.updateTick();
@@ -572,9 +575,9 @@ public class Minecraft implements Runnable {
 		if (!isWorldLoaded && theWorld != null) {
 			playerController.updateController();
 		}
-		EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, renderEngine.getTexture("/terrain.png"));
+		terrainTexture.bindTexture();
 		if (!isWorldLoaded) {
-			renderEngine.func_1067_a();
+			renderEngine.updateTerrainTextures();
 		}
 		if (currentScreen == null && thePlayer != null) {
 			if (thePlayer.health <= 0) {

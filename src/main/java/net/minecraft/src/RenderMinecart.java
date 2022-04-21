@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
@@ -9,6 +10,9 @@ import net.lax1dude.eaglercraft.EaglerAdapter;
 
 
 public class RenderMinecart extends Render {
+	
+	private static final TextureLocation terrainTexture = new TextureLocation("/terrain.png");
+	private static final TextureLocation minecartTexture = new TextureLocation("/item/cart.png");
 
 	public RenderMinecart() {
 		shadowSize = 0.5F;
@@ -56,7 +60,7 @@ public class RenderMinecart extends Render {
 					0.0F);
 		}
 		if (entityminecart.minecartType != 0) {
-			loadTexture("/terrain.png");
+			terrainTexture.bindTexture();
 			float f5 = 0.75F;
 			EaglerAdapter.glScalef(f5, f5, f5);
 			EaglerAdapter.glTranslatef(0.0F, 0.3125F, 0.0F);
@@ -70,7 +74,7 @@ public class RenderMinecart extends Render {
 			EaglerAdapter.glTranslatef(0.0F, -0.3125F, 0.0F);
 			EaglerAdapter.glScalef(1.0F / f5, 1.0F / f5, 1.0F / f5);
 		}
-		loadTexture("/item/cart.png");
+		minecartTexture.bindTexture();
 		EaglerAdapter.glScalef(-1F, -1F, 1.0F);
 		modelMinecart.render(0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		EaglerAdapter.glPopMatrix();
@@ -81,4 +85,9 @@ public class RenderMinecart extends Render {
 	}
 
 	protected ModelBase modelMinecart;
+
+	@Override
+	protected boolean loadDownloadableImageTexture(String s, String s1) {
+		return true;
+	}
 }

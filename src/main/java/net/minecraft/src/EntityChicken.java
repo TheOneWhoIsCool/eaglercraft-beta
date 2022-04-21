@@ -14,7 +14,7 @@ public class EntityChicken extends EntityAnimals {
 		field_752_b = 0.0F;
 		field_758_c = 0.0F;
 		field_755_h = 1.0F;
-		texture = "/mob/chicken.png";
+		//texture = "/mob/chicken.png";
 		setSize(0.3F, 0.4F);
 		health = 4;
 		timeUntilNextEgg = rand.nextInt(6000) + 6000;

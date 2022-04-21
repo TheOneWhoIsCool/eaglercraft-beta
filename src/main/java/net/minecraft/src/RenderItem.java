@@ -7,9 +7,13 @@ package net.minecraft.src;
 import java.util.Random;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 public class RenderItem extends Render {
+	
+	private static final TextureLocation terrainTexture = new TextureLocation("/terrain.png");
+	private static final TextureLocation itemsTexture = new TextureLocation("/gui/items.png");
 
 	public RenderItem() {
 		renderBlocks = new RenderBlocks();
@@ -38,7 +42,7 @@ public class RenderItem extends Render {
 		EaglerAdapter.glEnable(32826 /* GL_RESCALE_NORMAL_EXT */);
 		if (itemstack.itemID < 256 && RenderBlocks.func_1219_a(Block.blocksList[itemstack.itemID].getRenderType())) {
 			EaglerAdapter.glRotatef(f3, 0.0F, 1.0F, 0.0F);
-			loadTexture("/terrain.png");
+			terrainTexture.bindTexture();
 			float f4 = 0.25F;
 			if (!Block.blocksList[itemstack.itemID].renderAsNormalBlock()
 					&& itemstack.itemID != Block.stairSingle.blockID) {
@@ -61,9 +65,9 @@ public class RenderItem extends Render {
 			EaglerAdapter.glScalef(0.5F, 0.5F, 0.5F);
 			int i = itemstack.getIconIndex();
 			if (itemstack.itemID < 256) {
-				loadTexture("/terrain.png");
+				terrainTexture.bindTexture();
 			} else {
-				loadTexture("/gui/items.png");
+				itemsTexture.bindTexture();
 			}
 			Tessellator tessellator = Tessellator.instance;
 			float f6 = (float) ((i % 16) * 16 + 0) / 256F;
@@ -104,7 +108,7 @@ public class RenderItem extends Render {
 		}
 		if (itemstack.itemID < 256 && RenderBlocks.func_1219_a(Block.blocksList[itemstack.itemID].getRenderType())) {
 			int k = itemstack.itemID;
-			renderengine.bindTexture(renderengine.getTexture("/terrain.png"));
+			terrainTexture.bindTexture();
 			Block block = Block.blocksList[k];
 			EaglerAdapter.glPushMatrix();
 			EaglerAdapter.glTranslatef(i - 2, j + 3, 0.0F);
@@ -119,9 +123,9 @@ public class RenderItem extends Render {
 		} else if (itemstack.getIconIndex() >= 0) {
 			EaglerAdapter.glDisable(2896 /* GL_LIGHTING */);
 			if (itemstack.itemID < 256) {
-				renderengine.bindTexture(renderengine.getTexture("/terrain.png"));
+				terrainTexture.bindTexture();
 			} else {
-				renderengine.bindTexture(renderengine.getTexture("/gui/items.png"));
+				itemsTexture.bindTexture();
 			}
 			renderTexturedQuad(i, j, (itemstack.getIconIndex() % 16) * 16, (itemstack.getIconIndex() / 16) * 16, 16,
 					16);
@@ -193,4 +197,9 @@ public class RenderItem extends Render {
 
 	private RenderBlocks renderBlocks;
 	private Random random;
+
+	@Override
+	protected boolean loadDownloadableImageTexture(String s, String s1) {
+		return true;
+	}
 }

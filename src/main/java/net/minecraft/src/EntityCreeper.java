@@ -10,7 +10,7 @@ public class EntityCreeper extends EntityMobs {
 
 	public EntityCreeper(World world) {
 		super(world);
-		texture = "/mob/creeper.png";
+		//texture = "/mob/creeper.png";
 	}
 
 	protected void entityInit() {

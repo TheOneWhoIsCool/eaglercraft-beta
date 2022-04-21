@@ -9,7 +9,7 @@ import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 import net.minecraft.client.Minecraft;
 
-public class RenderLiving extends Render {
+public abstract class RenderLiving extends Render {
 
 	public RenderLiving(ModelBase modelbase, float f) {
 		mainModel = modelbase;

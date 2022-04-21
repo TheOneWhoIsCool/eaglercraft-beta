@@ -12,7 +12,7 @@ public class EntitySlime extends EntityLiving implements IMobs {
 		super(world);
 		field_769_d = 0;
 		slimeSize = 1;
-		texture = "/mob/slime.png";
+		//texture = "/mob/slime.png";
 		slimeSize = 1 << rand.nextInt(3);
 		yOffset = 0.0F;
 		field_769_d = rand.nextInt(20) + 10;

@@ -8,6 +8,7 @@ import java.nio.IntBuffer;
 import java.util.*;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 import net.minecraft.client.Minecraft;
 
@@ -544,6 +545,9 @@ public class RenderGlobal implements IWorldAccess {
 	public void func_945_d() {
 		field_1435_x++;
 	}
+	
+	private static final TextureLocation terrainSun = new TextureLocation("/terrain/sun.png");
+	private static final TextureLocation terrainMoon = new TextureLocation("/terrain/moon.png");
 
 	public void func_4142_a(float f) {
 		if (mc.theWorld.worldProvider.field_4220_c) {
@@ -607,7 +611,7 @@ public class RenderGlobal implements IWorldAccess {
 		EaglerAdapter.glRotatef(0.0F, 0.0F, 0.0F, 1.0F);
 		EaglerAdapter.glRotatef(worldObj.getCelestialAngle(f) * 360F, 1.0F, 0.0F, 0.0F);
 		float f11 = 30F;
-		EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, renderEngine.getTexture("/terrain/sun.png"));
+		terrainSun.bindTexture();
 		tessellator.startDrawingQuads();
 		tessellator.addVertexWithUV(-f11, 100D, -f11, 0.0D, 0.0D);
 		tessellator.addVertexWithUV(f11, 100D, -f11, 1.0D, 0.0D);
@@ -615,7 +619,7 @@ public class RenderGlobal implements IWorldAccess {
 		tessellator.addVertexWithUV(-f11, 100D, f11, 0.0D, 1.0D);
 		tessellator.draw();
 		f11 = 20F;
-		EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, renderEngine.getTexture("/terrain/moon.png"));
+		terrainMoon.bindTexture();
 		tessellator.startDrawingQuads();
 		tessellator.addVertexWithUV(-f11, -100D, f11, 1.0D, 1.0D);
 		tessellator.addVertexWithUV(f11, -100D, f11, 0.0D, 1.0D);
@@ -639,6 +643,8 @@ public class RenderGlobal implements IWorldAccess {
 		EaglerAdapter.glEnable(3553 /* GL_TEXTURE_2D */);
 		EaglerAdapter.glDepthMask(true);
 	}
+	
+	private static final TextureLocation cloudsTexture = new TextureLocation("/environment/clouds.png");
 
 	public void func_4141_b(float f) {
 		if (mc.theWorld.worldProvider.field_4220_c) {
@@ -654,7 +660,7 @@ public class RenderGlobal implements IWorldAccess {
 		byte byte0 = 32;
 		int i = 256 / byte0;
 		Tessellator tessellator = Tessellator.instance;
-		EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, renderEngine.getTexture("/environment/clouds.png"));
+		cloudsTexture.bindTexture();
 		EaglerAdapter.glEnable(3042 /* GL_BLEND */);
 		EaglerAdapter.glBlendFunc(770, 771);
 		Vec3D vec3d = worldObj.func_628_d(f);
@@ -717,7 +723,7 @@ public class RenderGlobal implements IWorldAccess {
 		int j = MathHelper.floor_double(d1 / 2048D);
 		d -= i * 2048 /* GL_EXP */;
 		d1 -= j * 2048 /* GL_EXP */;
-		EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, renderEngine.getTexture("/environment/clouds.png"));
+		cloudsTexture.bindTexture();
 		EaglerAdapter.glEnable(3042 /* GL_BLEND */);
 		EaglerAdapter.glBlendFunc(770, 771);
 		Vec3D vec3d = worldObj.func_628_d(f);
@@ -958,6 +964,8 @@ public class RenderGlobal implements IWorldAccess {
 		}
 		return l == i1 + l1;
 	}
+	
+	private static final TextureLocation terrainTexture = new TextureLocation("/terrain.png");
 
 	public void func_959_a(EntityPlayer entityplayer, MovingObjectPosition movingobjectposition, int i,
 			ItemStack itemstack, float f) {
@@ -970,8 +978,7 @@ public class RenderGlobal implements IWorldAccess {
 		if (i == 0) {
 			if (field_1450_i > 0.0F) {
 				EaglerAdapter.glBlendFunc(774, 768);
-				int j = renderEngine.getTexture("/terrain.png");
-				EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, j);
+				terrainTexture.bindTexture();
 				EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
 				EaglerAdapter.glPushMatrix();
 				int k = worldObj.getBlockId(movingobjectposition.blockX, movingobjectposition.blockY,
@@ -1003,8 +1010,7 @@ public class RenderGlobal implements IWorldAccess {
 			EaglerAdapter.glBlendFunc(770, 771);
 			float f1 = MathHelper.sin((float) System.currentTimeMillis() / 100F) * 0.2F + 0.8F;
 			EaglerAdapter.glColor4f(f1, f1, f1, MathHelper.sin((float) System.currentTimeMillis() / 200F) * 0.2F + 0.5F);
-			int l = renderEngine.getTexture("/terrain.png");
-			EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, l);
+			terrainTexture.bindTexture();
 			int i1 = movingobjectposition.blockX;
 			int j1 = movingobjectposition.blockY;
 			int k1 = movingobjectposition.blockZ;

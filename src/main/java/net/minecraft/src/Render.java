@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
@@ -11,6 +12,9 @@ import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 public abstract class Render {
 
+	private static final TextureLocation terrainTexture = new TextureLocation("/terrain.png");
+	private static final TextureLocation shadowTexture = new TextureLocation("%clamp%/misc/shadow.png");
+
 	public Render() {
 		field_195_d = new ModelBiped();
 		field_203_d = new RenderBlocks();
@@ -20,11 +24,15 @@ public abstract class Render {
 
 	public abstract void doRender(Entity entity, double d, double d1, double d2, float f, float f1);
 
+	@Deprecated
 	protected void loadTexture(String s) {
 		RenderEngine renderengine = renderManager.renderEngine;
 		renderengine.bindTexture(renderengine.getTexture(s));
 	}
+	
+	protected abstract boolean loadDownloadableImageTexture(String s, String s1);
 
+	/*
 	protected boolean loadDownloadableImageTexture(String s, String s1) {
 		RenderEngine renderengine = renderManager.renderEngine;
 		int i = renderengine.getTextureForDownloadableImage(s, s1);
@@ -35,6 +43,7 @@ public abstract class Render {
 			return false;
 		}
 	}
+	 */
 
 	private void renderEntityOnFire(Entity entity, double d, double d1, double d2, float f) {
 		EaglerAdapter.glDisable(2896 /* GL_LIGHTING */);
@@ -49,7 +58,7 @@ public abstract class Render {
 		EaglerAdapter.glTranslatef((float) d, (float) d1, (float) d2);
 		float f5 = entity.width * 1.4F;
 		EaglerAdapter.glScalef(f5, f5, f5);
-		loadTexture("/terrain.png");
+		terrainTexture.bindTexture();
 		Tessellator tessellator = Tessellator.instance;
 		float f6 = 1.0F;
 		float f7 = 0.5F;
@@ -78,7 +87,7 @@ public abstract class Render {
 		EaglerAdapter.glEnable(3042 /* GL_BLEND */);
 		EaglerAdapter.glBlendFunc(770, 771);
 		RenderEngine renderengine = renderManager.renderEngine;
-		renderengine.bindTexture(renderengine.getTexture("%clamp%/misc/shadow.png"));
+		shadowTexture.bindTexture();
 		World world = getWorldFromRenderManager();
 		EaglerAdapter.glDepthMask(false);
 		float f2 = shadowSize;

@@ -15,7 +15,7 @@ public abstract class EntityLiving extends Entity {
 		renderYawOffset = 0.0F;
 		prevRenderYawOffset = 0.0F;
 		field_9358_y = true;
-		texture = "/mob/char.png";
+		//texture = "/mob/char.png";
 		field_9355_A = true;
 		field_9353_B = 0.0F;
 		field_9351_C = null;
@@ -51,10 +51,6 @@ public abstract class EntityLiving extends Entity {
 	public boolean canEntityBeSeen(Entity entity) {
 		return worldObj.rayTraceBlocks(Vec3D.createVector(posX, posY + (double) getEyeHeight(), posZ),
 				Vec3D.createVector(entity.posX, entity.posY + (double) entity.getEyeHeight(), entity.posZ)) == null;
-	}
-
-	public String getEntityTexture() {
-		return texture;
 	}
 
 	public boolean canBeCollidedWith() {
@@ -735,7 +731,7 @@ public abstract class EntityLiving extends Entity {
 	protected float field_9360_w;
 	protected float field_9359_x;
 	protected boolean field_9358_y;
-	protected String texture;
+	//protected String texture;
 	protected boolean field_9355_A;
 	protected float field_9353_B;
 	protected String field_9351_C;

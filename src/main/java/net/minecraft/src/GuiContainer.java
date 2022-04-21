@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
@@ -8,6 +9,8 @@ import net.lax1dude.eaglercraft.EaglerAdapter;
 
 
 public abstract class GuiContainer extends GuiScreen {
+	
+	private static final TextureLocation itemTexture = new TextureLocation("/gui/items.png");
 
 	public GuiContainer(CraftingInventoryCB craftinginventorycb) {
 		xSize = 176;
@@ -92,7 +95,7 @@ public abstract class GuiContainer extends GuiScreen {
 			int k = slot.func_775_c();
 			if (k >= 0) {
 				EaglerAdapter.glDisable(2896 /* GL_LIGHTING */);
-				mc.renderEngine.bindTexture(mc.renderEngine.getTexture("/gui/items.png"));
+				itemTexture.bindTexture();
 				drawTexturedModalRect(i, j, (k % 16) * 16, (k / 16) * 16, 16, 16);
 				EaglerAdapter.glEnable(2896 /* GL_LIGHTING */);
 				return;

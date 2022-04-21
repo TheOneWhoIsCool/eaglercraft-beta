@@ -9,9 +9,12 @@ import java.util.List;
 import java.util.Random;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 import net.minecraft.client.Minecraft;
 
 public class EntityRenderer {
+	
+	private static final TextureLocation terrainTexture = new TextureLocation("/terrain.png");
 
 	public EntityRenderer(Minecraft minecraft) {
 		farPlaneDistance = 0.0F;
@@ -421,7 +424,7 @@ public class EntityRenderer {
 			mc.renderGlobal.updateRenderers(entityliving, false);
 			func_4140_a(0);
 			EaglerAdapter.glEnable(2912 /* GL_FOG */);
-			EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, mc.renderEngine.getTexture("/terrain.png"));
+			terrainTexture.bindTexture();
 			RenderHelper.disableStandardItemLighting();
 			renderglobal.func_943_a(entityliving, 0, f);
 			EaglerAdapter.glShadeModel(7424 /* GL_FLAT */);
@@ -445,7 +448,7 @@ public class EntityRenderer {
 			func_4140_a(0);
 			EaglerAdapter.glEnable(3042 /* GL_BLEND */);
 			EaglerAdapter.glDisable(2884 /* GL_CULL_FACE */);
-			EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, mc.renderEngine.getTexture("/terrain.png"));
+			terrainTexture.bindTexture();
 			if (mc.gameSettings.fancyGraphics) {
 				EaglerAdapter.glColorMask(false, false, false, false);
 				int l = renderglobal.func_943_a(entityliving, 1, f);
@@ -458,7 +461,7 @@ public class EntityRenderer {
 					}
 				}
 				if (l > 0) {
-					renderglobal.func_944_a(1, f);
+					renderglobal.func_943_a(entityliving, 1, f);
 				}
 			} else {
 				renderglobal.func_943_a(entityliving, 1, f);

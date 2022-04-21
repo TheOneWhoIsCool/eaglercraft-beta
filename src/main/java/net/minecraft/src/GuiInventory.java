@@ -1,12 +1,15 @@
 package net.minecraft.src;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
 public class GuiInventory extends GuiContainer {
+	
+	private static final TextureLocation containerTexture = new TextureLocation("/gui/inventory.png");
 
 	public GuiInventory(EntityPlayer entityplayer) {
 		super(entityplayer.inventorySlots);
@@ -24,9 +27,8 @@ public class GuiInventory extends GuiContainer {
 	}
 
 	protected void drawGuiContainerBackgroundLayer(float f) {
-		int i = mc.renderEngine.getTexture("/gui/inventory.png");
 		EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.renderEngine.bindTexture(i);
+		containerTexture.bindTexture();
 		int j = (width - xSize) / 2;
 		int k = (height - ySize) / 2;
 		drawTexturedModalRect(j, k, 0, 0, xSize, ySize);

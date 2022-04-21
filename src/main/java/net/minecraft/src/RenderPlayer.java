@@ -2,6 +2,7 @@ package net.minecraft.src;
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 // Jad home page: http://www.kpdus.com/jad.html
@@ -11,6 +12,16 @@ import net.minecraft.client.Minecraft;
 
 public class RenderPlayer extends RenderLiving {
 
+	private static final String[] armorFilenamePrefix = { "cloth", "chain", "iron", "diamond", "gold" };
+	private static final TextureLocation[][] armorTextures = new TextureLocation[armorFilenamePrefix.length][2];
+	
+	static {
+		for(int i = 0; i < armorFilenamePrefix.length; ++i) {
+			armorTextures[i][0] = new TextureLocation("/armor/" + armorFilenamePrefix[i] + "_1.png");
+			armorTextures[i][1] = new TextureLocation("/armor/" + armorFilenamePrefix[i] + "_2.png");
+		}
+	}
+	
 	public RenderPlayer() {
 		super(new ModelBiped(0.0F), 0.5F);
 		modelBipedMain = (ModelBiped) mainModel;
@@ -24,8 +35,7 @@ public class RenderPlayer extends RenderLiving {
 			Item item = itemstack.getItem();
 			if (item instanceof ItemArmor) {
 				ItemArmor itemarmor = (ItemArmor) item;
-				loadTexture((new StringBuilder()).append("/armor/").append(armorFilenamePrefix[itemarmor.renderIndex])
-						.append("_").append(i != 2 ? 1 : 2).append(".png").toString());
+				armorTextures[itemarmor.renderIndex][i != 2 ? 0 : 1].bindTexture();
 				ModelBiped modelbiped = i != 2 ? modelArmorChestplate : modelArmor;
 				modelbiped.bipedHead.showModel = i == 0;
 				modelbiped.bipedHeadwear.showModel = i == 0;
@@ -279,6 +289,13 @@ public class RenderPlayer extends RenderLiving {
 	private ModelBiped modelBipedMain;
 	private ModelBiped modelArmorChestplate;
 	private ModelBiped modelArmor;
-	private static final String armorFilenamePrefix[] = { "cloth", "chain", "iron", "diamond", "gold" };
+	
+	private static final TextureLocation defaultPlayerSkin = new TextureLocation("/mob/char.png");
+	
+	@Override
+	protected boolean loadDownloadableImageTexture(String s, String s1) {
+		defaultPlayerSkin.bindTexture();
+		return true;
+	}
 
 }

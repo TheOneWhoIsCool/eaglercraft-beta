@@ -2,6 +2,7 @@ package net.minecraft.src;
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 // Jad home page: http://www.kpdus.com/jad.html
@@ -10,6 +11,10 @@ import net.lax1dude.eaglercraft.adapter.Tessellator;
 import net.minecraft.client.Minecraft;
 
 public class ItemRenderer {
+	
+	private static final TextureLocation terrainTexture = new TextureLocation("/terrain.png");
+	private static final TextureLocation itemsTextures = new TextureLocation("/gui/items.png");
+	private static final TextureLocation waterTexture = new TextureLocation("/misc/water.png");
 
 	public ItemRenderer(Minecraft minecraft) {
 		itemToRender = null;
@@ -23,13 +28,13 @@ public class ItemRenderer {
 	public void renderItem(ItemStack itemstack) {
 		EaglerAdapter.glPushMatrix();
 		if (itemstack.itemID < 256 && RenderBlocks.func_1219_a(Block.blocksList[itemstack.itemID].getRenderType())) {
-			EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, mc.renderEngine.getTexture("/terrain.png"));
+			terrainTexture.bindTexture();
 			field_1357_e.func_1227_a(Block.blocksList[itemstack.itemID], itemstack.getItemDamage());
 		} else {
 			if (itemstack.itemID < 256) {
-				EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, mc.renderEngine.getTexture("/terrain.png"));
+				terrainTexture.bindTexture();
 			} else {
-				EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, mc.renderEngine.getTexture("/gui/items.png"));
+				itemsTextures.bindTexture();
 			}
 			Tessellator tessellator = Tessellator.instance;
 			float f = ((float) ((itemstack.getIconIndex() % 16) * 16) + 0.0F) / 256F;
@@ -202,24 +207,21 @@ public class ItemRenderer {
 	public void renderOverlays(float f) {
 		EaglerAdapter.glDisable(3008 /* GL_ALPHA_TEST */);
 		if (mc.thePlayer.func_21062_U()) {
-			int i = mc.renderEngine.getTexture("/terrain.png");
-			EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, i);
+			terrainTexture.bindTexture();
 			renderFireInFirstPerson(f);
 		}
 		if (mc.thePlayer.func_345_I()) {
 			int j = MathHelper.floor_double(mc.thePlayer.posX);
 			int l = MathHelper.floor_double(mc.thePlayer.posY);
 			int i1 = MathHelper.floor_double(mc.thePlayer.posZ);
-			int j1 = mc.renderEngine.getTexture("/terrain.png");
-			EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, j1);
+			terrainTexture.bindTexture();
 			int k1 = mc.theWorld.getBlockId(j, l, i1);
 			if (Block.blocksList[k1] != null) {
 				renderInsideOfBlock(f, Block.blocksList[k1].getBlockTextureFromSide(2));
 			}
 		}
 		if (mc.thePlayer.isInsideOfMaterial(Material.water)) {
-			int k = mc.renderEngine.getTexture("/misc/water.png");
-			EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, k);
+			waterTexture.bindTexture();
 			renderWarpedTextureOverlay(f);
 		}
 		EaglerAdapter.glEnable(3008 /* GL_ALPHA_TEST */);
