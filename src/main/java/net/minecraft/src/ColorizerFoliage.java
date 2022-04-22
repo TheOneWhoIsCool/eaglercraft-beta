@@ -4,8 +4,9 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
+
+import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglerImage;
 
 public class ColorizerFoliage {
 
@@ -13,6 +14,9 @@ public class ColorizerFoliage {
 	}
 
 	public static int getFoliageColor(double d, double d1) {
+		if(foliageBuffer == null) {
+			foliageBuffer = EaglerImage.loadImage(EaglerAdapter.loadResourceBytes("/misc/foliagecolor.png")).data;
+		}
 		d1 *= d;
 		int i = (int) ((1.0D - d) * 255D);
 		int j = (int) ((1.0D - d1) * 255D);
@@ -26,24 +30,7 @@ public class ColorizerFoliage {
 	public static int func_21174_b() {
 		return 0x80a755;
 	}
+	
+	private static int foliageBuffer[] = null;
 
-	static Class _mthclass$(String s) {
-		try {
-			return Class.forName(s);
-		} catch (ClassNotFoundException classnotfoundexception) {
-			throw new NoClassDefFoundError(classnotfoundexception.getMessage());
-		}
-	}
-
-	private static final int foliageBuffer[];
-
-	static {
-		foliageBuffer = new int[0x10000];
-		try {
-			BufferedImage bufferedimage = ImageIO.read((ColorizerFoliage.class).getResource("/misc/foliagecolor.png"));
-			bufferedimage.getRGB(0, 0, 256, 256, foliageBuffer, 0, 256);
-		} catch (Exception exception) {
-			exception.printStackTrace();
-		}
-	}
 }

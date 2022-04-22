@@ -4,27 +4,21 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
+
+import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglerImage;
 import net.minecraft.client.Minecraft;
 
 public class TextureCompassFX extends TextureFX {
 
 	public TextureCompassFX(Minecraft minecraft) {
 		super(Item.compass.getIconIndex(null));
-		field_4230_h = new int[256];
 		mc = minecraft;
 		tileImage = 1;
-		try {
-			BufferedImage bufferedimage = ImageIO
-					.read((net.minecraft.client.Minecraft.class).getResource("/gui/items.png"));
-			int i = (iconIndex % 16) * 16;
-			int j = (iconIndex / 16) * 16;
-			bufferedimage.getRGB(i, j, 16, 16, field_4230_h, 0, 16);
-		} catch (IOException ioexception) {
-			ioexception.printStackTrace();
-		}
+		EaglerImage bufferedimage = EaglerImage.loadImage(EaglerAdapter.loadResourceBytes("/gui/items.png"));
+		int i = (iconIndex % 16) * 16;
+		int j = (iconIndex / 16) * 16;
+		field_4230_h = bufferedimage.getSubImage(i, j, 16, 16).data;
 	}
 
 	public void onTick() {

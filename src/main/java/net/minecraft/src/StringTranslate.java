@@ -7,12 +7,14 @@ package net.minecraft.src;
 import java.io.IOException;
 import java.util.Properties;
 
+import net.lax1dude.eaglercraft.EaglerAdapter;
+
 public class StringTranslate {
 
 	private StringTranslate() {
 		translateTable = new Properties();
 		try {
-			translateTable.load((StringTranslate.class).getResourceAsStream("/lang/en_US.lang"));
+			translateTable.load(EaglerAdapter.loadResource("/lang/en_US.lang"));
 		} catch (IOException ioexception) {
 			ioexception.printStackTrace();
 		}

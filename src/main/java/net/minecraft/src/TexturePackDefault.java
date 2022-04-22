@@ -4,11 +4,6 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-
-import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.minecraft.client.Minecraft;
 
@@ -20,20 +15,23 @@ public class TexturePackDefault extends TexturePackBase {
 		texturePackName = -1;
 		texturePackFileName = "Default";
 		firstDescriptionLine = "The default look of Minecraft";
+		/*
 		try {
 			texturePackThumbnail = ImageIO.read((TexturePackDefault.class).getResource("/pack.png"));
 		} catch (IOException ioexception) {
 			ioexception.printStackTrace();
 		}
+		*/
 	}
 
 	public void func_6484_b(Minecraft minecraft) {
-		if (texturePackThumbnail != null) {
-			minecraft.renderEngine.deleteTexture(texturePackName);
-		}
+		//if (texturePackThumbnail != null) {
+		//	minecraft.renderEngine.deleteTexture(texturePackName);
+		//}
 	}
 
 	public void func_6483_c(Minecraft minecraft) {
+		/*
 		if (texturePackThumbnail != null && texturePackName < 0) {
 			texturePackName = minecraft.renderEngine.allocateAndSetupTexture(texturePackThumbnail);
 		}
@@ -42,8 +40,10 @@ public class TexturePackDefault extends TexturePackBase {
 		} else {
 			unknownPack.bindTexture();
 		}
+		*/
+		unknownPack.bindTexture();
 	}
 
 	private int texturePackName;
-	private BufferedImage texturePackThumbnail;
+	//private BufferedImage texturePackThumbnail;
 }

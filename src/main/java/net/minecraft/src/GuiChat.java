@@ -30,7 +30,11 @@ public class GuiChat extends GuiScreen {
 			String string;
 			String string2 = this.field_985_a.trim();
 			if (string2.length() > 0 && !this.mc.func_22003_b(string = this.field_985_a.trim())) {
-				this.mc.thePlayer.sendChatMessage(string);
+				if(mc.isMultiplayerWorld()) {
+					this.mc.thePlayer.sendChatMessage(string);
+				}else {
+					this.mc.ingameGUI.addChatMessage(string);
+				}
 			}
 			this.mc.displayGuiScreen(null);
 			return;

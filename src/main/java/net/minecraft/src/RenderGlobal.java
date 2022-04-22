@@ -535,13 +535,6 @@ public class RenderGlobal implements IWorldAccess {
 		return l;
 	}
 
-	public void func_944_a(int i, double d) {
-		for (int j = 0; j < field_1414_S.length; j++) {
-			field_1414_S[j].func_860_a();
-		}
-
-	}
-
 	public void func_945_d() {
 		field_1435_x++;
 	}
@@ -985,7 +978,7 @@ public class RenderGlobal implements IWorldAccess {
 						movingobjectposition.blockZ);
 				Block block = k <= 0 ? null : Block.blocksList[k];
 				EaglerAdapter.glDisable(3008 /* GL_ALPHA_TEST */);
-				EaglerAdapter.glPolygonOffset(-3F, -3F);
+				EaglerAdapter.glPolygonOffset(3F, 3F);
 				EaglerAdapter.glEnable(32823 /* GL_POLYGON_OFFSET_FILL */);
 				tessellator.startDrawingQuads();
 				double d = entityplayer.lastTickPosX + (entityplayer.posX - entityplayer.lastTickPosX) * (double) f;
@@ -1201,22 +1194,22 @@ public class RenderGlobal implements IWorldAccess {
 	}
 
 	public void obtainEntitySkin(Entity entity) {
-		entity.updateCloak();
-		if (entity.skinUrl != null) {
-			renderEngine.obtainImageData(entity.skinUrl, new ImageBufferDownload());
-		}
-		if (entity.cloakUrl != null) {
-			renderEngine.obtainImageData(entity.cloakUrl, new ImageBufferDownload());
-		}
+		//entity.updateCloak();
+		//if (entity.skinUrl != null) {
+		//	renderEngine.obtainImageData(entity.skinUrl, new ImageBufferDownload());
+		//}
+		//if (entity.cloakUrl != null) {
+		//	renderEngine.obtainImageData(entity.cloakUrl, new ImageBufferDownload());
+		//}
 	}
 
 	public void releaseEntitySkin(Entity entity) {
-		if (entity.skinUrl != null) {
-			renderEngine.releaseImageData(entity.skinUrl);
-		}
-		if (entity.cloakUrl != null) {
-			renderEngine.releaseImageData(entity.cloakUrl);
-		}
+		//if (entity.skinUrl != null) {
+		//	renderEngine.releaseImageData(entity.skinUrl);
+		//}
+		//if (entity.cloakUrl != null) {
+		//	renderEngine.releaseImageData(entity.cloakUrl);
+		//}
 	}
 
 	public void updateAllRenderers() {
@@ -1270,7 +1263,6 @@ public class RenderGlobal implements IWorldAccess {
 	private int field_1416_Q;
 	private int field_21156_R;
 	private List field_1415_R;
-	private RenderList field_1414_S[] = { new RenderList(), new RenderList(), new RenderList(), new RenderList() };
 	int field_1455_d;
 	int field_1454_e;
 	double field_1453_f;

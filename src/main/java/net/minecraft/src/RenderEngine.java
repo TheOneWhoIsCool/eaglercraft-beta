@@ -4,22 +4,16 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
-import javax.imageio.ImageIO;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglerImage;
 import net.lax1dude.eaglercraft.TextureLocation;
 
 public class RenderEngine {
@@ -49,9 +43,10 @@ public class RenderEngine {
 			singleIntBuffer.clear();
 			GLAllocation.generateTextureNames(singleIntBuffer);
 			int i = singleIntBuffer.get(0);
-			if (s.startsWith("##")) {
-				setupTexture(unwrapImageByColumns(readTextureImage(texturepackbase.func_6481_a(s.substring(2)))), i);
-			} else if (s.startsWith("%clamp%")) {
+			//if (s.startsWith("##")) {
+			//	setupTexture(unwrapImageByColumns(readTextureImage(texturepackbase.func_6481_a(s.substring(2)))), i);
+			//} else 
+			if (s.startsWith("%clamp%")) {
 				clampTexture = true;
 				setupTexture(readTextureImage(texturepackbase.func_6481_a(s.substring(7))), i);
 				clampTexture = false;
@@ -72,7 +67,7 @@ public class RenderEngine {
 			throw new RuntimeException("!!");
 		}
 	}
-
+/*
 	private BufferedImage unwrapImageByColumns(BufferedImage bufferedimage) {
 		int i = bufferedimage.getWidth() / 16;
 		BufferedImage bufferedimage1 = new BufferedImage(16, bufferedimage.getHeight() * i, 2);
@@ -84,8 +79,8 @@ public class RenderEngine {
 		g.dispose();
 		return bufferedimage1;
 	}
-
-	public int allocateAndSetupTexture(BufferedImage bufferedimage) {
+*/
+	public int allocateAndSetupTexture(EaglerImage bufferedimage) {
 		singleIntBuffer.clear();
 		GLAllocation.generateTextureNames(singleIntBuffer);
 		int i = singleIntBuffer.get(0);
@@ -94,7 +89,7 @@ public class RenderEngine {
 		return i;
 	}
 
-	public void setupTexture(BufferedImage bufferedimage, int i) {
+	public void setupTexture(EaglerImage bufferedimage, int i) {
 		EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, i);
 		if (useMipmaps) {
 			EaglerAdapter.glTexParameteri(3553 /* GL_TEXTURE_2D */, 10241 /* GL_TEXTURE_MIN_FILTER */, EaglerAdapter.GL_NEAREST_MIPMAP_LINEAR);
@@ -115,16 +110,15 @@ public class RenderEngine {
 			EaglerAdapter.glTexParameteri(3553 /* GL_TEXTURE_2D */, 10242 /* GL_TEXTURE_WRAP_S */, 10497 /* GL_REPEAT */);
 			EaglerAdapter.glTexParameteri(3553 /* GL_TEXTURE_2D */, 10243 /* GL_TEXTURE_WRAP_T */, 10497 /* GL_REPEAT */);
 		}
-		int j = bufferedimage.getWidth();
-		int k = bufferedimage.getHeight();
-		int ai[] = new int[j * k];
+		int j = bufferedimage.w;
+		int k = bufferedimage.h;
+		int ai[] = bufferedimage.data;
 		byte abyte0[] = new byte[j * k * 4];
-		bufferedimage.getRGB(0, 0, j, k, ai, 0, j);
 		for (int l = 0; l < ai.length; l++) {
 			int j1 = ai[l] >> 24 & 0xff;
 			int l1 = ai[l] >> 16 & 0xff;
 			int j2 = ai[l] >> 8 & 0xff;
-			int l2 = ai[l] & 0xff;
+			int l2 = ai[l] >> 0 & 0xff;
 			if (options != null && options.anaglyph) {
 				int j3 = (l1 * 30 + j2 * 59 + l2 * 11) / 100;
 				int l3 = (l1 * 30 + j2 * 70) / 100;
@@ -138,7 +132,6 @@ public class RenderEngine {
 			abyte0[l * 4 + 2] = (byte) l2;
 			abyte0[l * 4 + 3] = (byte) j1;
 		}
-
 		imageDataB1.clear();
 		imageDataB1.put(abyte0);
 		imageDataB1.position(0).limit(abyte0.length);
@@ -177,6 +170,7 @@ public class RenderEngine {
 	}
 
 	public int getTextureForDownloadableImage(String s, String s1) {
+		/*
 		ThreadDownloadImageData threaddownloadimagedata = (ThreadDownloadImageData) urlToImageDataMap.get(s);
 		if (threaddownloadimagedata != null && threaddownloadimagedata.image != null
 				&& !threaddownloadimagedata.textureSetupComplete) {
@@ -196,8 +190,10 @@ public class RenderEngine {
 		} else {
 			return threaddownloadimagedata.textureName;
 		}
+		*/
+		return getTexture("/mob/char.png");
 	}
-
+/*
 	public ThreadDownloadImageData obtainImageData(String s, ImageBuffer imagebuffer) {
 		ThreadDownloadImageData threaddownloadimagedata = (ThreadDownloadImageData) urlToImageDataMap.get(s);
 		if (threaddownloadimagedata == null) {
@@ -220,7 +216,7 @@ public class RenderEngine {
 			}
 		}
 	}
-
+*/
 	public void registerTextureFX(TextureFX texturefx) {
 		textureList.add(texturefx);
 		texturefx.onTick();
@@ -327,7 +323,7 @@ public class RenderEngine {
 		return ((k + l >> 1) << 24) + ((i & 0xfefefe) + (j & 0xfefefe) >> 1);
 		
 	}
-
+/*
 	private int weightedAverageColor(int i, int j) {
 		int k = (i & 0xff000000) >> 24 & 0xff;
 		int l = (j & 0xff000000) >> 24 & 0xff;
@@ -348,31 +344,34 @@ public class RenderEngine {
 		int i3 = (k1 + j2) / (k + l);
 		return c << 24 | k2 << 16 | l2 << 8 | i3;
 	}
-
+*/
 	public void refreshTextures() {
 		TextureLocation.freeTextures();
 		TexturePackBase texturepackbase = field_6527_k.selectedTexturePack;
 		int i;
-		BufferedImage bufferedimage;
+		EaglerImage bufferedimage;
 		for (Iterator iterator = textureNameToImageMap.keySet().iterator(); iterator
 				.hasNext(); setupTexture(bufferedimage, i)) {
 			i = ((Integer) iterator.next()).intValue();
-			bufferedimage = (BufferedImage) textureNameToImageMap.get(Integer.valueOf(i));
+			bufferedimage = (EaglerImage) textureNameToImageMap.get(Integer.valueOf(i));
 		}
 
-		for (Iterator iterator1 = urlToImageDataMap.values().iterator(); iterator1.hasNext();) {
-			ThreadDownloadImageData threaddownloadimagedata = (ThreadDownloadImageData) iterator1.next();
-			threaddownloadimagedata.textureSetupComplete = false;
-		}
+		//for (Iterator iterator1 = urlToImageDataMap.values().iterator(); iterator1.hasNext();) {
+		//	ThreadDownloadImageData threaddownloadimagedata = (ThreadDownloadImageData) iterator1.next();
+		//	threaddownloadimagedata.textureSetupComplete = false;
+		//}
 
 		for (Iterator iterator2 = textureMap.keySet().iterator(); iterator2.hasNext();) {
 			String s = (String) iterator2.next();
 			try {
-				BufferedImage bufferedimage1;
+				EaglerImage bufferedimage1;
+				/*
 				if (s.startsWith("##")) {
 					bufferedimage1 = unwrapImageByColumns(
 							readTextureImage(texturepackbase.func_6481_a(s.substring(2))));
-				} else if (s.startsWith("%clamp%")) {
+				} else
+				*/
+				if (s.startsWith("%clamp%")) {
 					clampTexture = true;
 					bufferedimage1 = readTextureImage(texturepackbase.func_6481_a(s.substring(7)));
 				} else if (s.startsWith("%blur%")) {
@@ -392,10 +391,8 @@ public class RenderEngine {
 
 	}
 
-	private BufferedImage readTextureImage(InputStream inputstream) throws IOException {
-		BufferedImage bufferedimage = ImageIO.read(inputstream);
-		inputstream.close();
-		return bufferedimage;
+	private EaglerImage readTextureImage(byte[] inputstream) throws IOException {
+		return EaglerImage.loadImage(inputstream);
 	}
 
 	public void bindTexture(int i) {

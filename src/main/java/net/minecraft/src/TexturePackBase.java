@@ -5,6 +5,8 @@ package net.minecraft.src;
 // Decompiler options: packimports(3) braces deadcode 
 
 import java.io.InputStream;
+
+import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.minecraft.client.Minecraft;
 
 public abstract class TexturePackBase {
@@ -27,8 +29,8 @@ public abstract class TexturePackBase {
 	public void func_6483_c(Minecraft minecraft) {
 	}
 
-	public InputStream func_6481_a(String s) {
-		return (TexturePackBase.class).getResourceAsStream(s);
+	public byte[] func_6481_a(String s) {
+		return EaglerAdapter.loadResourceBytes(s);
 	}
 
 	public String texturePackFileName;

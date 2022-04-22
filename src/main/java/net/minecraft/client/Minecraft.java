@@ -60,7 +60,7 @@ public class Minecraft implements Runnable {
 		mcDataDir = getMinecraftDir();
 		field_22008_V = new SaveConverterMcRegion(new File(mcDataDir, "saves"));
 		gameSettings = new GameSettings(this, mcDataDir);
-		texturePackList = new TexturePackList(this, mcDataDir);
+		texturePackList = new TexturePackList(this);
 		renderEngine = new RenderEngine(texturePackList, gameSettings);
 		fontRenderer = new FontRenderer(gameSettings, "/font/default.png", renderEngine);
 		checkGLError("Pre startup");
@@ -677,7 +677,7 @@ public class Minecraft implements Runnable {
 							if (EaglerAdapter.getEventKey() == gameSettings.keyBindDrop.keyCode) {
 								thePlayer.dropCurrentItem();
 							}
-							if (isMultiplayerWorld() && EaglerAdapter.getEventKey() == gameSettings.keyBindChat.keyCode) {
+							if (EaglerAdapter.getEventKey() == gameSettings.keyBindChat.keyCode) {
 								displayGuiScreen(new GuiChat());
 							}
 						}
@@ -1007,8 +1007,10 @@ public class Minecraft implements Runnable {
 	}
 
 	public boolean func_22003_b(String s) {
-		if (!s.startsWith("/"))
-			;
+		if (s.startsWith("/")) {
+
+			return true;
+		}
 		return false;
 	}
 

@@ -7,6 +7,9 @@ package net.minecraft.src;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+
+import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglerImage;
 import net.minecraft.client.Minecraft;
 
 public class TextureWatchFX extends TextureFX {
@@ -17,17 +20,11 @@ public class TextureWatchFX extends TextureFX {
 		field_4223_i = new int[256];
 		field_4225_g = minecraft;
 		tileImage = 1;
-		try {
-			BufferedImage bufferedimage = ImageIO
-					.read((net.minecraft.client.Minecraft.class).getResource("/gui/items.png"));
-			int i = (iconIndex % 16) * 16;
-			int j = (iconIndex / 16) * 16;
-			bufferedimage.getRGB(i, j, 16, 16, field_4224_h, 0, 16);
-			bufferedimage = ImageIO.read((net.minecraft.client.Minecraft.class).getResource("/misc/dial.png"));
-			bufferedimage.getRGB(0, 0, 16, 16, field_4223_i, 0, 16);
-		} catch (IOException ioexception) {
-			ioexception.printStackTrace();
-		}
+		EaglerImage bufferedimage = EaglerImage.loadImage(EaglerAdapter.loadResourceBytes("/gui/items.png"));
+		int i = (iconIndex % 16) * 16;
+		int j = (iconIndex / 16) * 16;
+		field_4224_h = bufferedimage.getSubImage(i, j, 16, 16).data;
+		field_4223_i = EaglerImage.loadImage(EaglerAdapter.loadResourceBytes("/misc/dial.png")).data;
 	}
 
 	public void onTick() {

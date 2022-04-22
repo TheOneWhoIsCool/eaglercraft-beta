@@ -4,22 +4,22 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import net.minecraft.client.Minecraft;
 
 public class TexturePackList {
 
-	public TexturePackList(Minecraft minecraft, File file) {
+	public TexturePackList(Minecraft minecraft) {
 		availableTexturePacks = new ArrayList();
 		defaultTexturePack = new TexturePackDefault();
 		field_6538_d = new HashMap();
 		mc = minecraft;
+		/*
 		texturePackDir = new File(file, "texturepacks");
 		if (!texturePackDir.exists()) {
 			texturePackDir.mkdirs();
 		}
+		*/
 		currentTexturePack = minecraft.gameSettings.skin;
 		func_6532_a();
 		selectedTexturePack.func_6482_a();
@@ -43,6 +43,7 @@ public class TexturePackList {
 		ArrayList arraylist = new ArrayList();
 		selectedTexturePack = null;
 		arraylist.add(defaultTexturePack);
+		/*
 		if (texturePackDir.exists() && texturePackDir.isDirectory()) {
 			File afile[] = texturePackDir.listFiles();
 			File afile1[] = afile;
@@ -68,6 +69,7 @@ public class TexturePackList {
 			}
 
 		}
+		*/
 		if (selectedTexturePack == null) {
 			selectedTexturePack = defaultTexturePack;
 		}
@@ -91,6 +93,5 @@ public class TexturePackList {
 	public TexturePackBase selectedTexturePack;
 	private Map field_6538_d;
 	private Minecraft mc;
-	private File texturePackDir;
 	private String currentTexturePack;
 }

@@ -4,12 +4,10 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.nio.IntBuffer;
-import javax.imageio.ImageIO;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglerImage;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 public class FontRenderer {
@@ -17,16 +15,10 @@ public class FontRenderer {
 	public FontRenderer(GameSettings gamesettings, String s, RenderEngine renderengine) {
 		charWidth = new int[256];
 		fontTextureName = 0;
-		BufferedImage bufferedimage;
-		try {
-			bufferedimage = ImageIO.read((RenderEngine.class).getResourceAsStream(s));
-		} catch (IOException ioexception) {
-			throw new RuntimeException(ioexception);
-		}
-		int i = bufferedimage.getWidth();
-		int j = bufferedimage.getHeight();
-		int ai[] = new int[i * j];
-		bufferedimage.getRGB(0, 0, i, j, ai, 0, i);
+		EaglerImage bufferedimage = EaglerImage.loadImage(EaglerAdapter.loadResourceBytes(s));
+		int i = bufferedimage.w;
+		int j = bufferedimage.h;
+		int ai[] = bufferedimage.data;
 		for (int k = 0; k < 256; k++) {
 			int l = k % 16;
 			int k1 = k / 16;

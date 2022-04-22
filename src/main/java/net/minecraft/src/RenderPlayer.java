@@ -123,6 +123,7 @@ public class RenderPlayer extends RenderLiving {
 			renderManager.itemRenderer.renderItem(itemstack);
 			EaglerAdapter.glPopMatrix();
 		}
+		/*
 		if (entityplayer.username.equals("deadmau5") && loadDownloadableImageTexture(entityplayer.skinUrl, null)) {
 			for (int i = 0; i < 2; i++) {
 				float f2 = (entityplayer.prevRotationYaw
@@ -145,6 +146,8 @@ public class RenderPlayer extends RenderLiving {
 			}
 
 		}
+		*/
+		/*
 		if (loadDownloadableImageTexture(entityplayer.field_20067_q, null)) {
 			EaglerAdapter.glPushMatrix();
 			EaglerAdapter.glTranslatef(0.0F, 0.0F, 0.125F);
@@ -185,6 +188,7 @@ public class RenderPlayer extends RenderLiving {
 			modelBipedMain.renderCloak(0.0625F);
 			EaglerAdapter.glPopMatrix();
 		}
+		*/
 		ItemStack itemstack1 = entityplayer.inventory.getCurrentItem();
 		if (itemstack1 != null) {
 			EaglerAdapter.glPushMatrix();

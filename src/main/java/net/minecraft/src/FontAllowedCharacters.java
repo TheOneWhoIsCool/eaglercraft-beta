@@ -7,6 +7,8 @@ package net.minecraft.src;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import net.lax1dude.eaglercraft.EaglerAdapter;
+
 public class FontAllowedCharacters {
 
 	public FontAllowedCharacters() {
@@ -15,8 +17,7 @@ public class FontAllowedCharacters {
 	private static String getAllowedCharacters() {
 		String s = "";
 		try {
-			BufferedReader bufferedreader = new BufferedReader(
-					new InputStreamReader((FontAllowedCharacters.class).getResourceAsStream("/font.txt"), "UTF-8"));
+			BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(EaglerAdapter.loadResource("/font.txt"), "UTF-8"));
 			String s1 = "";
 			do {
 				String s2;
@@ -34,7 +35,6 @@ public class FontAllowedCharacters {
 	}
 
 	public static final String allowedCharacters = getAllowedCharacters();
-	public static final char field_22286_b[] = { '/', '\n', '\r', '\t', '\0', '\f', '`', '?', '*', '\\', '<', '>', '|',
-			'"', ':' };
+	public static final char field_22286_b[] = { '/', '\n', '\r', '\t', '\0', '\f', '`', '?', '*', '\\', '<', '>', '|', '"', ':' };
 
 }

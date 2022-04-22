@@ -108,9 +108,9 @@ void main(){
 	
 #ifdef CC_unit0
 #ifdef CC_a_texture0
-	color *= texture(tex0, (matrix_t * vec4(v_texture0, 0.0, 1.0)).xy).bgra;
+	color *= texture(tex0, (matrix_t * vec4(v_texture0, 0.0, 1.0)).xy).rgba;
 #else
-	color *= texture(tex0, (matrix_t * vec4(texCoordV0, 0.0, 1.0)).xy).bgra;
+	color *= texture(tex0, (matrix_t * vec4(texCoordV0, 0.0, 1.0)).xy).rgba;
 #endif
 #endif
 
