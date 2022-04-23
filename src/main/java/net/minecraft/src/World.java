@@ -1452,6 +1452,9 @@ public class World implements IBlockAccess {
 		if (l1 % (long) autosavePeriod == 0L) {
 			saveWorld(false, null);
 		}
+		if(l1 % 24000 > 12000) {
+			l1 += 12000;
+		}
 		worldinfo.setWorldTime(l1);
 		TickUpdates(false);
 		func_4080_j();

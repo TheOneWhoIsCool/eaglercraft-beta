@@ -29,7 +29,7 @@ public class RenderSorter implements Comparator {
 		if (d > d1) {
 			return -1;
 		} else {
-			return worldrenderer.field_1735_w >= worldrenderer1.field_1735_w ? -1 : 1;
+			return worldrenderer.chunkIndex >= worldrenderer1.chunkIndex ? -1 : 1;
 		}
 	}
 

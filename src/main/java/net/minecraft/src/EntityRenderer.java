@@ -10,6 +10,7 @@ import java.util.Random;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.TextureLocation;
+import net.lax1dude.eaglercraft.glemu.EffectPipelineFXAA;
 import net.minecraft.client.Minecraft;
 
 public class EntityRenderer {
@@ -426,7 +427,7 @@ public class EntityRenderer {
 			EaglerAdapter.glEnable(2912 /* GL_FOG */);
 			terrainTexture.bindTexture();
 			RenderHelper.disableStandardItemLighting();
-			renderglobal.func_943_a(entityliving, 0, f);
+			renderglobal.sortAndRender(entityliving, 0, f);
 			EaglerAdapter.glShadeModel(7424 /* GL_FLAT */);
 			RenderHelper.enableStandardItemLighting();
 			renderglobal.func_951_a(entityliving.getPosition(f), frustrum, f);
@@ -451,7 +452,7 @@ public class EntityRenderer {
 			terrainTexture.bindTexture();
 			if (mc.gameSettings.fancyGraphics) {
 				EaglerAdapter.glColorMask(false, false, false, false);
-				int l = renderglobal.func_943_a(entityliving, 1, f);
+				int l = renderglobal.sortAndRender(entityliving, 1, f);
 				EaglerAdapter.glColorMask(true, true, true, true);
 				if (mc.gameSettings.anaglyph) {
 					if (i == 0) {
@@ -461,10 +462,10 @@ public class EntityRenderer {
 					}
 				}
 				if (l > 0) {
-					renderglobal.func_943_a(entityliving, 1, f);
+					renderglobal.sortAndRender(entityliving, 1, f);
 				}
 			} else {
-				renderglobal.func_943_a(entityliving, 1, f);
+				renderglobal.sortAndRender(entityliving, 1, f);
 			}
 			EaglerAdapter.glDepthMask(true);
 			EaglerAdapter.glEnable(2884 /* GL_CULL_FACE */);

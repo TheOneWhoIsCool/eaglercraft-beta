@@ -17,7 +17,7 @@ public class RenderGlobal implements IWorldAccess {
 	public RenderGlobal(Minecraft minecraft, RenderEngine renderengine) {
 		tileEntities = new ArrayList();
 		worldRenderersToUpdate = new ArrayList();
-		field_1436_w = false;
+		field_1436_w = true;
 		field_1435_x = 0;
 		renderDistance = -1;
 		field_1424_I = 2;
@@ -33,16 +33,13 @@ public class RenderGlobal implements IWorldAccess {
 		mc = minecraft;
 		renderEngine = renderengine;
 		byte byte0 = 64;
-		field_1440_s = GLAllocation.generateDisplayLists(byte0 * byte0 * byte0 * 3);
-		field_1436_w = false; //minecraft.func_6251_l().checkARBOcclusion();
-		if (field_1436_w) {
-			field_1456_c.clear();
-			field_1437_v = GLAllocation.createDirectIntBuffer(byte0 * byte0 * byte0);
-			field_1437_v.clear();
-			field_1437_v.position(0);
-			field_1437_v.limit(byte0 * byte0 * byte0);
-			//ARBOcclusionQuery.glGenQueriesARB(field_1437_v);
+		renderListBase = GLAllocation.generateDisplayLists(byte0 * byte0 * byte0 * 2);
+		this.glOcclusionQuery = new int[byte0 * byte0 * byte0]; 
+		for(int i = 0; i < glOcclusionQuery.length; ++i) {
+			this.glOcclusionQuery[i] = -1;
 		}
+		this.occlusionQueryAvailable = new boolean[glOcclusionQuery.length];
+		this.occlusionQueryStalled = new long[occlusionQueryAvailable.length];
 		field_1434_y = GLAllocation.generateDisplayLists(3);
 		EaglerAdapter.glPushMatrix();
 		EaglerAdapter.glNewList(field_1434_y, 4864 /* GL_COMPILE */);
@@ -188,37 +185,37 @@ public class RenderGlobal implements IWorldAccess {
 			for (int k1 = 0; k1 < renderChunksTall; k1++) {
 				for (int l1 = 0; l1 < renderChunksDeep; l1++) {
 					worldRenderers[(l1 * renderChunksTall + k1) * renderChunksWide + j1] = new WorldRenderer(worldObj,
-							tileEntities, j1 * 16, k1 * 16, l1 * 16, 16, field_1440_s + k);
-					if (field_1436_w) {
-						worldRenderers[(l1 * renderChunksTall + k1) * renderChunksWide + j1].field_1732_z = field_1437_v
-								.get(l);
-					}
+							tileEntities, j1 * 16, k1 * 16, l1 * 16, 16, renderListBase + k);
 					worldRenderers[(l1 * renderChunksTall + k1) * renderChunksWide
 							+ j1].isWaitingOnOcclusionQuery = false;
 					worldRenderers[(l1 * renderChunksTall + k1) * renderChunksWide + j1].isVisible = true;
 					worldRenderers[(l1 * renderChunksTall + k1) * renderChunksWide + j1].isInFrustum = true;
-					worldRenderers[(l1 * renderChunksTall + k1) * renderChunksWide + j1].field_1735_w = l++;
+					worldRenderers[(l1 * renderChunksTall + k1) * renderChunksWide + j1].chunkIndex = l++;
 					worldRenderers[(l1 * renderChunksTall + k1) * renderChunksWide + j1].markDirty();
 					sortedWorldRenderers[(l1 * renderChunksTall + k1) * renderChunksWide
 							+ j1] = worldRenderers[(l1 * renderChunksTall + k1) * renderChunksWide + j1];
 					worldRenderersToUpdate.add(worldRenderers[(l1 * renderChunksTall + k1) * renderChunksWide + j1]);
-					k += 3;
+					k += 2;
 				}
 
 			}
 
 		}
 
+		forceMarkForNewPosition();
+		field_1424_I = 2;
+	}
+	
+	public void forceMarkForNewPosition() {
 		if (worldObj != null) {
 			EntityLiving entityliving = mc.field_22009_h;
 			if (entityliving != null) {
-				func_956_b(MathHelper.floor_double(((Entity) (entityliving)).posX),
+				markRenderersForNewPosition(MathHelper.floor_double(((Entity) (entityliving)).posX),
 						MathHelper.floor_double(((Entity) (entityliving)).posY),
 						MathHelper.floor_double(((Entity) (entityliving)).posZ));
 				Arrays.sort(sortedWorldRenderers, new EntitySorter(entityliving));
 			}
 		}
-		field_1424_I = 2;
 	}
 
 	public void func_951_a(Vec3D vec3d, ICamera icamera, float f) {
@@ -275,8 +272,12 @@ public class RenderGlobal implements IWorldAccess {
 		return (new StringBuilder()).append("E: ").append(field_1422_K).append("/").append(field_1423_J).append(". B: ")
 				.append(field_1421_L).append(", I: ").append(field_1423_J - field_1421_L - field_1422_K).toString();
 	}
-
-	private void func_956_b(int i, int j, int k) {
+	
+	/**
+	 * Goes through all the renderers setting new positions on them and those that
+	 * have their position changed are adding to be updated
+	 */
+	private void markRenderersForNewPosition(int i, int j, int k) {
 		i -= 8;
 		j -= 8;
 		k -= 8;
@@ -326,7 +327,7 @@ public class RenderGlobal implements IWorldAccess {
 					}
 					WorldRenderer worldrenderer = worldRenderers[(i2 * renderChunksTall + l2) * renderChunksWide + j1];
 					boolean flag = worldrenderer.needsUpdate;
-					worldrenderer.func_1197_a(k1, i3, j2);
+					worldrenderer.setPositionAndBoundingBox(k1, i3, j2);
 					if (!flag && worldrenderer.needsUpdate) {
 						worldRenderersToUpdate.add(worldrenderer);
 					}
@@ -337,8 +338,16 @@ public class RenderGlobal implements IWorldAccess {
 		}
 
 	}
+	
+	private long lastOcclusionQuery = 0l;
+	private boolean[] occlusionQueryAvailable;
+	private long[] occlusionQueryStalled;
 
-	public int func_943_a(EntityLiving entityliving, int i, double d) {
+	/**
+	 * Sorts all renderers based on the passed in entity. Args: entityLiving,
+	 * renderPass, partialTickTime
+	 */
+	public int sortAndRender(EntityLiving entityliving, int i, double d) {
 		for (int j = 0; j < 10; j++) {
 			field_21156_R = (field_21156_R + 1) % worldRenderers.length;
 			WorldRenderer worldrenderer = worldRenderers[field_21156_R];
@@ -363,108 +372,92 @@ public class RenderGlobal implements IWorldAccess {
 		double d4 = entityliving.posX - field_1453_f;
 		double d5 = entityliving.posY - field_1452_g;
 		double d6 = entityliving.posZ - field_1451_h;
+
+		int fx = MathHelper.floor_double(d1);
+		int fy = MathHelper.floor_double(d2);
+		int fz = MathHelper.floor_double(d3);
+		
 		if (d4 * d4 + d5 * d5 + d6 * d6 > 16D) {
 			field_1453_f = entityliving.posX;
 			field_1452_g = entityliving.posY;
 			field_1451_h = entityliving.posZ;
-			func_956_b(MathHelper.floor_double(entityliving.posX), MathHelper.floor_double(entityliving.posY),
-					MathHelper.floor_double(entityliving.posZ));
+			markRenderersForNewPosition(fx, fy, fz);
 			Arrays.sort(sortedWorldRenderers, new EntitySorter(entityliving));
 		}
-		int k = 0;
-		if (field_1436_w && !mc.gameSettings.anaglyph && i == 0) {
-			int l = 0;
-			int i1 = 16;
-			func_962_a(l, i1);
-			for (int j1 = l; j1 < i1; j1++) {
-				sortedWorldRenderers[j1].isVisible = true;
+		
+		fx = fx >> 4;
+		fy = MathHelper.floor_double(d2 + entityliving.getEyeHeight()) >> 4;
+		fz = fz >> 4;
+
+		long queryRate = 50l;
+		long stallRate = 150l;
+		
+		long ct = System.currentTimeMillis();
+		if(i == 0) {
+			for (int j = 0; j < this.sortedWorldRenderers.length; ++j) {
+				WorldRenderer c = this.sortedWorldRenderers[j];
+				int ccx = c.chunkX - fx;
+				int ccy = c.chunkY - fy;
+				int ccz = c.chunkZ - fz;
+				if((ccx < 2 && ccx > -2 && ccy < 2 && ccy > -2 && ccz < 2 && ccz > -2) || glOcclusionQuery[c.chunkIndex] == -1) {
+					c.isVisible = true;
+				}else if(!c.canRender() && c.isInFrustum) {
+					if(occlusionQueryAvailable[c.chunkIndex] && EaglerAdapter.glGetQueryResultAvailable(glOcclusionQuery[c.chunkIndex])) {
+						c.isVisible = EaglerAdapter.glGetQueryResult(glOcclusionQuery[c.chunkIndex]);
+						occlusionQueryAvailable[c.chunkIndex] = false;
+						occlusionQueryStalled[c.chunkIndex] = 0l;
+					}else if(occlusionQueryStalled[c.chunkIndex] != 0l && ct - occlusionQueryStalled[c.chunkIndex] > stallRate) {
+						c.isVisible = true;
+					}
+				}
 			}
-
-			k += func_952_a(l, i1, i, d);
-			do {
-				int byte0 = i1;
-				i1 *= 2;
-				if (i1 > sortedWorldRenderers.length) {
-					i1 = sortedWorldRenderers.length;
-				}
-				EaglerAdapter.glDisable(3553 /* GL_TEXTURE_2D */);
-				EaglerAdapter.glDisable(2896 /* GL_LIGHTING */);
-				EaglerAdapter.glDisable(3008 /* GL_ALPHA_TEST */);
-				EaglerAdapter.glDisable(2912 /* GL_FOG */);
-				EaglerAdapter.glColorMask(false, false, false, false);
-				EaglerAdapter.glDepthMask(false);
-				func_962_a(byte0, i1);
-				EaglerAdapter.glPushMatrix();
-				float f = 0.0F;
-				float f1 = 0.0F;
-				float f2 = 0.0F;
-				for (int k1 = byte0; k1 < i1; k1++) {
-					if (sortedWorldRenderers[k1].canRender()) {
-						sortedWorldRenderers[k1].isInFrustum = false;
-						continue;
-					}
-					if (!sortedWorldRenderers[k1].isInFrustum) {
-						sortedWorldRenderers[k1].isVisible = true;
-					}
-					if (!sortedWorldRenderers[k1].isInFrustum || sortedWorldRenderers[k1].isWaitingOnOcclusionQuery) {
-						continue;
-					}
-					float f3 = MathHelper.sqrt_float(sortedWorldRenderers[k1].distanceToEntity(entityliving));
-					int l1 = (int) (1.0F + f3 / 128F);
-					if (field_1435_x % l1 != k1 % l1) {
-						continue;
-					}
-					WorldRenderer worldrenderer1 = sortedWorldRenderers[k1];
-					float f4 = (float) ((double) worldrenderer1.field_1755_i - d1);
-					float f5 = (float) ((double) worldrenderer1.field_1754_j - d2);
-					float f6 = (float) ((double) worldrenderer1.field_1753_k - d3);
-					float f7 = f4 - f;
-					float f8 = f5 - f1;
-					float f9 = f6 - f2;
-					if (f7 != 0.0F || f8 != 0.0F || f9 != 0.0F) {
-						EaglerAdapter.glTranslatef(f7, f8, f9);
-						f += f7;
-						f1 += f8;
-						f2 += f9;
-					}
-					//ARBOcclusionQuery.glBeginQueryARB(35092 /* GL_SAMPLES_PASSED_ARB */,
-					//		sortedWorldRenderers[k1].field_1732_z);
-					//sortedWorldRenderers[k1].callOcclusionQueryList();
-					//ARBOcclusionQuery.glEndQueryARB(35092 /* GL_SAMPLES_PASSED_ARB */);
-					//sortedWorldRenderers[k1].isWaitingOnOcclusionQuery = true;
-				}
-
-				EaglerAdapter.glPopMatrix();
-				EaglerAdapter.glColorMask(true, true, true, true);
-				EaglerAdapter.glDepthMask(true);
-				EaglerAdapter.glEnable(3553 /* GL_TEXTURE_2D */);
-				EaglerAdapter.glEnable(3008 /* GL_ALPHA_TEST */);
-				EaglerAdapter.glEnable(2912 /* GL_FOG */);
-				k += func_952_a(byte0, i1, i, d);
-			} while (i1 < sortedWorldRenderers.length);
-		} else {
-			k += func_952_a(0, sortedWorldRenderers.length, i, d);
 		}
+		
+		int k = func_952_a(0, this.sortedWorldRenderers.length, i, d);
+		
+		d2 -= entityliving.getEyeHeight();
+		
+		if(i == 0 && ct - lastOcclusionQuery > queryRate) {
+			lastOcclusionQuery = ct;
+			EaglerAdapter.glEnable(EaglerAdapter.GL_CULL_FACE);
+			EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
+			EaglerAdapter.glColorMask(false, false, false, false);
+			EaglerAdapter.glDepthMask(false);
+			EaglerAdapter.glBindOcclusionBB();
+			for (int j = 0; j < this.sortedWorldRenderers.length; ++j) {
+				WorldRenderer c = this.sortedWorldRenderers[j];
+				int ccx = c.chunkX - fx;
+				int ccy = c.chunkY - fy;
+				int ccz = c.chunkZ - fz;
+				if(!c.canRender() && c.isInFrustum && !(ccx < 2 && ccx > -2 && ccy < 2 && ccy > -2 && ccz < 2 && ccz > -2)) {
+					boolean stalled = false;
+					if(occlusionQueryAvailable[c.chunkIndex]) {
+						if(occlusionQueryStalled[c.chunkIndex] == 0l) {
+							occlusionQueryStalled[c.chunkIndex] = ct;
+							stalled = true;
+						}else if(ct - occlusionQueryStalled[c.chunkIndex] < stallRate) {
+							stalled = true;
+						}
+					}
+					if(!stalled) {
+						occlusionQueryAvailable[c.chunkIndex] = true;
+						int q = glOcclusionQuery[c.chunkIndex];
+						if(q == -1) {
+							q = glOcclusionQuery[c.chunkIndex] = EaglerAdapter.glCreateQuery();
+						}
+						EaglerAdapter.glBeginQuery(q);
+						EaglerAdapter.glDrawOcclusionBB((float)(c.posX - d1), (float)(c.posY - d2), (float)(c.posZ - d3), 16, 16, 16);
+						EaglerAdapter.glEndQuery();
+					}
+				}
+			}
+			EaglerAdapter.glEndOcclusionBB();
+			EaglerAdapter.glColorMask(true, true, true, true);
+			EaglerAdapter.glDepthMask(true);
+			EaglerAdapter.glEnable(EaglerAdapter.GL_CULL_FACE);
+		}
+		
 		return k;
-	}
-
-	private void func_962_a(int i, int j) {
-		for (int k = i; k < j; k++) {
-			if (!sortedWorldRenderers[k].isWaitingOnOcclusionQuery) {
-				continue;
-			}
-			field_1456_c.clear();
-			//ARBOcclusionQuery.glGetQueryObjectuARB(sortedWorldRenderers[k].field_1732_z,
-			//		34919 /* GL_QUERY_RESULT_AVAILABLE_ARB */, field_1456_c);
-			if (field_1456_c.get(0) != 0) {
-				sortedWorldRenderers[k].isWaitingOnOcclusionQuery = false;
-				field_1456_c.clear();
-				//ARBOcclusionQuery.glGetQueryObjectuARB(sortedWorldRenderers[k].field_1732_z,
-				//		34918 /* GL_QUERY_RESULT_ARB */, field_1456_c);
-				sortedWorldRenderers[k].isVisible = field_1456_c.get(0) != 0;
-			}
-		}
-
 	}
 
 	private int func_952_a(int i, int j, int k, double d) {
@@ -498,36 +491,11 @@ public class RenderGlobal implements IWorldAccess {
 		double d1 = entityliving.lastTickPosX + (entityliving.posX - entityliving.lastTickPosX) * d;
 		double d2 = entityliving.lastTickPosY + (entityliving.posY - entityliving.lastTickPosY) * d;
 		double d3 = entityliving.lastTickPosZ + (entityliving.posZ - entityliving.lastTickPosZ) * d;
-		/*
-		int k1 = 0;
-		for (int l1 = 0; l1 < field_1414_S.length; l1++) {
-			field_1414_S[l1].func_859_b();
-		}
-		for (int i2 = 0; i2 < field_1415_R.size(); i2++) {
-			WorldRenderer worldrenderer = (WorldRenderer) field_1415_R.get(i2);
-			int j2 = -1;
-			for (int k2 = 0; k2 < k1; k2++) {
-				if (field_1414_S[k2].func_862_a(worldrenderer.field_1755_i, worldrenderer.field_1754_j,
-						worldrenderer.field_1753_k)) {
-					j2 = k2;
-				}
-			}
-
-			if (j2 < 0) {
-				j2 = k1++;
-				field_1414_S[j2].func_861_a(worldrenderer.field_1755_i, worldrenderer.field_1754_j,
-						worldrenderer.field_1753_k, d1, d2, d3);
-			}
-			field_1414_S[j2].func_858_a(worldrenderer.getGLCallListForPass(k));
-		}
-
-		func_944_a(k, d);
-		*/
 		
 		for (int i2 = 0; i2 < field_1415_R.size(); i2++) {
 			WorldRenderer worldrenderer = (WorldRenderer) field_1415_R.get(i2);
 			EaglerAdapter.glPushMatrix();
-			EaglerAdapter.glTranslatef((float)(worldrenderer.field_1755_i - d1), (float)(worldrenderer.field_1754_j - d2), (float)(worldrenderer.field_1753_k - d3));
+			EaglerAdapter.glTranslatef((float)(worldrenderer.posXMinus - d1), (float)(worldrenderer.posYMinus - d2), (float)(worldrenderer.posZMinus - d3));
 			EaglerAdapter.glCallList(worldrenderer.getGLCallListForPass(k));
 			EaglerAdapter.glPopMatrix();
 		}
@@ -1231,10 +1199,11 @@ public class RenderGlobal implements IWorldAccess {
 	private List worldRenderersToUpdate;
 	private WorldRenderer sortedWorldRenderers[];
 	private WorldRenderer worldRenderers[];
+	private int[] glOcclusionQuery;
 	private int renderChunksWide;
 	private int renderChunksTall;
 	private int renderChunksDeep;
-	private int field_1440_s;
+	private int renderListBase;
 	private Minecraft mc;
 	private RenderBlocks field_1438_u;
 	private IntBuffer field_1437_v;

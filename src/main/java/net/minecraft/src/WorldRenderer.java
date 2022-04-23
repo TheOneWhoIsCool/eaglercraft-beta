@@ -25,11 +25,10 @@ public class WorldRenderer {
 				/ 2.0F;
 		glRenderList = i1;
 		posX = -999;
-		func_1197_a(i, j, k);
 		needsUpdate = false;
 	}
-
-	public void func_1197_a(int i, int j, int k) {
+	
+	public void setPositionAndBoundingBox(int i, int j, int k) {
 		if (i == posX && j == posY && k == posZ) {
 			return;
 		} else {
@@ -37,36 +36,34 @@ public class WorldRenderer {
 			posX = i;
 			posY = j;
 			posZ = k;
-			field_1746_q = i + sizeWidth / 2;
-			field_1743_r = j + sizeHeight / 2;
-			field_1741_s = k + sizeDepth / 2;
-			field_1752_l = i;// & 0x3ff;
-			field_1751_m = j;
-			field_1750_n = k;// & 0x3ff;
-			field_1755_i = i - field_1752_l;
-			field_1754_j = j - field_1751_m;
-			field_1753_k = k - field_1750_n;
+			chunkX = i >> 4;
+			chunkY = j >> 4;
+			chunkZ = k >> 4;
+			posXPlus = i + sizeWidth / 2;
+			posYPlus = j + sizeHeight / 2;
+			posZPlus = k + sizeDepth / 2;
+			posXClip = i;
+			posYClip = j;
+			posZClip = k;
+			posXMinus = i - posXClip;
+			posYMinus = j - posYClip;
+			posZMinus = k - posZClip;
 			float f = 6F;
-			field_1736_v = AxisAlignedBB.getBoundingBox((float) i - f, (float) j - f, (float) k - f,
+			renderBoundingBox = AxisAlignedBB.getBoundingBox((float) i - f, (float) j - f, (float) k - f,
 					(float) (i + sizeWidth) + f, (float) (j + sizeHeight) + f, (float) (k + sizeDepth) + f);
-			EaglerAdapter.glNewList(glRenderList + 2, 4864 /* GL_COMPILE */);
-			RenderItem.renderAABB(AxisAlignedBB.getBoundingBoxFromPool((float) field_1752_l - f,
-					(float) field_1751_m - f, (float) field_1750_n - f, (float) (field_1752_l + sizeWidth) + f,
-					(float) (field_1751_m + sizeHeight) + f, (float) (field_1750_n + sizeDepth) + f));
-			EaglerAdapter.glEndList();
+			//RenderItem.renderAABB(AxisAlignedBB.getBoundingBoxFromPool((float) field_1752_l - f,
+			//		(float) field_1751_m - f, (float) field_1750_n - f, (float) (field_1752_l + sizeWidth) + f,
+			//		(float) (field_1751_m + sizeHeight) + f, (float) (field_1750_n + sizeDepth) + f));
 			markDirty();
 			return;
 		}
-	}
-
-	private void setupGLTranslation() {
-		EaglerAdapter.glTranslatef(field_1752_l, field_1751_m, field_1750_n);
 	}
 
 	public void updateRenderer() {
 		if (!needsUpdate) {
 			return;
 		}
+		needsUpdate = false;
 		chunksUpdated++;
 		int i = posX;
 		int j = posY;
@@ -103,19 +100,7 @@ public class WorldRenderer {
 						if (!flag2) {
 							flag2 = true;
 							EaglerAdapter.glNewList(glRenderList + i2, 4864 /* GL_COMPILE */);
-							//EaglerAdapter.glPushMatrix();
-							//tessellator.setTranslationF(field_1752_l, field_1751_m, field_1750_n);
-							//setupGLTranslation();
-							/*
-							float f = 1.000001F;
-							EaglerAdapter.glTranslatef((float) (-sizeDepth) / 2.0F, (float) (-sizeHeight) / 2.0F,
-									(float) (-sizeDepth) / 2.0F);
-							EaglerAdapter.glScalef(f, f, f);
-							EaglerAdapter.glTranslatef((float) sizeDepth / 2.0F, (float) sizeHeight / 2.0F,
-									(float) sizeDepth / 2.0F);
-							*/
 							tessellator.startDrawingQuads();
-							//tessellator.setTranslationD(-posX, -posY, -posZ);
 						}
 						if (i2 == 0 && Block.isBlockContainer[i3]) {
 							TileEntity tileentity = chunkcache.getBlockTileEntity(l2, j2, k2);
@@ -140,7 +125,6 @@ public class WorldRenderer {
 
 			if (flag2) {
 				tessellator.draw();
-				//EaglerAdapter.glPopMatrix();
 				EaglerAdapter.glEndList();
 				tessellator.setTranslationD(0.0D, 0.0D, 0.0D);
 			} else {
@@ -165,9 +149,9 @@ public class WorldRenderer {
 	}
 
 	public float distanceToEntity(Entity entity) {
-		float f = (float) (entity.posX - (double) field_1746_q);
-		float f1 = (float) (entity.posY - (double) field_1743_r);
-		float f2 = (float) (entity.posZ - (double) field_1741_s);
+		float f = (float) (entity.posX - (double) posXPlus);
+		float f1 = (float) (entity.posY - (double) posYPlus);
+		float f2 = (float) (entity.posZ - (double) posZPlus);
 		return f * f + f1 * f1 + f2 * f2;
 	}
 
@@ -197,7 +181,7 @@ public class WorldRenderer {
 	}
 
 	public void updateInFrustrum(ICamera icamera) {
-		isInFrustum = icamera.isBoundingBoxInFrustum(field_1736_v);
+		isInFrustum = renderBoundingBox == null || icamera.isBoundingBoxInFrustum(renderBoundingBox);
 	}
 
 	public void callOcclusionQueryList() {
@@ -223,24 +207,27 @@ public class WorldRenderer {
 	public int posX;
 	public int posY;
 	public int posZ;
+	public int chunkX;
+	public int chunkY;
+	public int chunkZ;
 	public int sizeWidth;
 	public int sizeHeight;
 	public int sizeDepth;
-	public int field_1755_i;
-	public int field_1754_j;
-	public int field_1753_k;
-	public int field_1752_l;
-	public int field_1751_m;
-	public int field_1750_n;
+	public int posXMinus;
+	public int posYMinus;
+	public int posZMinus;
+	public int posXClip;
+	public int posYClip;
+	public int posZClip;
 	public boolean isInFrustum;
 	public boolean skipRenderPass[];
-	public int field_1746_q;
-	public int field_1743_r;
-	public int field_1741_s;
+	public int posXPlus;
+	public int posYPlus;
+	public int posZPlus;
 	public float field_1740_t;
 	public boolean needsUpdate;
-	public AxisAlignedBB field_1736_v;
-	public int field_1735_w;
+	public AxisAlignedBB renderBoundingBox;
+	public int chunkIndex;
 	public boolean isVisible;
 	public boolean isWaitingOnOcclusionQuery;
 	public int field_1732_z;

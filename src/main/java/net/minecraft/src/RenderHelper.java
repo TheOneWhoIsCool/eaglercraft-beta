@@ -27,11 +27,11 @@ public class RenderHelper {
 	public static void enableStandardItemLighting() {
 		EaglerAdapter.glEnable(EaglerAdapter.GL_LIGHTING);
 		EaglerAdapter.glEnable(EaglerAdapter.GL_COLOR_MATERIAL);
-		EaglerAdapter.glPushMatrix();
-		EaglerAdapter.glScalef(1.0F, -1.0F, 1.0F);
+		//EaglerAdapter.glPushMatrix();
+		//EaglerAdapter.glScalef(1.0F, -1.0F, 1.0F);
 		EaglerAdapter.copyModelToLightMatrix();
-		//EaglerAdapter.flipLightMatrix();
-		EaglerAdapter.glPopMatrix();
+		EaglerAdapter.flipLightMatrix();
+		//EaglerAdapter.glPopMatrix();
 		/*
 		EaglerAdapter.glColorMaterial(EaglerAdapter.GL_FRONT_AND_BACK, EaglerAdapter.GL_AMBIENT_AND_DIFFUSE);
 		float var0 = 0.4F;
