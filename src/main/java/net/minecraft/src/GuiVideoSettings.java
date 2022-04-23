@@ -66,6 +66,6 @@ public class GuiVideoSettings extends GuiScreen {
 	static {
 		field_22108_k = (new EnumOptions[] { EnumOptions.GRAPHICS, EnumOptions.RENDER_DISTANCE,
 				EnumOptions.LIMIT_FRAMERATE, EnumOptions.ANAGLYPH, EnumOptions.VIEW_BOBBING,
-				EnumOptions.AMBIENT_OCCLUSION });
+				EnumOptions.AMBIENT_OCCLUSION, EnumOptions.ANTIALIASING });
 	}
 }

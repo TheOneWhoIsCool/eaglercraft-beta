@@ -87,6 +87,10 @@ options.difficulty.hard=Hard
 options.graphics=Graphics
 options.graphics.fancy=Fancy
 options.graphics.fast=Fast
+options.framebufferAntialias=Antialiasing
+options.framebufferAntialias.none=None
+options.framebufferAntialias.auto=Auto
+options.framebufferAntialias.fxaa=FXAA
 
 controls.title=Controls
 

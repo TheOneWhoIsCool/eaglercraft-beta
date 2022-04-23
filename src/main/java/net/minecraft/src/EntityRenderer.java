@@ -396,6 +396,9 @@ public class EntityRenderer {
 			int k = MathHelper.floor_float((int) d2) >> 4;
 			chunkproviderloadorgenerate.func_21110_c(j, k);
 		}
+		EffectPipelineFXAA.displayWidth = this.mc.displayWidth;
+		EffectPipelineFXAA.displayHeight = this.mc.displayHeight;
+		EffectPipelineFXAA.beginPipelineRender();
 		for (int i = 0; i < 2; i++) {
 			if (mc.gameSettings.anaglyph) {
 				if (i == 0) {
@@ -493,11 +496,13 @@ public class EntityRenderer {
 				func_4135_b(f, i);
 			}
 			if (!mc.gameSettings.anaglyph) {
+				EffectPipelineFXAA.endPipelineRender();
 				return;
 			}
 		}
 
 		EaglerAdapter.glColorMask(true, true, true, false);
+		EffectPipelineFXAA.endPipelineRender();
 	}
 
 	private void addRainParticles() {

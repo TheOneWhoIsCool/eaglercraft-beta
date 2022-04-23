@@ -22,6 +22,7 @@ public class GameSettings {
 		limitFramerate = false;
 		fancyGraphics = true;
 		field_22278_j = true;
+		antialiasing = 1;
 		skin = "Default";
 		keyBindForward = new KeyBinding("key.forward", 17);
 		keyBindLeft = new KeyBinding("key.left", 30);
@@ -61,6 +62,7 @@ public class GameSettings {
 		limitFramerate = false;
 		fancyGraphics = true;
 		field_22278_j = true;
+		antialiasing = 1;
 		skin = "Default";
 		keyBindForward = new KeyBinding("key.forward", 17);
 		keyBindLeft = new KeyBinding("key.left", 30);
@@ -142,6 +144,9 @@ public class GameSettings {
 			field_22278_j = !field_22278_j;
 			mc.renderGlobal.loadRenderers();
 		}
+		if (enumoptions == EnumOptions.ANTIALIASING) {
+			antialiasing = (antialiasing + i) % 3;
+		}
 		saveOptions();
 	}
 
@@ -219,6 +224,10 @@ public class GameSettings {
 			return (new StringBuilder()).append(s).append(stringtranslate.translateKey(DIFFICULTIES[difficulty]))
 					.toString();
 		}
+		if (enumoptions == EnumOptions.ANTIALIASING) {
+			return (new StringBuilder()).append(s).append(stringtranslate.translateKey(ANTIALIASING_MODES[antialiasing]))
+					.toString();
+		}
 		if (enumoptions == EnumOptions.GRAPHICS) {
 			if (fancyGraphics) {
 				return (new StringBuilder()).append(s).append(stringtranslate.translateKey("options.graphics.fancy"))
@@ -273,6 +282,9 @@ public class GameSettings {
 				if (as[0].equals("ao")) {
 					field_22278_j = as[1].equals("true");
 				}
+				if (as[0].equals("antialiasing")) {
+					antialiasing = Integer.parseInt(as[1]);
+				}
 				if (as[0].equals("skin")) {
 					skin = as[1];
 				}
@@ -321,6 +333,7 @@ public class GameSettings {
 			printwriter.println((new StringBuilder()).append("difficulty:").append(difficulty).toString());
 			printwriter.println((new StringBuilder()).append("fancyGraphics:").append(fancyGraphics).toString());
 			printwriter.println((new StringBuilder()).append("ao:").append(field_22278_j).toString());
+			printwriter.println((new StringBuilder()).append("antialiasing:").append(antialiasing).toString());
 			printwriter.println((new StringBuilder()).append("skin:").append(skin).toString());
 			printwriter.println((new StringBuilder()).append("lastServer:").append(lastServer).toString());
 			for (int i = 0; i < keyBindings.length; i++) {
@@ -339,6 +352,8 @@ public class GameSettings {
 			"options.renderDistance.short", "options.renderDistance.tiny" };
 	private static final String DIFFICULTIES[] = { "options.difficulty.peaceful", "options.difficulty.easy",
 			"options.difficulty.normal", "options.difficulty.hard" };
+	private static final String ANTIALIASING_MODES[] = { "options.framebufferAntialias.none", "options.framebufferAntialias.auto",
+			"options.framebufferAntialias.fxaa" };
 	public float musicVolume;
 	public float soundVolume;
 	public float mouseSensitivity;
@@ -349,6 +364,7 @@ public class GameSettings {
 	public boolean limitFramerate;
 	public boolean fancyGraphics;
 	public boolean field_22278_j;
+	public int antialiasing;
 	public String skin;
 	public KeyBinding keyBindForward;
 	public KeyBinding keyBindLeft;

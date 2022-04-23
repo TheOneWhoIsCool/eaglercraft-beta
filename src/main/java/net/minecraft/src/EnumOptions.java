@@ -63,6 +63,7 @@ public final class EnumOptions extends CompatEnum {
 	public static final EnumOptions DIFFICULTY;
 	public static final EnumOptions GRAPHICS;
 	public static final EnumOptions AMBIENT_OCCLUSION;
+	public static final EnumOptions ANTIALIASING;
 	private final boolean enumFloat;
 	private final boolean enumBoolean;
 	private final String enumString;
@@ -80,7 +81,8 @@ public final class EnumOptions extends CompatEnum {
 		DIFFICULTY = new EnumOptions("DIFFICULTY", 8, "options.difficulty", false, false);
 		GRAPHICS = new EnumOptions("GRAPHICS", 9, "options.graphics", false, false);
 		AMBIENT_OCCLUSION = new EnumOptions("AMBIENT_OCCLUSION", 10, "options.ao", false, true);
+		ANTIALIASING = new EnumOptions("ANTIALIASING", 11, "options.framebufferAntialias", false, false);
 		field_20141_n = (new EnumOptions[] { MUSIC, SOUND, INVERT_MOUSE, SENSITIVITY, RENDER_DISTANCE, VIEW_BOBBING,
-				ANAGLYPH, LIMIT_FRAMERATE, DIFFICULTY, GRAPHICS, AMBIENT_OCCLUSION });
+				ANAGLYPH, LIMIT_FRAMERATE, DIFFICULTY, GRAPHICS, AMBIENT_OCCLUSION, ANTIALIASING });
 	}
 }
