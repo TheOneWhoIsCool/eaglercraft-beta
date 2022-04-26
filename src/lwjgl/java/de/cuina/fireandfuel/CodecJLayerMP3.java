@@ -142,8 +142,8 @@ public class CodecJLayerMP3 implements ICodec {
 
 			myAudioInputStream = new DecodedMpegAudioInputStream(myAudioFormat,
 					new AudioInputStream(new BufferedInputStream(url.openStream()), mpegAudioFormat, -1));
-			myAudioInputStream.skip((int) (myAudioInputStream.getFormat().getFrameRate() * 0.018f)
-					* myAudioInputStream.getFormat().getFrameSize());
+			//myAudioInputStream.skip((int) (myAudioInputStream.getFormat().getFrameRate() * 0.018f)
+			//		* myAudioInputStream.getFormat().getFrameSize());
 		} catch (Exception e) {
 			errorMessage("Unable to set up input streams in method " + "'initialize'");
 			printStackTrace(e);

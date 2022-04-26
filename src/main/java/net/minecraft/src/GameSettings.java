@@ -60,8 +60,8 @@ public class GameSettings {
 		viewBobbing = true;
 		anaglyph = false;
 		limitFramerate = false;
-		fancyGraphics = true;
-		field_22278_j = true;
+		fancyGraphics = false;
+		field_22278_j = false;
 		antialiasing = 1;
 		skin = "Default";
 		keyBindForward = new KeyBinding("key.forward", 17);

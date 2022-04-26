@@ -128,12 +128,23 @@ public class GuiIngame extends Gui {
 		EaglerAdapter.glRotatef(180F, 1.0F, 0.0F, 0.0F);
 		RenderHelper.enableStandardItemLighting();
 		EaglerAdapter.glPopMatrix();
+		boolean hasTransformHack = false;
 		for (int l1 = 0; l1 < 9; l1++) {
+			if(!hasTransformHack) {
+				ItemStack s = mc.thePlayer.inventory.mainInventory[l1];
+				if(s != null) {
+					if(s.itemID < 256 && RenderBlocks.func_1219_a(Block.blocksList[s.itemID].getRenderType())) {
+						// stupid hack to fix upside down block
+						itemRenderer.renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, new ItemStack(Item.coal), -100, -100);
+					}
+					hasTransformHack = true;
+				}
+			}
 			int i3 = (k / 2 - 90) + l1 * 20 + 2;
 			int i4 = l - 16 - 3;
 			renderInventorySlot(l1, i3, i4, f);
 		}
-
+		
 		RenderHelper.disableStandardItemLighting();
 		EaglerAdapter.glDisable(32826 /* GL_RESCALE_NORMAL_EXT */);
 		if (mc.thePlayer.func_22060_M() > 0) {

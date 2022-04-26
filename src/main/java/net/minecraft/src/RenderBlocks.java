@@ -1,6 +1,7 @@
 package net.minecraft.src;
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
+import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 // Jad home page: http://www.kpdus.com/jad.html
@@ -2324,6 +2325,11 @@ public class RenderBlocks {
 		Tessellator tessellator = Tessellator.instance;
 		int j = block.getRenderType();
 		if (j == 0) {
+			//EaglerAdapter.glPushMatrix();
+			//EaglerAdapter.glScalef(-1.0f, 1.0f, -1.0f);
+			if(block instanceof BlockPumpkin) {
+				BlockPumpkin.flipFix = true;
+			}
 			block.func_237_e();
 			tessellator.setTranslationF(-0.5F, -0.5F, -0.5F);
 			tessellator.startDrawingQuads();
@@ -2351,6 +2357,10 @@ public class RenderBlocks {
 			renderSouthFace(block, 0.0D, 0.0D, 0.0D, block.getBlockTextureFromSideAndMetadata(5, i));
 			tessellator.draw();
 			tessellator.setTranslationF(0.5F, 0.5F, 0.5F);
+			//EaglerAdapter.glPopMatrix();
+			if(block instanceof BlockPumpkin) {
+				BlockPumpkin.flipFix = false;
+			}
 		} else if (j == 1) {
 			tessellator.startDrawingQuads();
 			tessellator.setNormal(0.0F, -1F, 0.0F);

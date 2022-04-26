@@ -9,6 +9,7 @@ import java.io.*;
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
+import net.lax1dude.eaglercraft.beta.SingleplayerCommands;
 import net.minecraft.src.*;
 
 // Referenced classes of package net.minecraft.client:
@@ -210,7 +211,6 @@ public class Minecraft implements Runnable {
 			GLAllocation.deleteTexturesAndDisplayLists();
 		} catch (Throwable throwable1) {
 		}
-		sndManager.closeMinecraft();
 		EaglerAdapter.destroyContext();
 		System.exit(0);
 	}
@@ -282,7 +282,9 @@ public class Minecraft implements Runnable {
 					Thread.sleep(10L);
 				}
 				if (gameSettings.showDebugInfo) {
-					displayDebugInfo(l2);
+					if(!(currentScreen instanceof GuiChat)) {
+						displayDebugInfo(l2);
+					}
 				} else {
 					prevFrameTime = System.nanoTime();
 				}
@@ -753,6 +755,14 @@ public class Minecraft implements Runnable {
 	public boolean isMultiplayerWorld() {
 		return theWorld != null && theWorld.multiplayerWorld;
 	}
+	
+	public void displayChat(String s) {
+		this.ingameGUI.addChatMessage(s);
+	}
+	
+	public void displayErrorChat(String s) {
+		this.ingameGUI.addChatMessage(FontRenderer.formatChar + "c" + s);
+	}
 
 	public void startWorld(String s, String s1, long l) {
 		changeWorld1(null);
@@ -910,23 +920,6 @@ public class Minecraft implements Runnable {
 		theWorld.func_656_j();
 	}
 
-	public void installResource(String s, File file) {
-		int i = s.indexOf("/");
-		String s1 = s.substring(0, i);
-		s = s.substring(i + 1);
-		if (s1.equalsIgnoreCase("sound")) {
-			sndManager.addSound(s, file);
-		} else if (s1.equalsIgnoreCase("newsound")) {
-			sndManager.addSound(s, file);
-		} else if (s1.equalsIgnoreCase("streaming")) {
-			sndManager.addStreaming(s, file);
-		} else if (s1.equalsIgnoreCase("music")) {
-			sndManager.addMusic(s, file);
-		} else if (s1.equalsIgnoreCase("newmusic")) {
-			sndManager.addMusic(s, file);
-		}
-	}
-
 	public OpenGlCapsChecker func_6251_l() {
 		return glCapabilities;
 	}
@@ -1007,8 +1000,8 @@ public class Minecraft implements Runnable {
 	}
 
 	public boolean func_22003_b(String s) {
-		if (s.startsWith("/")) {
-
+		if (!this.isMultiplayerWorld() && s.startsWith("/")) {
+			SingleplayerCommands.processCommand(this, s.substring(1));
 			return true;
 		}
 		return false;

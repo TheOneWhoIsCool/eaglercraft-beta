@@ -127,6 +127,7 @@ public class RenderItem extends Render {
 			} else {
 				itemsTexture.bindTexture();
 			}
+			EaglerAdapter.glClear(EaglerAdapter.GL_DEPTH_BUFFER_BIT);
 			renderTexturedQuad(i, j, (itemstack.getIconIndex() % 16) * 16, (itemstack.getIconIndex() / 16) * 16, 16,
 					16);
 			EaglerAdapter.glEnable(2896 /* GL_LIGHTING */);

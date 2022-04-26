@@ -4,29 +4,39 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.io.File;
-import java.io.PrintStream;
-import java.util.Random;
-import paulscode.sound.SoundSystem;
-import paulscode.sound.SoundSystemConfig;
-import paulscode.sound.libraries.LibraryLWJGLOpenAL;
+import java.io.IOException;
+import java.util.HashMap;
+
+import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class SoundManager {
 
+	private GameSettings options;
+	private HashMap<String,Integer> sounddefinitions;
+	private EaglercraftRandom soundrandom;
+
 	public SoundManager() {
-		soundPoolSounds = new SoundPool();
-		soundPoolStreaming = new SoundPool();
-		soundPoolMusic = new SoundPool();
-		field_587_e = 0;
-		rand = new Random();
-		ticksBeforeMusic = rand.nextInt(12000);
+		this.sounddefinitions = null;
+		this.soundrandom = new EaglercraftRandom();
 	}
 
 	public void loadSoundSettings(GameSettings gamesettings) {
-		soundPoolStreaming.field_1657_b = false;
-		options = gamesettings;
-		if (!loaded && (gamesettings == null || gamesettings.soundVolume != 0.0F || gamesettings.musicVolume != 0.0F)) {
-			tryToSetLibraryAndCodecs();
+		this.options = gamesettings;
+		if(this.sounddefinitions == null) {
+			this.sounddefinitions = new HashMap();
+			try {
+				NBTTagCompound file = CompressedStreamTools.func_1138_a(EaglerAdapter.loadResource("/sounds/sounds.dat"));
+				EaglerAdapter.setPlaybackOffsetDelay(file.hasKey("playbackOffset") ? file.getFloat("playbackOffset") : 0.03f);
+				NBTTagList l = file.getTagList("sounds");
+				int c = l.tagCount();
+				for(int i = 0; i < c; i++) {
+					NBTTagCompound cc = (NBTTagCompound)l.tagAt(i);
+					this.sounddefinitions.put(cc.getString("e"), (int)cc.getByte("c") & 0xFF);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -44,159 +54,75 @@ public class SoundManager {
 		 * catch(Throwable throwable) { throwable.printStackTrace();
 		 * System.err.println("error linking with the LibraryJavaSound plug-in"); }
 		 */
-		loaded = false;
 	}
 
 	public void onSoundOptionsChanged() {
-		if (!loaded && (options.soundVolume != 0.0F || options.musicVolume != 0.0F)) {
-			tryToSetLibraryAndCodecs();
-		}
-		if (loaded) {
-			if (options.musicVolume == 0.0F) {
-				sndSystem.stop("BgMusic");
-			} else {
-				sndSystem.setVolume("BgMusic", options.musicVolume);
-			}
-		}
-	}
-
-	public void closeMinecraft() {
-		if (loaded) {
-			sndSystem.cleanup();
-		}
-	}
-
-	public void addSound(String s, File file) {
-		soundPoolSounds.addSound(s, file);
-	}
-
-	public void addStreaming(String s, File file) {
-		soundPoolStreaming.addSound(s, file);
-	}
-
-	public void addMusic(String s, File file) {
-		soundPoolMusic.addSound(s, file);
+		
 	}
 
 	public void playRandomMusicIfReady() {
-		if (!loaded || options.musicVolume == 0.0F) {
-			return;
-		}
-		if (!sndSystem.playing("BgMusic") && !sndSystem.playing("streaming")) {
-			if (ticksBeforeMusic > 0) {
-				ticksBeforeMusic--;
-				return;
-			}
-			SoundPoolEntry soundpoolentry = soundPoolMusic.getRandomSound();
-			if (soundpoolentry != null) {
-				ticksBeforeMusic = rand.nextInt(12000) + 12000;
-				sndSystem.backgroundMusic("BgMusic", soundpoolentry.soundUrl, soundpoolentry.soundName, false);
-				sndSystem.setVolume("BgMusic", options.musicVolume);
-				sndSystem.play("BgMusic");
-			}
-		}
+		
 	}
 
-	public void func_338_a(EntityLiving entityliving, float f) {
-		if (!loaded || options.soundVolume == 0.0F) {
-			return;
-		}
-		if (entityliving == null) {
-			return;
-		} else {
-			float f1 = entityliving.prevRotationYaw + (entityliving.rotationYaw - entityliving.prevRotationYaw) * f;
-			double d = entityliving.prevPosX + (entityliving.posX - entityliving.prevPosX) * (double) f;
-			double d1 = entityliving.prevPosY + (entityliving.posY - entityliving.prevPosY) * (double) f;
-			double d2 = entityliving.prevPosZ + (entityliving.posZ - entityliving.prevPosZ) * (double) f;
-			float f2 = MathHelper.cos(-f1 * 0.01745329F - 3.141593F);
-			float f3 = MathHelper.sin(-f1 * 0.01745329F - 3.141593F);
-			float f4 = -f3;
-			float f5 = 0.0F;
-			float f6 = -f2;
-			float f7 = 0.0F;
-			float f8 = 1.0F;
-			float f9 = 0.0F;
-			sndSystem.setListenerPosition((float) d, (float) d1, (float) d2);
-			sndSystem.setListenerOrientation(f4, f5, f6, f7, f8, f9);
-			return;
+	public void func_338_a(EntityLiving par1EntityLiving, float f) {
+		if(par1EntityLiving == null) {
+			EaglerAdapter.setListenerPos(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f);
+		}else {
+			double x = par1EntityLiving.prevPosX + (par1EntityLiving.posX - par1EntityLiving.prevPosX) * f;
+			double y = par1EntityLiving.prevPosY + (par1EntityLiving.posY - par1EntityLiving.prevPosY) * f;
+			double z = par1EntityLiving.prevPosZ + (par1EntityLiving.posZ - par1EntityLiving.prevPosZ) * f;
+			double pitch = par1EntityLiving.prevRotationPitch + (par1EntityLiving.rotationPitch - par1EntityLiving.prevRotationPitch) * f;
+			double yaw = par1EntityLiving.prevRotationYaw + (par1EntityLiving.rotationYaw - par1EntityLiving.prevRotationYaw) * f;
+			
+			try {
+				EaglerAdapter.setListenerPos((float)x, (float)y, (float)z, (float)par1EntityLiving.motionX, (float)par1EntityLiving.motionY, (float)par1EntityLiving.motionZ, (float)pitch, (float)yaw);
+			}catch(Throwable t) {
+				System.err.println("AudioListener f***ed up again");
+			}
 		}
 	}
 
 	public void func_331_a(String s, float f, float f1, float f2, float f3, float f4) {
-		if (!loaded || options.soundVolume == 0.0F) {
-			return;
-		}
-		String s1 = "streaming";
-		if (sndSystem.playing("streaming")) {
-			sndSystem.stop("streaming");
-		}
-		if (s == null) {
-			return;
-		}
-		SoundPoolEntry soundpoolentry = soundPoolStreaming.getRandomSoundFromSoundPool(s);
-		if (soundpoolentry != null && f3 > 0.0F) {
-			if (sndSystem.playing("BgMusic")) {
-				sndSystem.stop("BgMusic");
+		playSound(s, f, f1, f2, f3, f4);
+	}
+
+	public void playSound(String s, float par2, float par3, float par4, float par5, float par6) {
+		float v = par5 * this.options.soundVolume;
+		if(v > 0.0F) {
+			Integer ct = this.sounddefinitions.get(s);
+			if(ct != null) {
+				int c = ct.intValue();
+				String path;
+				if(c <= 1) {
+					path = "/sounds/"+s.replace('.', '/')+".mp3";
+				}else {
+					int r = soundrandom.nextInt(c) + 1;
+					path = "/sounds/"+s.replace('.', '/')+r+".mp3";
+				}
+				EaglerAdapter.beginPlayback(path, par2, par3, par4, v, par6);
+			}else {
+				System.err.println("unregistered sound effect: "+s);
 			}
-			float f5 = 16F;
-			sndSystem.newStreamingSource(true, s1, soundpoolentry.soundUrl, soundpoolentry.soundName, false, f, f1, f2,
-					2, f5 * 4F);
-			sndSystem.setVolume(s1, 0.5F * options.soundVolume);
-			sndSystem.play(s1);
 		}
 	}
 
-	public void playSound(String s, float f, float f1, float f2, float f3, float f4) {
-		if (!loaded || options.soundVolume == 0.0F) {
-			return;
-		}
-		SoundPoolEntry soundpoolentry = soundPoolSounds.getRandomSoundFromSoundPool(s);
-		if (soundpoolentry != null && f3 > 0.0F) {
-			field_587_e = (field_587_e + 1) % 256;
-			String s1 = (new StringBuilder()).append("sound_").append(field_587_e).toString();
-			float f5 = 16F;
-			if (f3 > 1.0F) {
-				f5 *= f3;
+	public void func_337_a(String par1Str, float par2, float par3) {
+		float v = par3 * this.options.soundVolume;
+		if(v > 0.0F) {
+			Integer ct = this.sounddefinitions.get(par1Str);
+			if(ct != null) {
+				int c = ct.intValue();
+				String path;
+				if(c <= 1) {
+					path = "/sounds/"+par1Str.replace('.', '/')+".mp3";
+				}else {
+					int r = soundrandom.nextInt(c) + 1;
+					path = "/sounds/"+par1Str.replace('.', '/')+r+".mp3";
+				}
+				EaglerAdapter.beginPlaybackStatic(path, v, par3);
+			}else {
+				System.err.println("unregistered sound effect: "+par1Str);
 			}
-			sndSystem.newSource(f3 > 1.0F, s1, soundpoolentry.soundUrl, soundpoolentry.soundName, false, f, f1, f2, 2,
-					f5);
-			sndSystem.setPitch(s1, f4);
-			if (f3 > 1.0F) {
-				f3 = 1.0F;
-			}
-			sndSystem.setVolume(s1, f3 * options.soundVolume);
-			sndSystem.play(s1);
 		}
 	}
-
-	public void func_337_a(String s, float f, float f1) {
-		if (!loaded || options.soundVolume == 0.0F) {
-			return;
-		}
-		SoundPoolEntry soundpoolentry = soundPoolSounds.getRandomSoundFromSoundPool(s);
-		if (soundpoolentry != null) {
-			field_587_e = (field_587_e + 1) % 256;
-			String s1 = (new StringBuilder()).append("sound_").append(field_587_e).toString();
-			sndSystem.newSource(false, s1, soundpoolentry.soundUrl, soundpoolentry.soundName, false, 0.0F, 0.0F, 0.0F,
-					0, 0.0F);
-			if (f > 1.0F) {
-				f = 1.0F;
-			}
-			f *= 0.25F;
-			sndSystem.setPitch(s1, f1);
-			sndSystem.setVolume(s1, f * options.soundVolume);
-			sndSystem.play(s1);
-		}
-	}
-
-	private static SoundSystem sndSystem;
-	private SoundPool soundPoolSounds;
-	private SoundPool soundPoolStreaming;
-	private SoundPool soundPoolMusic;
-	private int field_587_e;
-	private GameSettings options;
-	private static boolean loaded = false;
-	private Random rand;
-	private int ticksBeforeMusic;
-
 }

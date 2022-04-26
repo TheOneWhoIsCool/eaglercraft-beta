@@ -13,7 +13,9 @@ public class EntitySorter implements Comparator {
 	}
 
 	public int func_1063_a(WorldRenderer worldrenderer, WorldRenderer worldrenderer1) {
-		return worldrenderer.distanceToEntity(field_1594_a) >= worldrenderer1.distanceToEntity(field_1594_a) ? 1 : -1;
+		float f = worldrenderer.distanceToEntity(field_1594_a);
+		float f1 = worldrenderer1.distanceToEntity(field_1594_a) ;
+		return f == f1 ? 0 : f >= f1 ? 1 : -1;
 	}
 
 	public int compare(Object obj, Object obj1) {

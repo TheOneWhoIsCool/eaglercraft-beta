@@ -70,4 +70,8 @@ public class GuiChat extends GuiScreen {
 			}
 		}
 	}
+	
+	public boolean doesGuiPauseGame() {
+		return false;
+	}
 }

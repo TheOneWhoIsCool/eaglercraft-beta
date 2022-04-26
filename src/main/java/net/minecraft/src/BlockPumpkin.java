@@ -5,6 +5,8 @@ package net.minecraft.src;
 // Decompiler options: packimports(3) braces deadcode 
 
 public class BlockPumpkin extends Block {
+	
+	public static boolean flipFix = false;
 
 	protected BlockPumpkin(int i, int j, boolean flag) {
 		super(i, Material.pumpkin);
@@ -24,13 +26,13 @@ public class BlockPumpkin extends Block {
 		if (blockType) {
 			k++;
 		}
-		if (j == 0 && i == 2) {
+		if (j == 0 && i == (flipFix ? 3 : 2)) {
 			return k;
 		}
 		if (j == 1 && i == 5) {
 			return k;
 		}
-		if (j == 2 && i == 3) {
+		if (j == 2 && i ==  (flipFix ? 2 : 3)) {
 			return k;
 		}
 		if (j == 3 && i == 4) {

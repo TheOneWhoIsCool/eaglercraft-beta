@@ -22,7 +22,7 @@ public class RenderGhast extends RenderLiving {
 		EntityGhast entityghast1 = entityghast;
 		float f1 = ((float) entityghast1.prevAttackCounter
 				+ (float) (entityghast1.attackCounter - entityghast1.prevAttackCounter) * f) / 20F;
-		if(f1 <= 10) {
+		if(f1 <= 0.5f) {
 			ghastTexture.bindTexture();
 		}else {
 			ghastFireTexture.bindTexture();

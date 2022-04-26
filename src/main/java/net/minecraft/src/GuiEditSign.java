@@ -15,13 +15,13 @@ public class GuiEditSign extends GuiScreen {
 		this.field_1002_h = tileEntitySign;
 	}
 
-	public void func_6448_a() {
+	public void initGui() {
 		this.controlList.clear();
 		EaglerAdapter.enableRepeatEvents(true);
 		this.controlList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 120, "Done"));
 	}
 
-	public void func_6449_h() {
+	public void onGuiClosed() {
 		EaglerAdapter.enableRepeatEvents(false);
 		if (this.mc.theWorld.multiplayerWorld) {
 			this.mc.func_20001_q().addToSendQueue(new Packet130(this.field_1002_h.xCoord, this.field_1002_h.yCoord,
@@ -29,11 +29,11 @@ public class GuiEditSign extends GuiScreen {
 		}
 	}
 
-	public void func_570_g() {
+	public void updateScreen() {
 		++this.field_4189_i;
 	}
 
-	protected void func_572_a(GuiButton guiButton) {
+	protected void actionPerformed(GuiButton guiButton) {
 		if (!guiButton.enabled) {
 			return;
 		}
@@ -43,7 +43,7 @@ public class GuiEditSign extends GuiScreen {
 		}
 	}
 
-	protected void func_580_a(char c, int n) {
+	protected void keyTyped(char c, int n) {
 		if (n == 200) {
 			this.field_1000_j = this.field_1000_j - 1 & 3;
 		}
@@ -60,7 +60,7 @@ public class GuiEditSign extends GuiScreen {
 		}
 	}
 
-	public void func_571_a(int n, int n2, float f) {
+	public void drawScreen(int n, int n2, float f) {
 		this.drawDefaultBackground();
 		this.drawCenteredString(this.fontRenderer, this.field_999_a, this.width / 2, 40, 0xFFFFFF);
 		EaglerAdapter.glPushMatrix();

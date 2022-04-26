@@ -41,7 +41,6 @@ import javax.swing.filechooser.FileFilter;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
-import org.json.JSONObject;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
@@ -66,7 +65,6 @@ import org.lwjgl.util.glu.GLU;
 import de.cuina.fireandfuel.CodecJLayerMP3;
 import net.lax1dude.eaglercraft.AssetRepository;
 import net.lax1dude.eaglercraft.EarlyLoadScreen;
-import net.lax1dude.eaglercraft.ServerQuery;
 import net.lax1dude.eaglercraft.adapter.EaglerAdapterImpl2.ProgramGL;
 import net.lax1dude.eaglercraft.adapter.EaglerAdapterImpl2.RateLimit;
 import net.lax1dude.eaglercraft.adapter.lwjgl.GameWindowListener;
@@ -1332,7 +1330,12 @@ public class EaglerAdapterImpl2 {
 		return s;
 	}
 
+	private static float soundX = 0f;
+	private static float soundY = 0f;
+	private static float soundZ = 0f;
+
 	public static final void setListenerPos(float x, float y, float z, float vx, float vy, float vz, float pitch, float yaw) {
+		soundX = x; soundY = y; soundZ = z;
 		float var2 = MathHelper.cos(-yaw * 0.017453292F);
 		float var3 = MathHelper.sin(-yaw * 0.017453292F);
 		float var4 = -MathHelper.cos(pitch * 0.017453292F);
@@ -1373,7 +1376,7 @@ public class EaglerAdapterImpl2 {
 		URL loc = null;
 		if ((loc = getResourceURL(fileName)) != null) {
 			String name = "sound_" + id;
-			ss.newSource(false, name, loc, fileName, false, 0f, 0f, 0f, 0, 0f);
+			ss.newSource(false, name, loc, fileName, false, soundX, soundY, soundZ, 0, 0f);
 			ss.setTemporary(name, true);
 			ss.setPitch(name, pitch);
 			ss.setVolume(name, volume);
@@ -1537,145 +1540,6 @@ public class EaglerAdapterImpl2 {
 
 	}
 
-	private static class ServerQueryImpl extends WebSocketClient implements ServerQuery {
-
-		private final LinkedList<QueryResponse> queryResponses = new LinkedList();
-		private final LinkedList<byte[]> queryResponsesBytes = new LinkedList();
-		private final String type;
-		private boolean open;
-		private boolean alive;
-		private String serverUri;
-
-		private ServerQueryImpl(String type, URI serverUri, String serverUriString) throws IOException {
-			super(serverUri);
-			this.serverUri = serverUriString;
-			this.type = type;
-			this.open = true;
-			this.alive = false;
-			this.setConnectionLostTimeout(5);
-			this.setTcpNoDelay(true);
-			this.connect();
-		}
-
-		@Override
-		public int responseAvailable() {
-			synchronized (queryResponses) {
-				return queryResponses.size();
-			}
-		}
-
-		@Override
-		public int responseBinaryAvailable() {
-			synchronized (queryResponsesBytes) {
-				return queryResponsesBytes.size();
-			}
-		}
-
-		@Override
-		public QueryResponse getResponse() {
-			synchronized (queryResponses) {
-				return queryResponses.size() > 0 ? queryResponses.remove(0) : null;
-			}
-		}
-
-		@Override
-		public byte[] getBinaryResponse() {
-			synchronized (queryResponsesBytes) {
-				return queryResponsesBytes.size() > 0 ? queryResponsesBytes.remove(0) : null;
-			}
-		}
-
-		@Override
-		public void onClose(int arg0, String arg1, boolean arg2) {
-			open = false;
-			if (!alive) {
-				synchronized (socketSync) {
-					if (EaglerAdapterImpl2.blockedAddresses.contains(serverUri)) {
-						queryResponses.add(new QueryResponse(true));
-					} else if (EaglerAdapterImpl2.rateLimitedAddresses.contains(serverUri)) {
-						queryResponses.add(new QueryResponse(false));
-					}
-				}
-			}
-		}
-
-		@Override
-		public void onError(Exception arg0) {
-			System.err.println("WebSocket query error: " + arg0.toString());
-			open = false;
-			this.close();
-		}
-
-		@Override
-		public void onMessage(String arg0) {
-			this.alive = true;
-			synchronized (queryResponses) {
-				if (arg0.equalsIgnoreCase("BLOCKED")) {
-					synchronized (socketSync) {
-						EaglerAdapterImpl2.rateLimitedAddresses.add(serverUri);
-						queryResponses.add(new QueryResponse(false));
-					}
-					this.close();
-					return;
-				} else if (arg0.equalsIgnoreCase("LOCKED")) {
-					synchronized (socketSync) {
-						EaglerAdapterImpl2.blockedAddresses.add(serverUri);
-						queryResponses.add(new QueryResponse(true));
-					}
-					this.close();
-					return;
-				} else {
-					try {
-						QueryResponse q = new QueryResponse(new JSONObject(arg0));
-						if (q.rateLimitStatus != null) {
-							synchronized (socketSync) {
-								if (q.rateLimitStatus == RateLimit.BLOCKED) {
-									EaglerAdapterImpl2.rateLimitedAddresses.add(serverUri);
-								} else if (q.rateLimitStatus == RateLimit.LOCKED) {
-									EaglerAdapterImpl2.blockedAddresses.add(serverUri);
-								}
-							}
-							this.close();
-						}
-						queryResponses.add(q);
-					} catch (Throwable t) {
-						System.err.println("Query response parse error: " + t.toString());
-					}
-				}
-			}
-		}
-
-		@Override
-		public void onMessage(ByteBuffer arg0) {
-			this.alive = true;
-			synchronized (queryResponsesBytes) {
-				byte[] pkt = new byte[arg0.limit()];
-				arg0.get(pkt);
-				queryResponsesBytes.add(pkt);
-			}
-		}
-
-		@Override
-		public void onOpen(ServerHandshake arg0) {
-			send("Accept: " + type);
-		}
-
-		@Override
-		public boolean isQueryOpen() {
-			return open;
-		}
-
-	}
-
-	public static final ServerQuery openQuery(String type, String uri) {
-		try {
-			return new ServerQueryImpl(type, new URI(uri), uri);
-		} catch (Throwable t) {
-			System.err.println("WebSocket query error: " + t.toString());
-			return null;
-		}
-	}
-
 	private static String serverToJoinOnLaunch = null;
 
 	public static final void setServerToJoinOnLaunch(String s) {
@@ -1685,5 +1549,7 @@ public class EaglerAdapterImpl2 {
 	public static final String getServerToJoinOnLaunch() {
 		return serverToJoinOnLaunch;
 	}
+	
+	
 
 }

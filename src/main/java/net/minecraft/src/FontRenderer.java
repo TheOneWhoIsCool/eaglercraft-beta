@@ -132,8 +132,9 @@ public class FontRenderer {
 				if (j1 < 0 || j1 > 15) {
 					j1 = 15;
 				}
-				EaglerAdapter.glCallList(fontDisplayLists + 256 + j1 + (flag ? 16 : 0));
-				EaglerAdapter.glTranslatef(charWidth[256 + j1 + (flag ? 16 : 0)] * 0.5f, 0.0F, 0.0F);
+				continue;
+				//EaglerAdapter.glCallList(fontDisplayLists + 256 + j1 + (flag ? 16 : 0));
+				//EaglerAdapter.glTranslatef(charWidth[256 + j1 + (flag ? 16 : 0)] * 0.5f, 0.0F, 0.0F);
 			}
 
 			if (i1 < s.length()) {
@@ -171,4 +172,6 @@ public class FontRenderer {
 	public int fontTextureName;
 	private int fontDisplayLists;
 	private IntBuffer buffer;
+	
+	public static final char formatChar = '\247';
 }
