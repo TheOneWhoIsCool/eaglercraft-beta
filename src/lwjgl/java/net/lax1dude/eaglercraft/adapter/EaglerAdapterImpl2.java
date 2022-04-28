@@ -14,6 +14,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -29,6 +30,8 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
@@ -65,9 +68,8 @@ import org.lwjgl.util.glu.GLU;
 import de.cuina.fireandfuel.CodecJLayerMP3;
 import net.lax1dude.eaglercraft.AssetRepository;
 import net.lax1dude.eaglercraft.EarlyLoadScreen;
-import net.lax1dude.eaglercraft.adapter.EaglerAdapterImpl2.ProgramGL;
-import net.lax1dude.eaglercraft.adapter.EaglerAdapterImpl2.RateLimit;
 import net.lax1dude.eaglercraft.adapter.lwjgl.GameWindowListener;
+import net.minecraft.src.ISaveFormat;
 import net.minecraft.src.MathHelper;
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
@@ -1550,6 +1552,215 @@ public class EaglerAdapterImpl2 {
 		return serverToJoinOnLaunch;
 	}
 	
+	private static final File filesystemBaseDirectory = new File("./filesystem");
 	
+	static {
+		filesystemBaseDirectory.mkdirs();
+	}
+	
+	// ======== Virtual Filesystem Functions =============
+	
+	public static final boolean fileExists(String path) {
+		return (new File(filesystemBaseDirectory, stripPath(path))).isFile();
+	}
+	
+	public static final boolean directoryExists(String path) {
+		return (new File(filesystemBaseDirectory, stripPath(path))).isDirectory();
+	}
+	
+	public static final void writeFile(String path, byte[] data) {
+		try {
+			File f = new File(filesystemBaseDirectory, stripPath(path));
+			File p = f.getParentFile();
+			if(p != null) {
+				p.mkdirs();
+			}
+			FileOutputStream os = new FileOutputStream(f);
+			os.write(data);
+			os.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static final byte[] readFile(String path) {
+		File f = new File(filesystemBaseDirectory, stripPath(path));
+		if(!f.isFile()) {
+			return null;
+		}
+		try {
+			byte[] ret = new byte[(int)f.length()];
+			FileInputStream in = new FileInputStream(f);
+			in.read(ret);
+			in.close();
+			return ret;
+		}catch(IOException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static final long getLastModified(String path) {
+		return (new File(filesystemBaseDirectory, stripPath(path))).lastModified();
+	}
+	
+	public static final void setLastModified(String path, long t) {
+		(new File(filesystemBaseDirectory, stripPath(path))).setLastModified(t);
+	}
+	
+	public static final void touchFile(String path) {
+		(new File(filesystemBaseDirectory, stripPath(path))).setLastModified(System.currentTimeMillis());
+	}
+	
+	public static final int getFileSize(String path) {
+		return (int)(new File(filesystemBaseDirectory, stripPath(path))).length();
+	}
+	
+	public static final void renameFile(String oldPath, String newPath) {
+		File f1 = new File(filesystemBaseDirectory, stripPath(oldPath));
+		File f2 = new File(filesystemBaseDirectory, stripPath(newPath));
+		if(f1.exists()) {
+			if(f2.exists()) {
+				try {
+					FileInputStream fs1 = new FileInputStream(f1);
+					FileOutputStream fs2 = new FileOutputStream(f2);
+					byte[] buffer = new byte[1024 * 64];
+					int a;
+					while((a = fs1.read(buffer)) > 0) {
+						fs2.write(buffer, 0, a);
+					}
+					fs1.close();
+					fs2.close();
+					f1.delete();
+				} catch (IOException e) {
+					System.err.println("Copy from '" + oldPath + "' to '" + newPath + "' failed");
+					e.printStackTrace();
+				}
+			}else {
+				File p = f2.getParentFile();
+				if(p != null) {
+					p.mkdirs();
+				}
+				f1.renameTo(f2);
+			}
+		}
+	}
+	
+	public static final void copyFile(String oldPath, String newPath) {
+		try {
+			File ff2 = new File(filesystemBaseDirectory, stripPath(newPath));
+			File p = ff2.getParentFile();
+			if(p != null) {
+				p.mkdirs();
+			}
+			FileInputStream f1 = new FileInputStream(new File(filesystemBaseDirectory, stripPath(oldPath)));
+			FileOutputStream f2 = new FileOutputStream(ff2);
+			byte[] buffer = new byte[1024 * 64];
+			int a;
+			while((a = f1.read(buffer)) > 0) {
+				f2.write(buffer, 0, a);
+			}
+			f1.close();
+			f2.close();
+		} catch (IOException e) {
+			System.err.println("Copy from '" + oldPath + "' to '" + newPath + "' failed");
+			e.printStackTrace();
+		}
+	}
+	
+	public static final void deleteFile(String path) {
+		(new File(filesystemBaseDirectory, stripPath(path))).delete();
+	}
+	
+	public static final Collection<FileEntry> listFiles(String path, boolean listDirs, boolean recursiveDirs) {
+		path = stripPath(path);
+		ArrayList<FileEntry> ret = new ArrayList<>();
+		File f = new File(filesystemBaseDirectory, path);
+		if(f.isFile()) {
+			ret.add(new FileEntry(path, false, f.lastModified(), (int)f.length()));
+		}else if(f.isDirectory()) {
+			for(File ff : f.listFiles()) {
+				if(ff.isDirectory()) {
+					if(listDirs && !recursiveDirs) {
+						ret.add(new FileEntry(path + "/" + ff.getName(), true, -1l, -1));
+					}
+					if(recursiveDirs) {
+						recursiveListing(path + "/" + ff.getName(), ff, ret, listDirs, recursiveDirs);
+					}
+				}else {
+					ret.add(new FileEntry(path + "/" + ff.getName(), false, ff.lastModified(), (int)ff.length()));
+				}
+			}
+		}
+		return ret;
+	}
+	
+	private static void recursiveListing(String path, File f, Collection<FileEntry> lst, boolean listDirs, boolean recursiveDirs) {
+		if(f.isFile()) {
+			lst.add(new FileEntry(path, false, f.lastModified(), (int)f.length()));
+		}else if(f.isDirectory()) {
+			if(listDirs) {
+				lst.add(new FileEntry(path, true, -1l, -1));
+			}
+			if(recursiveDirs) {
+				for(File ff : f.listFiles()) {
+					recursiveListing(path + "/" + ff.getName(), ff, lst, listDirs, recursiveDirs);
+				}
+			}
+		}
+	}
+	
+	public static final Collection<FileEntry> listFilesAndDirectories(String path) {
+		return listFiles(path, true, false);
+	}
+	
+	public static final Collection<FileEntry> listFilesRecursive(String path) {
+		return listFiles(path, false, true);
+	}
+	
+	public static class FileEntry {
+		
+		public final String path;
+		public final boolean isDirectory;
+		public final long lastModified;
+		public final int fileSize;
+		
+		protected FileEntry(String path, boolean isDirectory, long lastModified, int fileSize) {
+			this.path = path;
+			this.isDirectory = isDirectory;
+			this.lastModified = lastModified;
+			this.fileSize = fileSize;
+		}
+		
+		public String getName() {
+			int i = path.indexOf('/');
+			if(i >= 0) {
+				return path.substring(i + 1);
+			}else {
+				return path;
+			}
+		}
+		
+	}
+	
+	private static String stripPath(String str) {
+		if(str.startsWith("/")) {
+			str = str.substring(1);
+		}
+		if(str.endsWith("/")) {
+			str = str.substring(0, str.length() - 1);
+		}
+		return str;
+	}
+	
+	private static ISaveFormat svformat = null;
+	
+	public static final void configureSaveFormat(ISaveFormat fmt) {
+		svformat = fmt;
+	}
+	
+	public static final ISaveFormat getConfiguredSaveFormat() {
+		return svformat;
+	}
 
 }

@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package net.lax1dude.eaglercraft.anvil;
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
@@ -7,13 +7,18 @@ package net.minecraft.src;
 import java.io.File;
 import java.util.List;
 
+import net.minecraft.src.IChunkLoader;
+import net.minecraft.src.WorldInfo;
+import net.minecraft.src.WorldProvider;
+import net.minecraft.src.WorldProviderHell;
+
 public class SaveOldDir extends SaveHandler {
 
 	public SaveOldDir(File file, String s, boolean flag) {
 		super(file, s, flag);
 	}
 
-	public IChunkLoader func_22149_a(WorldProvider worldprovider) {
+	public IChunkLoader getChunkLoader(WorldProvider worldprovider) {
 		File file = func_22153_a();
 		if (worldprovider instanceof WorldProviderHell) {
 			File file1 = new File(file, "DIM-1");
@@ -24,8 +29,8 @@ public class SaveOldDir extends SaveHandler {
 		}
 	}
 
-	public void func_22148_a(WorldInfo worldinfo, List list) {
+	public void saveWorldAndPlayer(WorldInfo worldinfo, List list) {
 		worldinfo.func_22289_d(19132);
-		super.func_22148_a(worldinfo, list);
+		super.saveWorldAndPlayer(worldinfo, list);
 	}
 }

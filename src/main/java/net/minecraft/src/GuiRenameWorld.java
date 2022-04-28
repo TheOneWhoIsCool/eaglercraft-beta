@@ -29,7 +29,7 @@ public class GuiRenameWorld extends GuiScreen {
 		controlList.add(
 				new GuiButton(1, width / 2 - 100, height / 4 + 120 + 12, stringtranslate.translateKey("gui.cancel")));
 		ISaveFormat isaveformat = mc.func_22004_c();
-		WorldInfo worldinfo = isaveformat.func_22173_b(field_22113_i);
+		WorldInfo worldinfo = isaveformat.getWorldInfoForWorld(field_22113_i);
 		String s = worldinfo.getWorldName();
 		field_22114_h = new GuiDisableButton(fontRenderer, width / 2 - 100, 60, 200, 20, s);
 		field_22114_h.field_22082_a = true;
@@ -48,7 +48,7 @@ public class GuiRenameWorld extends GuiScreen {
 			mc.displayGuiScreen(field_22112_a);
 		} else if (guibutton.id == 0) {
 			ISaveFormat isaveformat = mc.func_22004_c();
-			isaveformat.func_22170_a(field_22113_i, field_22114_h.func_22071_a().trim());
+			isaveformat.renameWorldData(field_22113_i, field_22114_h.func_22071_a().trim());
 			mc.displayGuiScreen(field_22112_a);
 		}
 	}

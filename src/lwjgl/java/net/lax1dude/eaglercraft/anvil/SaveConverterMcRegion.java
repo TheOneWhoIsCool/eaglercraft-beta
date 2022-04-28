@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package net.lax1dude.eaglercraft.anvil;
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
@@ -8,17 +8,23 @@ import java.io.*;
 import java.util.*;
 import java.util.zip.GZIPInputStream;
 
+import net.minecraft.src.IProgressUpdate;
+import net.minecraft.src.ISaveHandler;
+import net.minecraft.src.MathHelper;
+import net.minecraft.src.SaveFormatComparator;
+import net.minecraft.src.WorldInfo;
+
 public class SaveConverterMcRegion extends SaveFormatOld {
 
 	public SaveConverterMcRegion(File file) {
 		super(file);
 	}
 
-	public String func_22178_a() {
+	public String formatName() {
 		return "Scaevolus' McRegion";
 	}
 
-	public List func_22176_b() {
+	public List getWorldList() {
 		ArrayList arraylist = new ArrayList();
 		File afile[] = field_22180_a.listFiles();
 		File afile1[] = afile;
@@ -29,7 +35,7 @@ public class SaveConverterMcRegion extends SaveFormatOld {
 				continue;
 			}
 			String s = file.getName();
-			WorldInfo worldinfo = func_22173_b(s);
+			WorldInfo worldinfo = getWorldInfoForWorld(s);
 			if (worldinfo == null) {
 				continue;
 			}
@@ -44,20 +50,20 @@ public class SaveConverterMcRegion extends SaveFormatOld {
 		return arraylist;
 	}
 
-	public void func_22177_c() {
+	public void flushCache() {
 		RegionFileCache.func_22192_a();
 	}
 
-	public ISaveHandler func_22174_a(String s, boolean flag) {
+	public ISaveHandler loadWorldHandler(String s, boolean flag) {
 		return new SaveOldDir(field_22180_a, s, flag);
 	}
 
-	public boolean func_22175_a(String s) {
-		WorldInfo worldinfo = func_22173_b(s);
+	public boolean worldNeedsConvert_maybe(String s) {
+		WorldInfo worldinfo = getWorldInfoForWorld(s);
 		return worldinfo != null && worldinfo.func_22296_k() == 0;
 	}
 
-	public boolean func_22171_a(String s, IProgressUpdate iprogressupdate) {
+	public boolean convertSave(String s, IProgressUpdate iprogressupdate) {
 		iprogressupdate.setLoadingProgress(0);
 		ArrayList arraylist = new ArrayList();
 		ArrayList arraylist1 = new ArrayList();
@@ -74,10 +80,10 @@ public class SaveConverterMcRegion extends SaveFormatOld {
 		System.out.println((new StringBuilder()).append("Total conversion count is ").append(i).toString());
 		func_22181_a(file, arraylist, 0, i, iprogressupdate);
 		func_22181_a(file1, arraylist2, arraylist.size(), i, iprogressupdate);
-		WorldInfo worldinfo = func_22173_b(s);
+		WorldInfo worldinfo = getWorldInfoForWorld(s);
 		worldinfo.func_22289_d(19132);
-		ISaveHandler isavehandler = func_22174_a(s, false);
-		isavehandler.func_22152_a(worldinfo);
+		ISaveHandler isavehandler = loadWorldHandler(s, false);
+		isavehandler.saveWorldInfo(worldinfo);
 		func_22182_a(arraylist1, arraylist.size() + arraylist2.size(), i, iprogressupdate);
 		if (file1.exists()) {
 			func_22182_a(arraylist3, arraylist.size() + arraylist2.size() + arraylist1.size(), i, iprogressupdate);

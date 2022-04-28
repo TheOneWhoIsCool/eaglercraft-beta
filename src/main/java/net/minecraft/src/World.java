@@ -116,7 +116,7 @@ public class World implements IBlockAccess {
 		field_1012_M = new ArrayList();
 		multiplayerWorld = false;
 		field_22147_p = isavehandler;
-		worldinfo = isavehandler.func_22151_c();
+		worldinfo = isavehandler.getWorldInfo();
 		isNewWorld = worldinfo == null;
 		if (worldprovider != null) {
 			worldProvider = worldprovider;
@@ -150,7 +150,7 @@ public class World implements IBlockAccess {
 	}
 
 	protected IChunkProvider getChunkProvider() {
-		IChunkLoader ichunkloader = field_22147_p.func_22149_a(worldProvider);
+		IChunkLoader ichunkloader = field_22147_p.getChunkLoader(worldProvider);
 		return new ChunkProviderLoadOrGenerate(this, ichunkloader, worldProvider.getChunkProvider());
 	}
 
@@ -213,7 +213,7 @@ public class World implements IBlockAccess {
 
 	private void saveLevel() {
 		checkSessionLock();
-		field_22147_p.func_22148_a(worldinfo, playerEntities);
+		field_22147_p.saveWorldAndPlayer(worldinfo, playerEntities);
 	}
 
 	public boolean func_650_a(int i) {
@@ -1817,7 +1817,7 @@ public class World implements IBlockAccess {
 	}
 
 	public void checkSessionLock() {
-		field_22147_p.func_22150_b();
+		field_22147_p.checkSessionLock();
 	}
 
 	public void setWorldTime(long l) {

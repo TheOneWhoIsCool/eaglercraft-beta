@@ -1,10 +1,18 @@
-package net.minecraft.src;
+package net.lax1dude.eaglercraft.anvil;
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
 import java.io.*;
+
+import net.lax1dude.eaglercraft.beta.EaglercraftChunkLoader;
+import net.minecraft.src.Chunk;
+import net.minecraft.src.CompressedStreamTools;
+import net.minecraft.src.IChunkLoader;
+import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.World;
+import net.minecraft.src.WorldInfo;
 
 public class McRegionChunkLoader implements IChunkLoader {
 
@@ -36,7 +44,7 @@ public class McRegionChunkLoader implements IChunkLoader {
 					.append(" is missing block data, skipping").toString());
 			return null;
 		}
-		Chunk chunk = ChunkLoader.loadChunkIntoWorldFromCompound(world, nbttagcompound.getCompoundTag("Level"));
+		Chunk chunk = EaglercraftChunkLoader.loadChunkIntoWorldFromCompound(world, nbttagcompound.getCompoundTag("Level"));
 		if (!chunk.isAtLocation(i, j)) {
 			System.out.println((new StringBuilder()).append("Chunk file at ").append(i).append(",").append(j)
 					.append(" is in the wrong location; relocating. (Expected ").append(i).append(", ").append(j)
@@ -44,7 +52,7 @@ public class McRegionChunkLoader implements IChunkLoader {
 					.toString());
 			nbttagcompound.setInteger("xPos", i);
 			nbttagcompound.setInteger("zPos", j);
-			chunk = ChunkLoader.loadChunkIntoWorldFromCompound(world, nbttagcompound.getCompoundTag("Level"));
+			chunk = EaglercraftChunkLoader.loadChunkIntoWorldFromCompound(world, nbttagcompound.getCompoundTag("Level"));
 		}
 		return chunk;
 	}
@@ -57,7 +65,7 @@ public class McRegionChunkLoader implements IChunkLoader {
 			NBTTagCompound nbttagcompound = new NBTTagCompound();
 			NBTTagCompound nbttagcompound1 = new NBTTagCompound();
 			nbttagcompound.setTag("Level", nbttagcompound1);
-			ChunkLoader.storeChunkInCompound(chunk, world, nbttagcompound1);
+			EaglercraftChunkLoader.storeChunkInCompound(chunk, world, nbttagcompound1);
 			CompressedStreamTools.func_1139_a(nbttagcompound, dataoutputstream);
 			dataoutputstream.close();
 			WorldInfo worldinfo = world.func_22144_v();

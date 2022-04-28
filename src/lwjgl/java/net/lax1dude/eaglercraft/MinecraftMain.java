@@ -1,7 +1,10 @@
 package net.lax1dude.eaglercraft;
 
+import java.io.File;
+
 import javax.swing.JOptionPane;
 
+import net.lax1dude.eaglercraft.anvil.SaveConverterMcRegion;
 import net.minecraft.client.Minecraft;
 
 public class MinecraftMain {
@@ -12,6 +15,13 @@ public class MinecraftMain {
 				JOptionPane.PLAIN_MESSAGE);
 		EaglerAdapter.initializeContext();
 
+		for(int i = 0; i < par0ArrayOfStr.length; ++i) {
+			String arg = par0ArrayOfStr[i];
+			if("--anvilSaveFormat".equalsIgnoreCase(arg)) {
+				EaglerAdapter.configureSaveFormat(new SaveConverterMcRegion(new File("lwjgl_saves")));
+			}
+		}
+		
 		/*
 		 * LocalStorageManager.loadStorage(); byte[] b =
 		 * EaglerAdapter.loadLocalStorage("forced"); if(b != null) {

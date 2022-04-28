@@ -13,9 +13,8 @@ class PacketCounter {
 		field_22238_a++;
 		field_22237_b += i;
 	}
-
-	PacketCounter(Empty1 empty1) {
-		this();
+	
+	public PacketCounter(Object wtf) {
 	}
 
 	private int field_22238_a;

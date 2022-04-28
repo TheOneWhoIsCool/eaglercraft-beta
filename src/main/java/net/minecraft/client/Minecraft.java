@@ -9,6 +9,7 @@ import java.io.*;
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
+import net.lax1dude.eaglercraft.beta.EaglercraftSaveManager;
 import net.lax1dude.eaglercraft.beta.SingleplayerCommands;
 import net.minecraft.src.*;
 
@@ -59,7 +60,12 @@ public class Minecraft implements Runnable {
 	public void startGame() {
 		RenderManager.instance.itemRenderer = new ItemRenderer(this);
 		mcDataDir = getMinecraftDir();
-		field_22008_V = new SaveConverterMcRegion(new File(mcDataDir, "saves"));
+		
+		field_22008_V = EaglerAdapter.getConfiguredSaveFormat();
+		if(field_22008_V == null) {
+			field_22008_V = new EaglercraftSaveManager("saves");
+		}
+		
 		gameSettings = new GameSettings(this, mcDataDir);
 		texturePackList = new TexturePackList(this);
 		renderEngine = new RenderEngine(texturePackList, gameSettings);
@@ -767,10 +773,10 @@ public class Minecraft implements Runnable {
 	public void startWorld(String s, String s1, long l) {
 		changeWorld1(null);
 		System.gc();
-		if (field_22008_V.func_22175_a(s)) {
+		if (field_22008_V.worldNeedsConvert_maybe(s)) {
 			func_22002_b(s, s1);
 		} else {
-			ISaveHandler isavehandler = field_22008_V.func_22174_a(s, false);
+			ISaveHandler isavehandler = field_22008_V.loadWorldHandler(s, false);
 			World world = new World(isavehandler, s1, l);
 			if (world.isNewWorld) {
 				changeWorld2(world, "Generating level");
@@ -881,9 +887,9 @@ public class Minecraft implements Runnable {
 
 	private void func_22002_b(String s, String s1) {
 		loadingScreen.printText(
-				(new StringBuilder()).append("Converting World to ").append(field_22008_V.func_22178_a()).toString());
+				(new StringBuilder()).append("Converting World to ").append(field_22008_V.formatName()).toString());
 		loadingScreen.displayLoadingString("This may take a while :)");
-		field_22008_V.func_22171_a(s, loadingScreen);
+		field_22008_V.convertSave(s, loadingScreen);
 		startWorld(s, s1, 0L);
 	}
 

@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package net.lax1dude.eaglercraft.anvil;
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
@@ -7,6 +7,14 @@ package net.minecraft.src;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.minecraft.src.CompressedStreamTools;
+import net.minecraft.src.IProgressUpdate;
+import net.minecraft.src.ISaveFormat;
+import net.minecraft.src.ISaveHandler;
+import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.SaveFormatComparator;
+import net.minecraft.src.WorldInfo;
 
 public class SaveFormatOld implements ISaveFormat {
 
@@ -17,15 +25,15 @@ public class SaveFormatOld implements ISaveFormat {
 		field_22180_a = file;
 	}
 
-	public String func_22178_a() {
+	public String formatName() {
 		return "Old Format";
 	}
 
-	public List func_22176_b() {
+	public List getWorldList() {
 		ArrayList arraylist = new ArrayList();
 		for (int i = 0; i < 5; i++) {
 			String s = (new StringBuilder()).append("World").append(i + 1).toString();
-			WorldInfo worldinfo = func_22173_b(s);
+			WorldInfo worldinfo = getWorldInfoForWorld(s);
 			if (worldinfo != null) {
 				arraylist.add(
 						new SaveFormatComparator(s, "", worldinfo.func_22301_l(), worldinfo.func_22306_g(), false));
@@ -35,10 +43,10 @@ public class SaveFormatOld implements ISaveFormat {
 		return arraylist;
 	}
 
-	public void func_22177_c() {
+	public void flushCache() {
 	}
 
-	public WorldInfo func_22173_b(String s) {
+	public WorldInfo getWorldInfoForWorld(String s) {
 		File file = new File(field_22180_a, s);
 		if (!file.exists()) {
 			return null;
@@ -56,7 +64,7 @@ public class SaveFormatOld implements ISaveFormat {
 		return null;
 	}
 
-	public void func_22170_a(String s, String s1) {
+	public void renameWorldData(String s, String s1) {
 		File file = new File(field_22180_a, s);
 		if (!file.exists()) {
 			return;
@@ -74,7 +82,7 @@ public class SaveFormatOld implements ISaveFormat {
 		}
 	}
 
-	public void func_22172_c(String s) {
+	public void deleteWorldByDirectory(String s) {
 		File file = new File(field_22180_a, s);
 		if (!file.exists()) {
 			return;
@@ -95,15 +103,15 @@ public class SaveFormatOld implements ISaveFormat {
 
 	}
 
-	public ISaveHandler func_22174_a(String s, boolean flag) {
+	public ISaveHandler loadWorldHandler(String s, boolean flag) {
 		return new SaveHandler(field_22180_a, s, flag);
 	}
 
-	public boolean func_22175_a(String s) {
+	public boolean worldNeedsConvert_maybe(String s) {
 		return false;
 	}
 
-	public boolean func_22171_a(String s, IProgressUpdate iprogressupdate) {
+	public boolean convertSave(String s, IProgressUpdate iprogressupdate) {
 		return false;
 	}
 

@@ -50,7 +50,7 @@ public class GuiCreateWorld extends GuiScreen {
 			field_22132_k = "World";
 		}
 		for (ISaveFormat isaveformat = mc.func_22004_c(); isaveformat
-				.func_22173_b(field_22132_k) != null; field_22132_k = (new StringBuilder()).append(field_22132_k)
+				.getWorldInfoForWorld(field_22132_k) != null; field_22132_k = (new StringBuilder()).append(field_22132_k)
 						.append("-").toString()) {
 		}
 	}

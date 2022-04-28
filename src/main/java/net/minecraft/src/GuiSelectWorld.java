@@ -31,7 +31,7 @@ public class GuiSelectWorld extends GuiScreen {
 
 	private void func_22084_k() {
 		ISaveFormat isaveformat = mc.func_22004_c();
-		field_22100_m = isaveformat.func_22176_b();
+		field_22100_m = isaveformat.getWorldList();
 		Collections.sort(field_22100_m);
 		field_22101_l = -1;
 	}
@@ -117,8 +117,8 @@ public class GuiSelectWorld extends GuiScreen {
 			field_22096_q = false;
 			if (flag) {
 				ISaveFormat isaveformat = mc.func_22004_c();
-				isaveformat.func_22177_c();
-				isaveformat.func_22172_c(func_22091_c(i));
+				isaveformat.flushCache();
+				isaveformat.deleteWorldByDirectory(func_22091_c(i));
 				func_22084_k();
 			}
 			mc.displayGuiScreen(this);
