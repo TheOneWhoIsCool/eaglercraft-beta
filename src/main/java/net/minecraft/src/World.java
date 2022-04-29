@@ -83,6 +83,10 @@ public class World implements IBlockAccess {
 		chunkProvider = getChunkProvider();
 		calculateInitialSkylight();
 	}
+	
+	public WorldInfo getInfo() {
+		return worldinfo;
+	}
 
 	public World(ISaveHandler isavehandler, String s, long l) {
 		this(isavehandler, s, l, ((WorldProvider) (null)));
@@ -1451,9 +1455,6 @@ public class World implements IBlockAccess {
 		long l1 = worldinfo.getWorldTime() + 1L;
 		if (l1 % (long) autosavePeriod == 0L) {
 			saveWorld(false, null);
-		}
-		if(l1 % 24000 > 12000) {
-			l1 += 12000;
 		}
 		worldinfo.setWorldTime(l1);
 		TickUpdates(false);

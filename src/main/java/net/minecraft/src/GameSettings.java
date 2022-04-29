@@ -4,88 +4,49 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.io.*;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.LocalStorageManager;
 import net.minecraft.client.Minecraft;
 
 public class GameSettings {
-
-	public GameSettings(Minecraft minecraft, File file) {
-		musicVolume = 1.0F;
-		soundVolume = 1.0F;
-		mouseSensitivity = 0.5F;
-		invertMouse = false;
-		renderDistance = 0;
-		viewBobbing = true;
-		anaglyph = false;
-		limitFramerate = false;
-		fancyGraphics = true;
-		field_22278_j = true;
-		antialiasing = 1;
-		skin = "Default";
-		keyBindForward = new KeyBinding("key.forward", 17);
-		keyBindLeft = new KeyBinding("key.left", 30);
-		keyBindBack = new KeyBinding("key.back", 31);
-		keyBindRight = new KeyBinding("key.right", 32);
-		keyBindJump = new KeyBinding("key.jump", 57);
-		keyBindInventory = new KeyBinding("key.inventory", 8);
-		keyBindDrop = new KeyBinding("key.drop", 16);
-		keyBindChat = new KeyBinding("key.chat", 20);
-		keyBindToggleFog = new KeyBinding("key.fog", 33);
-		keyBindSneak = new KeyBinding("key.sneak", 42);
-		keyBindings = (new KeyBinding[] { keyBindForward, keyBindLeft, keyBindBack, keyBindRight, keyBindJump,
-				keyBindSneak, keyBindDrop, keyBindInventory, keyBindChat, keyBindToggleFog });
-		difficulty = 2;
-		field_22277_y = false;
-		thirdPersonView = false;
-		showDebugInfo = false;
-		lastServer = "";
-		field_22275_C = false;
-		field_22274_D = false;
-		field_22273_E = false;
-		field_22272_F = 1.0F;
-		field_22271_G = 1.0F;
-		mc = minecraft;
-		optionsFile = new File(file, "options.txt");
-		loadOptions();
-	}
 
 	public GameSettings() {
 		musicVolume = 1.0F;
 		soundVolume = 1.0F;
 		mouseSensitivity = 0.5F;
 		invertMouse = false;
-		renderDistance = 0;
+		renderDistance = 2;
 		viewBobbing = true;
 		anaglyph = false;
 		limitFramerate = false;
 		fancyGraphics = false;
 		field_22278_j = false;
 		antialiasing = 1;
-		skin = "Default";
 		keyBindForward = new KeyBinding("key.forward", 17);
 		keyBindLeft = new KeyBinding("key.left", 30);
 		keyBindBack = new KeyBinding("key.back", 31);
 		keyBindRight = new KeyBinding("key.right", 32);
 		keyBindJump = new KeyBinding("key.jump", 57);
-		keyBindInventory = new KeyBinding("key.inventory", 23);
+		keyBindInventory = new KeyBinding("key.inventory", 18);
 		keyBindDrop = new KeyBinding("key.drop", 16);
 		keyBindChat = new KeyBinding("key.chat", 20);
-		keyBindToggleFog = new KeyBinding("key.fog", 33);
 		keyBindSneak = new KeyBinding("key.sneak", 42);
+		keyBindFunction = new KeyBinding("key.function", 33);
 		keyBindings = (new KeyBinding[] { keyBindForward, keyBindLeft, keyBindBack, keyBindRight, keyBindJump,
-				keyBindSneak, keyBindDrop, keyBindInventory, keyBindChat, keyBindToggleFog });
-		difficulty = 2;
+				keyBindSneak, keyBindDrop, keyBindInventory, keyBindChat, keyBindFunction });
+		difficulty = 1;
 		field_22277_y = false;
 		thirdPersonView = false;
 		showDebugInfo = false;
 		lastServer = "";
+		texturePack = "Default";
 		field_22275_C = false;
 		field_22274_D = false;
 		field_22273_E = false;
 		field_22272_F = 1.0F;
 		field_22271_G = 1.0F;
+		loadOptions();
 	}
 
 	public String getKeyBindingDescription(int i) {
@@ -242,110 +203,50 @@ public class GameSettings {
 	}
 
 	public void loadOptions() {
-		try {
-			if (!optionsFile.exists()) {
-				return;
+		NBTTagCompound yee = LocalStorageManager.gameSettingsStorage;
+		if(!yee.hasNoTags()) {
+			if(yee.hasKey("musicVolume")) musicVolume = yee.getFloat("musicVolume");
+			if(yee.hasKey("soundVolume")) soundVolume = yee.getFloat("soundVolume");
+			if(yee.hasKey("mouseSensitivity")) mouseSensitivity = yee.getFloat("mouseSensitivity");
+			if(yee.hasKey("invertMouse")) invertMouse = yee.getBoolean("invertMouse");
+			if(yee.hasKey("renderDistance")) renderDistance = (int)yee.getByte("renderDistance") & 0xFF;
+			if(yee.hasKey("viewBobbing")) viewBobbing = yee.getBoolean("viewBobbing");
+			if(yee.hasKey("anaglyph")) anaglyph = yee.getBoolean("anaglyph");
+			if(yee.hasKey("limitFramerate")) limitFramerate = yee.getBoolean("limitFramerate");
+			if(yee.hasKey("difficulty")) difficulty = (int)yee.getByte("difficulty") & 0xFF;
+			if(yee.hasKey("fancyGraphics")) fancyGraphics = yee.getBoolean("fancyGraphics");
+			if(yee.hasKey("ao")) field_22278_j = yee.getBoolean("ao");
+			if(yee.hasKey("antialiasing")) antialiasing = (int)yee.getByte("antialiasing") & 0xFF;
+			if(yee.hasKey("lastServer")) lastServer = yee.getString("lastServer");
+			if(yee.hasKey("texturePack")) texturePack = yee.getString("texturePack");
+			for(int i = 0; i < keyBindings.length; ++i) {
+				String k = "key_" + keyBindings[i].keyDescription;
+				if(yee.hasKey(k)) keyBindings[i].keyCode = (int)yee.getShort(k) & 0xFFFF;
 			}
-			BufferedReader bufferedreader = new BufferedReader(new FileReader(optionsFile));
-			for (String s = ""; (s = bufferedreader.readLine()) != null;) {
-				String as[] = s.split(":");
-				if (as[0].equals("music")) {
-					musicVolume = parseFloat(as[1]);
-				}
-				if (as[0].equals("sound")) {
-					soundVolume = parseFloat(as[1]);
-				}
-				if (as[0].equals("mouseSensitivity")) {
-					mouseSensitivity = parseFloat(as[1]);
-				}
-				if (as[0].equals("invertYMouse")) {
-					invertMouse = as[1].equals("true");
-				}
-				if (as[0].equals("viewDistance")) {
-					renderDistance = Integer.parseInt(as[1]);
-				}
-				if (as[0].equals("bobView")) {
-					viewBobbing = as[1].equals("true");
-				}
-				if (as[0].equals("anaglyph3d")) {
-					anaglyph = as[1].equals("true");
-				}
-				if (as[0].equals("limitFramerate")) {
-					limitFramerate = as[1].equals("true");
-				}
-				if (as[0].equals("difficulty")) {
-					difficulty = Integer.parseInt(as[1]);
-				}
-				if (as[0].equals("fancyGraphics")) {
-					fancyGraphics = as[1].equals("true");
-				}
-				if (as[0].equals("ao")) {
-					field_22278_j = as[1].equals("true");
-				}
-				if (as[0].equals("antialiasing")) {
-					antialiasing = Integer.parseInt(as[1]);
-				}
-				if (as[0].equals("skin")) {
-					skin = as[1];
-				}
-				if (as[0].equals("lastServer") && as.length >= 2) {
-					lastServer = as[1];
-				}
-				int i = 0;
-				while (i < keyBindings.length) {
-					if (as[0].equals(
-							(new StringBuilder()).append("key_").append(keyBindings[i].keyDescription).toString())) {
-						keyBindings[i].keyCode = Integer.parseInt(as[1]);
-					}
-					i++;
-				}
-			}
-
-			bufferedreader.close();
-		} catch (Exception exception) {
-			System.out.println("Failed to load options");
-			exception.printStackTrace();
-		}
-	}
-
-	private float parseFloat(String s) {
-		if (s.equals("true")) {
-			return 1.0F;
-		}
-		if (s.equals("false")) {
-			return 0.0F;
-		} else {
-			return Float.parseFloat(s);
 		}
 	}
 
 	public void saveOptions() {
-		try {
-			PrintWriter printwriter = new PrintWriter(new FileWriter(optionsFile));
-			printwriter.println((new StringBuilder()).append("music:").append(musicVolume).toString());
-			printwriter.println((new StringBuilder()).append("sound:").append(soundVolume).toString());
-			printwriter.println((new StringBuilder()).append("invertYMouse:").append(invertMouse).toString());
-			printwriter.println((new StringBuilder()).append("mouseSensitivity:").append(mouseSensitivity).toString());
-			printwriter.println((new StringBuilder()).append("viewDistance:").append(renderDistance).toString());
-			printwriter.println((new StringBuilder()).append("bobView:").append(viewBobbing).toString());
-			printwriter.println((new StringBuilder()).append("anaglyph3d:").append(anaglyph).toString());
-			printwriter.println((new StringBuilder()).append("limitFramerate:").append(limitFramerate).toString());
-			printwriter.println((new StringBuilder()).append("difficulty:").append(difficulty).toString());
-			printwriter.println((new StringBuilder()).append("fancyGraphics:").append(fancyGraphics).toString());
-			printwriter.println((new StringBuilder()).append("ao:").append(field_22278_j).toString());
-			printwriter.println((new StringBuilder()).append("antialiasing:").append(antialiasing).toString());
-			printwriter.println((new StringBuilder()).append("skin:").append(skin).toString());
-			printwriter.println((new StringBuilder()).append("lastServer:").append(lastServer).toString());
-			for (int i = 0; i < keyBindings.length; i++) {
-				printwriter.println((new StringBuilder()).append("key_").append(keyBindings[i].keyDescription)
-						.append(":").append(keyBindings[i].keyCode).toString());
-			}
-
-			printwriter.close();
-		} catch (Exception exception) {
-			System.out.println("Failed to save options");
-			exception.printStackTrace();
+		NBTTagCompound yee = LocalStorageManager.gameSettingsStorage;
+		yee.setFloat("musicVolume", musicVolume);
+		yee.setFloat("soundVolume", soundVolume);
+		yee.setFloat("mouseSensitivity", mouseSensitivity);
+		yee.setBoolean("invertMouse", invertMouse);
+		yee.setByte("renderDistance", (byte)renderDistance);
+		yee.setBoolean("viewBobbing", viewBobbing);
+		yee.setBoolean("anaglyph", anaglyph);
+		yee.setBoolean("limitFramerate", limitFramerate);
+		yee.setByte("difficulty", (byte)difficulty);
+		yee.setBoolean("fancyGraphics", fancyGraphics);
+		yee.setBoolean("ao", field_22278_j);
+		yee.setByte("antialiasing", (byte)antialiasing);
+		yee.setString("lastServer", lastServer);
+		yee.setString("texturePack", texturePack);
+		for(int i = 0; i < keyBindings.length; ++i) {
+			String k = "key_" + keyBindings[i].keyDescription;
+			yee.setShort(k, (short)keyBindings[i].keyCode);
 		}
+		LocalStorageManager.saveStorageG();
 	}
 
 	private static final String RENDER_DISTANCES[] = { "options.renderDistance.far", "options.renderDistance.normal",
@@ -365,7 +266,6 @@ public class GameSettings {
 	public boolean fancyGraphics;
 	public boolean field_22278_j;
 	public int antialiasing;
-	public String skin;
 	public KeyBinding keyBindForward;
 	public KeyBinding keyBindLeft;
 	public KeyBinding keyBindBack;
@@ -374,16 +274,16 @@ public class GameSettings {
 	public KeyBinding keyBindInventory;
 	public KeyBinding keyBindDrop;
 	public KeyBinding keyBindChat;
-	public KeyBinding keyBindToggleFog;
 	public KeyBinding keyBindSneak;
+	public KeyBinding keyBindFunction;
 	public KeyBinding keyBindings[];
 	protected Minecraft mc;
-	private File optionsFile;
 	public int difficulty;
 	public boolean field_22277_y;
 	public boolean thirdPersonView;
 	public boolean showDebugInfo;
 	public String lastServer;
+	public String texturePack;
 	public boolean field_22275_C;
 	public boolean field_22274_D;
 	public boolean field_22273_E;

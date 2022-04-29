@@ -11,6 +11,7 @@ import net.minecraft.src.FontRenderer;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.MathHelper;
+import net.minecraft.src.WorldInfo;
 
 public class SingleplayerCommands {
 	
@@ -21,6 +22,7 @@ public class SingleplayerCommands {
 		singleplayerCommands.put("help", new CommandHelp());
 		singleplayerCommands.put("give", new CommandGiveItem());
 		singleplayerCommands.put("summon", new CommandSummon());
+		singleplayerCommands.put("time", new CommandTime());
 	}
 	
 	public static interface Command {
@@ -139,6 +141,34 @@ public class SingleplayerCommands {
 		@Override
 		public String getDescription() {
 			return "spawn an entity <id> [x] [y] [z]";
+		}
+		
+	}
+	
+	public static class CommandTime implements Command {
+
+		@Override
+		public void processCommand(Minecraft mc, String[] args) throws Throwable {
+			int i;
+			if(args.length != 1) {
+				throw new CommandException("arguments must be: <ticks>");
+			}
+			try {
+				i = Integer.parseInt(args[0]);
+			}catch(NumberFormatException ex) {
+				throw new CommandException("time argument must be an integer");
+			}
+			WorldInfo inf = mc.theWorld.getInfo();
+			long t = inf.getWorldTime();
+			t = t / 24000l * 24000l;
+			t += i;
+			inf.setWorldTime(t);
+			mc.displayChat("Set world time to " + i + " ticks");
+		}
+
+		@Override
+		public String getDescription() {
+			return "set world time in <ticks>";
 		}
 		
 	}

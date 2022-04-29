@@ -5,7 +5,6 @@ package net.minecraft.src;
 // Decompiler options: packimports(3) braces deadcode 
 
 import java.util.List;
-import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 
 public class GuiSleepMP extends GuiChat {

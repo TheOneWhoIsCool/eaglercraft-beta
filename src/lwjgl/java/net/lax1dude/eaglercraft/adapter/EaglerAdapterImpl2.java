@@ -992,6 +992,15 @@ public class EaglerAdapterImpl2 {
 		return Keyboard.isKeyDown(p1);
 	}
 
+	public static final boolean isFunctionKeyDown(boolean mod, int p1) {
+		return Keyboard.isKeyDown(p1) || (mod && p1 >= Keyboard.KEY_F1 && p1 <= Keyboard.KEY_F9 && Keyboard.isKeyDown(Keyboard.KEY_1 + (p1 - Keyboard.KEY_F1)));
+	}
+
+	public static final boolean isFunctionKeyDown(int mod, int p1) {
+		return Keyboard.isKeyDown(p1) || (Keyboard.isKeyDown(mod) && p1 >= Keyboard.KEY_F1 && p1 <= Keyboard.KEY_F9 &
+				Keyboard.isKeyDown(Keyboard.KEY_1 + (p1 - Keyboard.KEY_F1)));
+	}
+
 	public static final String getKeyName(int p1) {
 		return Keyboard.getKeyName(p1);
 	}

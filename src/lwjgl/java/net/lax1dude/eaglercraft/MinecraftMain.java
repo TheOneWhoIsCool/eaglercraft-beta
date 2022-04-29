@@ -8,12 +8,25 @@ import net.lax1dude.eaglercraft.anvil.SaveConverterMcRegion;
 import net.minecraft.client.Minecraft;
 
 public class MinecraftMain {
+	
+	private static class MinecraftImpl extends Minecraft {
+		
+		@Override
+		public void displayCrashScreen(Throwable t) {
+			System.err.println("GAME CRASHED! Crash screen was requested");
+			t.printStackTrace();
+			EaglerAdapter.destroyContext();
+			EaglerAdapter.exit();
+		}
+		
+	}
 
 	public static void main(String[] par0ArrayOfStr) {
-
 		JOptionPane.showMessageDialog(null, "launch renderdoc (optionally) and press ok to continue", "eaglercraft",
 				JOptionPane.PLAIN_MESSAGE);
+		
 		EaglerAdapter.initializeContext();
+		LocalStorageManager.loadStorage();
 
 		for(int i = 0; i < par0ArrayOfStr.length; ++i) {
 			String arg = par0ArrayOfStr[i];
@@ -22,17 +35,7 @@ public class MinecraftMain {
 			}
 		}
 		
-		/*
-		 * LocalStorageManager.loadStorage(); byte[] b =
-		 * EaglerAdapter.loadLocalStorage("forced"); if(b != null) {
-		 * ServerList.loadDefaultServers(Base64.encodeBase64String(b)); }
-		 * if(par0ArrayOfStr.length > 0) {
-		 * EaglerAdapter.setServerToJoinOnLaunch(par0ArrayOfStr[0]); }
-		 */
-
-		// Minecraft.startMainThread(null, null, null);
-
-		Minecraft mc = new Minecraft();
+		Minecraft mc = new MinecraftImpl();
 		mc.run();
 
 	}

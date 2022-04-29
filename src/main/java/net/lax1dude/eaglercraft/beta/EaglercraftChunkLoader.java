@@ -62,7 +62,7 @@ public class EaglercraftChunkLoader implements IChunkLoader {
 	public void saveChunk(World world, Chunk chunk) {
 		NBTTagCompound toSave = new NBTTagCompound();
 		storeChunkInCompound(chunk, world, toSave);
-		ByteArrayOutputStream bao = new ByteArrayOutputStream(98304);
+		ByteArrayOutputStream bao = new ByteArrayOutputStream(131072);
 		try {
 			NBTBase.writeTag(toSave, new DataOutputStream(bao));
 		} catch (IOException e) {

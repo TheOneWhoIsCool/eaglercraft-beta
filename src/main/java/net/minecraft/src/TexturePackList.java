@@ -14,13 +14,7 @@ public class TexturePackList {
 		defaultTexturePack = new TexturePackDefault();
 		field_6538_d = new HashMap();
 		mc = minecraft;
-		/*
-		texturePackDir = new File(file, "texturepacks");
-		if (!texturePackDir.exists()) {
-			texturePackDir.mkdirs();
-		}
-		*/
-		currentTexturePack = minecraft.gameSettings.skin;
+		currentTexturePack = minecraft.gameSettings.texturePack;
 		func_6532_a();
 		selectedTexturePack.func_6482_a();
 	}
@@ -32,7 +26,7 @@ public class TexturePackList {
 			selectedTexturePack.closeTexturePackFile();
 			currentTexturePack = texturepackbase.texturePackFileName;
 			selectedTexturePack = texturepackbase;
-			mc.gameSettings.skin = currentTexturePack;
+			mc.gameSettings.texturePack = currentTexturePack;
 			mc.gameSettings.saveOptions();
 			selectedTexturePack.func_6482_a();
 			return true;

@@ -4,8 +4,6 @@
 
 package net.minecraft.client;
 
-import java.io.*;
-
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
@@ -13,10 +11,7 @@ import net.lax1dude.eaglercraft.beta.EaglercraftSaveManager;
 import net.lax1dude.eaglercraft.beta.SingleplayerCommands;
 import net.minecraft.src.*;
 
-// Referenced classes of package net.minecraft.client:
-//            MinecraftApplet
-
-public class Minecraft implements Runnable {
+public abstract class Minecraft implements Runnable {
 
 	public Minecraft() {
 		instance = this;
@@ -51,6 +46,8 @@ public class Minecraft implements Runnable {
 		hideQuitButton = false;
 		field_21900_a = this;
 	}
+	
+	public abstract void displayCrashScreen(Throwable t);
 
 	public void setServer(String s, int i) {
 		serverName = s;
@@ -59,14 +56,13 @@ public class Minecraft implements Runnable {
 
 	public void startGame() {
 		RenderManager.instance.itemRenderer = new ItemRenderer(this);
-		mcDataDir = getMinecraftDir();
 		
 		field_22008_V = EaglerAdapter.getConfiguredSaveFormat();
 		if(field_22008_V == null) {
 			field_22008_V = new EaglercraftSaveManager("saves");
 		}
 		
-		gameSettings = new GameSettings(this, mcDataDir);
+		gameSettings = new GameSettings();
 		texturePackList = new TexturePackList(this);
 		renderEngine = new RenderEngine(texturePackList, gameSettings);
 		fontRenderer = new FontRenderer(gameSettings, "/font/default.png", renderEngine);
@@ -156,17 +152,6 @@ public class Minecraft implements Runnable {
 		tessellator.draw();
 	}
 
-	public static File getMinecraftDir() {
-		if (minecraftDir == null) {
-			minecraftDir = new File(".");
-		}
-		return minecraftDir;
-	}
-
-	private static EnumOS2 getOs() {
-		return EnumOS2.windows;
-	}
-
 	public ISaveFormat func_22004_c() {
 		return field_22008_V;
 	}
@@ -226,9 +211,7 @@ public class Minecraft implements Runnable {
 		try {
 			startGame();
 		} catch (Exception exception) {
-			exception.printStackTrace();
-			// displayUnexpectedThrowable(new UnexpectedThrowable("Failed to start game",
-			// exception)); //TODO: crash screen
+			displayCrashScreen(exception);
 			return;
 		}
 		try {
@@ -319,32 +302,23 @@ public class Minecraft implements Runnable {
 			}
 		} catch (Throwable throwable) {
 			theWorld = null;
-			throwable.printStackTrace();
-			// displayUnexpectedThrowable(new UnexpectedThrowable("Unexpected error",
-			// throwable)); //TODO: crash screen
-		} finally {
-			shutdownMinecraftApplet();
+			displayCrashScreen(throwable);
+			return;
 		}
+		
+		EaglerAdapter.destroyContext();
+		EaglerAdapter.exit();
 	}
 
 	private void screenshotListener() {
-		if (EaglerAdapter.isKeyDown(60)) {
+		if (EaglerAdapter.isFunctionKeyDown(gameSettings.keyBindFunction.keyCode, 60)) {
 			if (!isTakingScreenshot) {
 				isTakingScreenshot = true;
-				if (EaglerAdapter.isKeyDown(42)) {
-					ingameGUI.addChatMessage(func_21001_a(minecraftDir, displayWidth, displayHeight, 36450, 17700));
-				} else {
-					//ingameGUI
-					//		.addChatMessage(ScreenShotHelper.saveScreenshot(minecraftDir, displayWidth, displayHeight));
-				}
+				EaglerAdapter.saveScreenshot();
 			}
 		} else {
 			isTakingScreenshot = false;
 		}
-	}
-
-	private String func_21001_a(File file, int i, int j, int k, int l) {
-		return "Screenshot not implemented";
 	}
 
 	private void displayDebugInfo(long l) {
@@ -655,49 +629,40 @@ public class Minecraft implements Runnable {
 				}
 				thePlayer.handleKeyPress(EaglerAdapter.getEventKey(), EaglerAdapter.getEventKeyState());
 				if (EaglerAdapter.getEventKeyState()) {
-					if (EaglerAdapter.getEventKey() == 87) {
-						toggleFullscreen();
+					if (currentScreen != null) {
+						currentScreen.handleKeyboardInput();
 					} else {
-						if (currentScreen != null) {
-							currentScreen.handleKeyboardInput();
-						} else {
-							if (EaglerAdapter.getEventKey() == 1) {
-								func_6252_g();
-							}
-							if (EaglerAdapter.getEventKey() == 31 && EaglerAdapter.isKeyDown(61)) {
-								forceReload();
-							}
-							if (EaglerAdapter.getEventKey() == 59) {
-								gameSettings.field_22277_y = !gameSettings.field_22277_y;
-							}
-							if (EaglerAdapter.getEventKey() == 61) {
-								gameSettings.showDebugInfo = !gameSettings.showDebugInfo;
-							}
-							if (EaglerAdapter.getEventKey() == 63) {
-								gameSettings.thirdPersonView = !gameSettings.thirdPersonView;
-							}
-							if (EaglerAdapter.getEventKey() == 66) {
-								gameSettings.field_22274_D = !gameSettings.field_22274_D;
-							}
-							if (EaglerAdapter.getEventKey() == gameSettings.keyBindInventory.keyCode) {
-								displayGuiScreen(new GuiInventory(thePlayer));
-							}
-							if (EaglerAdapter.getEventKey() == gameSettings.keyBindDrop.keyCode) {
-								thePlayer.dropCurrentItem();
-							}
-							if (EaglerAdapter.getEventKey() == gameSettings.keyBindChat.keyCode) {
-								displayGuiScreen(new GuiChat());
-							}
+						if (EaglerAdapter.getEventKey() == 1) {
+							func_6252_g();
 						}
-						for (int i = 0; i < 9; i++) {
-							if (EaglerAdapter.getEventKey() == 2 + i) {
-								thePlayer.inventory.currentItem = i;
-							}
+						if (EaglerAdapter.getEventKey() == 31 && EaglerAdapter.isFunctionKeyDown(gameSettings.keyBindFunction.keyCode, 61)) {
+							forceReload();
 						}
-
-						if (EaglerAdapter.getEventKey() == gameSettings.keyBindToggleFog.keyCode) {
-							gameSettings.setOptionValue(EnumOptions.RENDER_DISTANCE,
-									!EaglerAdapter.isKeyDown(42) && !EaglerAdapter.isKeyDown(54) ? 1 : -1);
+						if (EaglerAdapter.isFunctionKeyDown(gameSettings.keyBindFunction.keyCode, 59)) {
+							gameSettings.field_22277_y = !gameSettings.field_22277_y;
+						}
+						if (EaglerAdapter.isFunctionKeyDown(gameSettings.keyBindFunction.keyCode, 61)) {
+							gameSettings.showDebugInfo = !gameSettings.showDebugInfo;
+						}
+						if (EaglerAdapter.isFunctionKeyDown(gameSettings.keyBindFunction.keyCode, 63)) {
+							gameSettings.thirdPersonView = !gameSettings.thirdPersonView;
+						}
+						if (EaglerAdapter.isFunctionKeyDown(gameSettings.keyBindFunction.keyCode, 66)) {
+							gameSettings.field_22274_D = !gameSettings.field_22274_D;
+						}
+						if (EaglerAdapter.getEventKey() == gameSettings.keyBindInventory.keyCode) {
+							displayGuiScreen(new GuiInventory(thePlayer));
+						}
+						if (EaglerAdapter.getEventKey() == gameSettings.keyBindDrop.keyCode) {
+							thePlayer.dropCurrentItem();
+						}
+						if (EaglerAdapter.getEventKey() == gameSettings.keyBindChat.keyCode) {
+							displayGuiScreen(new GuiChat());
+						}
+					}
+					for (int i = 0; i < 9; i++) {
+						if (EaglerAdapter.getEventKey() == 2 + i) {
+							thePlayer.inventory.currentItem = i;
 						}
 					}
 				}
@@ -1046,7 +1011,6 @@ public class Minecraft implements Runnable {
 	public SoundManager sndManager;
 	public MouseHelper mouseHelper;
 	public TexturePackList texturePackList;
-	private File mcDataDir;
 	private ISaveFormat field_22008_V;
 	public static long frameTimes[] = new long[512];
 	public static long tickTimes[] = new long[512];
@@ -1055,7 +1019,6 @@ public class Minecraft implements Runnable {
 	private int serverPort;
 	private TextureWaterFX textureWaterFX;
 	private TextureLavaFX textureLavaFX;
-	private static File minecraftDir = null;
 	public volatile boolean running;
 	public String debug;
 	boolean isTakingScreenshot;

@@ -4,10 +4,7 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.io.File;
-import java.util.List;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.Sys;
 
 public class GuiTexturePacks extends GuiScreen {
 
@@ -23,7 +20,7 @@ public class GuiTexturePacks extends GuiScreen {
 				stringtranslate.translateKey("texturePack.openFolder")));
 		controlList.add(new GuiSmallButton(6, width / 2 + 4, height - 48, stringtranslate.translateKey("gui.done")));
 		mc.texturePackList.func_6532_a();
-		field_6453_p = (new File(Minecraft.getMinecraftDir(), "texturepacks")).getAbsolutePath();
+		//field_6453_p = (new File(Minecraft.getMinecraftDir(), "texturepacks")).getAbsolutePath();
 		field_22128_k = new GuiTexturePackSlot(this);
 		field_22128_k.func_22240_a(controlList, 7, 8);
 	}
@@ -33,7 +30,7 @@ public class GuiTexturePacks extends GuiScreen {
 			return;
 		}
 		if (guibutton.id == 5) {
-			Sys.openURL((new StringBuilder()).append("file://").append(field_6453_p).toString());
+			//Sys.openURL((new StringBuilder()).append("file://").append(field_6453_p).toString());
 		} else if (guibutton.id == 6) {
 			mc.renderEngine.refreshTextures();
 			mc.displayGuiScreen(field_6461_a);

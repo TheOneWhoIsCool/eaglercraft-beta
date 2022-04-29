@@ -44,7 +44,7 @@ public class GuiGameOver extends GuiScreen {
 		drawCenteredString(fontRenderer, "Game over!", width / 2 / 2, 30, 0xffffff);
 		EaglerAdapter.glPopMatrix();
 		drawCenteredString(fontRenderer,
-				(new StringBuilder()).append("Score: &e").append(mc.thePlayer.getScore()).toString(), width / 2, 100,
+				(new StringBuilder()).append("Score: ").append(mc.thePlayer.getScore()).toString(), width / 2, 100,
 				0xffffff);
 		super.drawScreen(i, j, f);
 	}

@@ -4,8 +4,6 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import org.lwjgl.opengl.ContextCapabilities;
-import org.lwjgl.opengl.GLContext;
 
 public class OpenGlCapsChecker {
 
@@ -13,9 +11,7 @@ public class OpenGlCapsChecker {
 	}
 
 	public boolean checkARBOcclusion() {
-		return tryCheckOcclusionCapable && GLContext.getCapabilities().GL_ARB_occlusion_query;
+		return true;
 	}
-
-	private static boolean tryCheckOcclusionCapable = false;
 
 }

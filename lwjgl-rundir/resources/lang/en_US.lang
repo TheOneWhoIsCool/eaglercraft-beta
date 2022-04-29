@@ -102,7 +102,7 @@ key.jump=Jump
 key.inventory=Inventory
 key.drop=Drop
 key.chat=Chat
-key.fog=Toggle Fog
+key.function=Function
 key.sneak=Sneak
 key.playerlist=List players
 

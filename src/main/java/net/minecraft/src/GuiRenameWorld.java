@@ -5,7 +5,6 @@ package net.minecraft.src;
 // Decompiler options: packimports(3) braces deadcode 
 
 import java.util.List;
-import org.lwjgl.input.Keyboard;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
 
