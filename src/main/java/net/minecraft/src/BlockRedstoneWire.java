@@ -6,6 +6,8 @@ package net.minecraft.src;
 
 import java.util.*;
 
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 public class BlockRedstoneWire extends Block {
 
 	public BlockRedstoneWire(int i, int j) {
@@ -259,7 +261,7 @@ public class BlockRedstoneWire extends Block {
 		super.onNeighborBlockChange(world, i, j, k, l);
 	}
 
-	public int idDropped(int i, Random random) {
+	public int idDropped(int i, EaglercraftRandom random) {
 		return Item.redstone.shiftedIndex;
 	}
 
@@ -322,7 +324,7 @@ public class BlockRedstoneWire extends Block {
 		return wiresProvidePower;
 	}
 
-	public void randomDisplayTick(World world, int i, int j, int k, Random random) {
+	public void randomDisplayTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		int l = world.getBlockMetadata(i, j, k);
 		if (l > 0) {
 			double d = (double) i + 0.5D + ((double) random.nextFloat() - 0.5D) * 0.20000000000000001D;

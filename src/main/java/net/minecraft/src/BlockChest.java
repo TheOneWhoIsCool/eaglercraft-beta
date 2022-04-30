@@ -1,16 +1,18 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.Random;
 
 public class BlockChest extends BlockContainer {
 
 	protected BlockChest(int i) {
 		super(i, Material.wood);
-		random = new Random();
+		random = new EaglercraftRandom();
 		blockIndexInTexture = 26;
 	}
 
@@ -225,5 +227,5 @@ public class BlockChest extends BlockContainer {
 		return new TileEntityChest();
 	}
 
-	private Random random;
+	private EaglercraftRandom random;
 }

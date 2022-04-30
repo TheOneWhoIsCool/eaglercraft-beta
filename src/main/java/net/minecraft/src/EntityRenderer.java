@@ -6,9 +6,9 @@ package net.minecraft.src;
 
 import java.nio.FloatBuffer;
 import java.util.List;
-import java.util.Random;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.glemu.EffectPipelineFXAA;
 import net.minecraft.client.Minecraft;
@@ -40,7 +40,7 @@ public class EntityRenderer {
 		field_21154_m = 0.0D;
 		field_21153_n = 0.0D;
 		field_1384_l = System.currentTimeMillis();
-		random = new Random();
+		random = new EaglercraftRandom();
 		field_1394_b = 0;
 		field_1393_c = 0;
 		field_1392_d = GLAllocation.createDirectFloatBuffer(16);
@@ -670,7 +670,7 @@ public class EntityRenderer {
 	private double field_21154_m;
 	private double field_21153_n;
 	private long field_1384_l;
-	private Random random;
+	private EaglercraftRandom random;
 	volatile int field_1394_b;
 	volatile int field_1393_c;
 	FloatBuffer field_1392_d;

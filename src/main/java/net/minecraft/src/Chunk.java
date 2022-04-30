@@ -4,8 +4,9 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.io.PrintStream;
 import java.util.*;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class Chunk {
 
@@ -516,8 +517,8 @@ public class Chunk {
 		return k1;
 	}
 
-	public Random func_997_a(long l) {
-		return new Random(
+	public EaglercraftRandom func_997_a(long l) {
+		return new EaglercraftRandom(
 				worldObj.func_22138_q() + (long) (xPosition * xPosition * 0x4c1906) + (long) (xPosition * 0x5ac0db)
 						+ (long) (zPosition * zPosition) * 0x4307a7L + (long) (zPosition * 0x5f24f) ^ l);
 	}

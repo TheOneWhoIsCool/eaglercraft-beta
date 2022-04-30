@@ -5,7 +5,8 @@ package net.minecraft.src;
 // Decompiler options: packimports(3) braces deadcode 
 
 import java.util.ArrayList;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class Block {
 
@@ -153,10 +154,10 @@ public class Block {
 		return true;
 	}
 
-	public void updateTick(World world, int i, int j, int k, Random random) {
+	public void updateTick(World world, int i, int j, int k, EaglercraftRandom random) {
 	}
 
-	public void randomDisplayTick(World world, int i, int j, int k, Random random) {
+	public void randomDisplayTick(World world, int i, int j, int k, EaglercraftRandom random) {
 	}
 
 	public void onBlockDestroyedByPlayer(World world, int i, int j, int k, int l) {
@@ -175,11 +176,11 @@ public class Block {
 	public void onBlockRemoval(World world, int i, int j, int k) {
 	}
 
-	public int quantityDropped(Random random) {
+	public int quantityDropped(EaglercraftRandom random) {
 		return 1;
 	}
 
-	public int idDropped(int i, Random random) {
+	public int idDropped(int i, EaglercraftRandom random) {
 		return blockID;
 	}
 

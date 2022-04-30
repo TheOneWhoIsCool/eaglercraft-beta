@@ -1,10 +1,11 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
-
-import java.util.Random;
 
 public class MapGenCaves extends MapGenBase {
 
@@ -21,7 +22,7 @@ public class MapGenCaves extends MapGenBase {
 		double d5 = j * 16 + 8;
 		float f3 = 0.0F;
 		float f4 = 0.0F;
-		Random random = new Random(rand.nextLong());
+		EaglercraftRandom random = new EaglercraftRandom(rand.nextLong());
 		if (l <= 0) {
 			int i1 = field_1306_a * 16 - 16;
 			l = i1 - random.nextInt(i1 / 4);

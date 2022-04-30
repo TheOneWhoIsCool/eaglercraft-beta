@@ -1,16 +1,17 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.io.PrintStream;
-import java.util.Random;
 
 public class Teleporter {
 
 	public Teleporter() {
-		field_4232_a = new Random();
+		field_4232_a = new EaglercraftRandom();
 	}
 
 	public void func_4107_a(World world, Entity entity) {
@@ -252,5 +253,5 @@ public class Teleporter {
 		return true;
 	}
 
-	private Random field_4232_a;
+	private EaglercraftRandom field_4232_a;
 }

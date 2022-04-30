@@ -1,10 +1,11 @@
 package net.minecraft.src;
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.Random;
 
 public class BlockFurnace extends BlockContainer {
 
@@ -14,7 +15,7 @@ public class BlockFurnace extends BlockContainer {
 		blockIndexInTexture = 45;
 	}
 
-	public int idDropped(int i, Random random) {
+	public int idDropped(int i, EaglercraftRandom random) {
 		return Block.stoneOvenIdle.blockID;
 	}
 
@@ -62,7 +63,7 @@ public class BlockFurnace extends BlockContainer {
 		}
 	}
 
-	public void randomDisplayTick(World world, int i, int j, int k, Random random) {
+	public void randomDisplayTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		if (!isActive) {
 			return;
 		}

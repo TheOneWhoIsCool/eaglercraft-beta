@@ -4,10 +4,10 @@ package net.minecraft.src;
 // Decompiler options: packimports(3) braces deadcode 
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import net.lax1dude.eaglercraft.AWTColor;
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 import net.minecraft.client.Minecraft;
@@ -22,7 +22,7 @@ public class GuiIngame extends Gui {
 	
 	public GuiIngame(Minecraft minecraft) {
 		chatMessageList = new ArrayList();
-		rand = new Random();
+		rand = new EaglercraftRandom();
 		field_933_a = null;
 		updateCounter = 0;
 		recordPlaying = "";
@@ -384,7 +384,7 @@ public class GuiIngame extends Gui {
 
 	private static RenderItem itemRenderer = new RenderItem();
 	private java.util.List chatMessageList;
-	private Random rand;
+	private EaglercraftRandom rand;
 	private Minecraft mc;
 	public String field_933_a;
 	private int updateCounter;

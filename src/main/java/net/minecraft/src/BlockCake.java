@@ -1,10 +1,12 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.Random;
 
 public class BlockCake extends Block {
 
@@ -119,11 +121,11 @@ public class BlockCake extends Block {
 		return world.getBlockMaterial(i, j - 1, k).isSolid();
 	}
 
-	public int quantityDropped(Random random) {
+	public int quantityDropped(EaglercraftRandom random) {
 		return 0;
 	}
 
-	public int idDropped(int i, Random random) {
+	public int idDropped(int i, EaglercraftRandom random) {
 		return 0;
 	}
 }

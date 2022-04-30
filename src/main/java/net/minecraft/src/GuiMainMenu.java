@@ -4,12 +4,10 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.util.*;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 import net.lax1dude.eaglercraft.beta.GuiNoMultiplayer;
@@ -215,11 +213,11 @@ public class GuiMainMenu extends GuiScreen {
 		EaglerAdapter.glEnable(2884 /* GL_CULL_FACE */);
 	}
 
-	static Random getRand() {
+	static EaglercraftRandom getRand() {
 		return rand;
 	}
 
-	private static final Random rand = new Random();
+	private static final EaglercraftRandom rand = new EaglercraftRandom();
 	/*
 	String minecraftLogo[] = {
 			" *   * * *   * *** *** *** *** *** ***",

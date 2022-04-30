@@ -1,10 +1,11 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
-
-import java.util.Random;
 
 public class BlockSoil extends Block {
 
@@ -39,7 +40,7 @@ public class BlockSoil extends Block {
 		}
 	}
 
-	public void updateTick(World world, int i, int j, int k, Random random) {
+	public void updateTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		if (random.nextInt(5) == 0) {
 			if (isWaterNearby(world, i, j, k)) {
 				world.setBlockMetadataWithNotify(i, j, k, 7);
@@ -98,7 +99,7 @@ public class BlockSoil extends Block {
 		}
 	}
 
-	public int idDropped(int i, Random random) {
+	public int idDropped(int i, EaglercraftRandom random) {
 		return Block.dirt.idDropped(0, random);
 	}
 }

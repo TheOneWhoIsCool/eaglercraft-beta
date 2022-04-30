@@ -4,7 +4,7 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockTorch extends Block {
 
@@ -65,7 +65,7 @@ public class BlockTorch extends Block {
 		world.setBlockMetadataWithNotify(i, j, k, i1);
 	}
 
-	public void updateTick(World world, int i, int j, int k, Random random) {
+	public void updateTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		super.updateTick(world, i, j, k, random);
 		if (world.getBlockMetadata(i, j, k) == 0) {
 			onBlockAdded(world, i, j, k);
@@ -141,7 +141,7 @@ public class BlockTorch extends Block {
 		return super.collisionRayTrace(world, i, j, k, vec3d, vec3d1);
 	}
 
-	public void randomDisplayTick(World world, int i, int j, int k, Random random) {
+	public void randomDisplayTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		int l = world.getBlockMetadata(i, j, k);
 		double d = (float) i + 0.5F;
 		double d1 = (float) j + 0.7F;

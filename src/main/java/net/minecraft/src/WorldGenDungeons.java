@@ -1,17 +1,18 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
-
-import java.util.Random;
 
 public class WorldGenDungeons extends WorldGenerator {
 
 	public WorldGenDungeons() {
 	}
 
-	public boolean generate(World world, Random random, int i, int j, int k) {
+	public boolean generate(World world, EaglercraftRandom random, int i, int j, int k) {
 		byte byte0 = 3;
 		int l = random.nextInt(2) + 2;
 		int i1 = random.nextInt(2) + 2;
@@ -113,7 +114,7 @@ public class WorldGenDungeons extends WorldGenerator {
 		return true;
 	}
 
-	private ItemStack pickCheckLootItem(Random random) {
+	private ItemStack pickCheckLootItem(EaglercraftRandom random) {
 		int i = random.nextInt(11);
 		if (i == 0) {
 			return new ItemStack(Item.saddle);
@@ -149,7 +150,7 @@ public class WorldGenDungeons extends WorldGenerator {
 		}
 	}
 
-	private String pickMobSpawner(Random random) {
+	private String pickMobSpawner(EaglercraftRandom random) {
 		int i = random.nextInt(4);
 		if (i == 0) {
 			return "Skeleton";

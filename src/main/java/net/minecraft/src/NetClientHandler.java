@@ -6,8 +6,8 @@ package net.minecraft.src;
 
 import java.io.*;
 import java.net.*;
-import java.util.Random;
 
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.compat.UnexpectedThrowable;
 import net.minecraft.client.Minecraft;
 
@@ -16,7 +16,7 @@ public class NetClientHandler extends NetHandler {
 	public NetClientHandler(Minecraft minecraft, String s, int i) {
 		disconnected = false;
 		field_1210_g = false;
-		rand = new Random();
+		rand = new EaglercraftRandom();
 		mc = minecraft;
 		Socket socket;
 		try {
@@ -545,5 +545,5 @@ public class NetClientHandler extends NetHandler {
 	private Minecraft mc;
 	private WorldClient worldClient;
 	private boolean field_1210_g;
-	Random rand;
+	EaglercraftRandom rand;
 }

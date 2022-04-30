@@ -5,7 +5,8 @@ package net.minecraft.src;
 // Decompiler options: packimports(3) braces deadcode 
 
 import java.util.ArrayList;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockStairs extends Block {
 
@@ -68,7 +69,7 @@ public class BlockStairs extends Block {
 		setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
 	}
 
-	public void randomDisplayTick(World world, int i, int j, int k, Random random) {
+	public void randomDisplayTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		modelBlock.randomDisplayTick(world, i, j, k, random);
 	}
 
@@ -92,11 +93,11 @@ public class BlockStairs extends Block {
 		return modelBlock.getRenderBlockPass();
 	}
 
-	public int idDropped(int i, Random random) {
+	public int idDropped(int i, EaglercraftRandom random) {
 		return modelBlock.idDropped(i, random);
 	}
 
-	public int quantityDropped(Random random) {
+	public int quantityDropped(EaglercraftRandom random) {
 		return modelBlock.quantityDropped(random);
 	}
 
@@ -157,7 +158,7 @@ public class BlockStairs extends Block {
 		modelBlock.onEntityWalking(world, i, j, k, entity);
 	}
 
-	public void updateTick(World world, int i, int j, int k, Random random) {
+	public void updateTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		modelBlock.updateTick(world, i, j, k, random);
 	}
 

@@ -1,11 +1,11 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
-
-import java.io.PrintStream;
-import java.util.Random;
 
 public class Item {
 
@@ -139,7 +139,7 @@ public class Item {
 		return containerItem != null;
 	}
 
-	protected static Random itemRand = new Random();
+	protected static EaglercraftRandom itemRand = new EaglercraftRandom();
 	public static Item itemsList[] = new Item[32000];
 	public static Item shovelSteel;
 	public static Item pickaxeSteel;

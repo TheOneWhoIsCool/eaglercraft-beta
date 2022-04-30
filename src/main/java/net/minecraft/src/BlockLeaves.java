@@ -1,10 +1,12 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.Random;
 
 public class BlockLeaves extends BlockLeavesBase {
 
@@ -50,7 +52,7 @@ public class BlockLeaves extends BlockLeavesBase {
 		}
 	}
 
-	public void updateTick(World world, int i, int j, int k, Random random) {
+	public void updateTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		if (world.multiplayerWorld) {
 			return;
 		}
@@ -132,11 +134,11 @@ public class BlockLeaves extends BlockLeavesBase {
 		world.setBlockWithNotify(i, j, k, 0);
 	}
 
-	public int quantityDropped(Random random) {
+	public int quantityDropped(EaglercraftRandom random) {
 		return random.nextInt(16) != 0 ? 0 : 1;
 	}
 
-	public int idDropped(int i, Random random) {
+	public int idDropped(int i, EaglercraftRandom random) {
 		return Block.sapling.blockID;
 	}
 

@@ -1,14 +1,16 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.Random;
 
 public class NoiseGeneratorOctaves extends NoiseGenerator {
 
-	public NoiseGeneratorOctaves(Random random, int i) {
+	public NoiseGeneratorOctaves(EaglercraftRandom random, int i) {
 		field_1191_b = i;
 		generatorCollection = new NoiseGeneratorPerlin[i];
 		for (int j = 0; j < i; j++) {

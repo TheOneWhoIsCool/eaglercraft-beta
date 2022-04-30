@@ -1,11 +1,13 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.AWTColor;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.awt.Color;
-import java.util.Random;
 
 public class MobSpawnerBase {
 
@@ -31,7 +33,7 @@ public class MobSpawnerBase {
 		iceDesert.topBlock = iceDesert.fillerBlock = (byte) Block.sand.blockID;
 	}
 
-	public WorldGenerator getRandomWorldGenForTrees(Random random) {
+	public WorldGenerator getRandomWorldGenForTrees(EaglercraftRandom random) {
 		if (random.nextInt(10) == 0) {
 			return new WorldGenBigTree();
 		} else {
@@ -110,7 +112,7 @@ public class MobSpawnerBase {
 		if (f > 1.0F) {
 			f = 1.0F;
 		}
-		return Color.getHSBColor(0.6222222F - f * 0.05F, 0.5F + f * 0.1F, 1.0F).getRGB();
+		return AWTColor.HSBtoRGB(0.6222222F - f * 0.05F, 0.5F + f * 0.1F, 1.0F);
 	}
 
 	public Class[] getEntitiesForType(EnumCreatureType enumcreaturetype) {

@@ -1,10 +1,12 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.Random;
 
 public class BlockRedstoneRepeater extends Block {
 
@@ -34,7 +36,7 @@ public class BlockRedstoneRepeater extends Block {
 		}
 	}
 
-	public void updateTick(World world, int i, int j, int k, Random random) {
+	public void updateTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		int l = world.getBlockMetadata(i, j, k);
 		boolean flag = func_22022_g(world, i, j, k, l);
 		if (field_22025_c && !flag) {
@@ -160,11 +162,11 @@ public class BlockRedstoneRepeater extends Block {
 		return false;
 	}
 
-	public int idDropped(int i, Random random) {
+	public int idDropped(int i, EaglercraftRandom random) {
 		return Item.field_22018_aZ.shiftedIndex;
 	}
 
-	public void randomDisplayTick(World world, int i, int j, int k, Random random) {
+	public void randomDisplayTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		if (!field_22025_c) {
 			return;
 		}

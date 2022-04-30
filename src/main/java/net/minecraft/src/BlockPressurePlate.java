@@ -5,7 +5,8 @@ package net.minecraft.src;
 // Decompiler options: packimports(3) braces deadcode 
 
 import java.util.List;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockPressurePlate extends Block {
 
@@ -51,7 +52,7 @@ public class BlockPressurePlate extends Block {
 		}
 	}
 
-	public void updateTick(World world, int i, int j, int k, Random random) {
+	public void updateTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		if (world.multiplayerWorld) {
 			return;
 		}

@@ -1,10 +1,12 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.Random;
 
 public class BlockFire extends Block {
 
@@ -42,7 +44,7 @@ public class BlockFire extends Block {
 		return 3;
 	}
 
-	public int quantityDropped(Random random) {
+	public int quantityDropped(EaglercraftRandom random) {
 		return 0;
 	}
 
@@ -50,7 +52,7 @@ public class BlockFire extends Block {
 		return 10;
 	}
 
-	public void updateTick(World world, int i, int j, int k, Random random) {
+	public void updateTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		boolean flag = world.getBlockId(i, j - 1, k) == Block.bloodStone.blockID;
 		int l = world.getBlockMetadata(i, j, k);
 		if (l < 15) {
@@ -105,7 +107,7 @@ public class BlockFire extends Block {
 		}
 	}
 
-	private void tryToCatchBlockOnFire(World world, int i, int j, int k, int l, Random random) {
+	private void tryToCatchBlockOnFire(World world, int i, int j, int k, int l, EaglercraftRandom random) {
 		int i1 = abilityToCatchFire[world.getBlockId(i, j, k)];
 		if (random.nextInt(l) < i1) {
 			boolean flag = world.getBlockId(i, j, k) == Block.tnt.blockID;
@@ -197,7 +199,7 @@ public class BlockFire extends Block {
 		}
 	}
 
-	public void randomDisplayTick(World world, int i, int j, int k, Random random) {
+	public void randomDisplayTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		if (random.nextInt(24) == 0) {
 			world.playSoundEffect((float) i + 0.5F, (float) j + 0.5F, (float) k + 0.5F, "fire.fire",
 					1.0F + random.nextFloat(), random.nextFloat() * 0.7F + 0.3F);

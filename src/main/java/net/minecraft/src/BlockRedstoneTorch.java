@@ -6,6 +6,8 @@ package net.minecraft.src;
 
 import java.util.*;
 
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 public class BlockRedstoneTorch extends BlockTorch {
 
 	public int getBlockTextureFromSideAndMetadata(int i, int j) {
@@ -104,7 +106,7 @@ public class BlockRedstoneTorch extends BlockTorch {
 		return l == 2 && world.isBlockIndirectlyProvidingPowerTo(i + 1, j, k, 5);
 	}
 
-	public void updateTick(World world, int i, int j, int k, Random random) {
+	public void updateTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		boolean flag = func_22026_h(world, i, j, k);
 		for (; torchUpdates.size() > 0
 				&& world.func_22139_r() - ((RedstoneUpdateInfo) torchUpdates.get(0)).updateTime > 100L; torchUpdates
@@ -145,7 +147,7 @@ public class BlockRedstoneTorch extends BlockTorch {
 		}
 	}
 
-	public int idDropped(int i, Random random) {
+	public int idDropped(int i, EaglercraftRandom random) {
 		return Block.torchRedstoneActive.blockID;
 	}
 
@@ -153,7 +155,7 @@ public class BlockRedstoneTorch extends BlockTorch {
 		return true;
 	}
 
-	public void randomDisplayTick(World world, int i, int j, int k, Random random) {
+	public void randomDisplayTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		if (!torchActive) {
 			return;
 		}

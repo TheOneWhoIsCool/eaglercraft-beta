@@ -4,7 +4,8 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class ChunkProviderGenerate implements IChunkProvider {
 
@@ -15,7 +16,7 @@ public class ChunkProviderGenerate implements IChunkProvider {
 		field_902_u = new MapGenCaves();
 		field_914_i = new int[32][32];
 		worldObj = world;
-		rand = new Random(l);
+		rand = new EaglercraftRandom(l);
 		field_912_k = new NoiseGeneratorOctaves(rand, 16);
 		field_911_l = new NoiseGeneratorOctaves(rand, 16);
 		field_910_m = new NoiseGeneratorOctaves(rand, 8);
@@ -507,7 +508,7 @@ public class ChunkProviderGenerate implements IChunkProvider {
 		return "RandomLevelSource";
 	}
 
-	private Random rand;
+	private EaglercraftRandom rand;
 	private NoiseGeneratorOctaves field_912_k;
 	private NoiseGeneratorOctaves field_911_l;
 	private NoiseGeneratorOctaves field_910_m;

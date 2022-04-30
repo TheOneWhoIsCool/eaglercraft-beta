@@ -5,7 +5,8 @@ package net.minecraft.src;
 // Decompiler options: packimports(3) braces deadcode 
 
 import java.util.List;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class EmptyChunk extends Chunk {
 
@@ -122,8 +123,8 @@ public class EmptyChunk extends Chunk {
 		return k2 + (k2 / 2) * 3;
 	}
 
-	public Random func_997_a(long l) {
-		return new Random(
+	public EaglercraftRandom func_997_a(long l) {
+		return new EaglercraftRandom(
 				worldObj.func_22138_q() + (long) (xPosition * xPosition * 0x4c1906) + (long) (xPosition * 0x5ac0db)
 						+ (long) (zPosition * zPosition) * 0x4307a7L + (long) (zPosition * 0x5f24f) ^ l);
 	}

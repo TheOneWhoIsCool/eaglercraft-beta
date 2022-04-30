@@ -6,11 +6,13 @@ package net.minecraft.src;
 
 import java.util.*;
 
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 public class Explosion {
 
 	public Explosion(World world, Entity entity, double d, double d1, double d2, float f) {
 		field_12257_a = false;
-		ExplosionRNG = new Random();
+		ExplosionRNG = new EaglercraftRandom();
 		destroyedBlockPositions = new HashSet();
 		worldObj = world;
 		exploder = entity;
@@ -160,7 +162,7 @@ public class Explosion {
 	}
 
 	public boolean field_12257_a;
-	private Random ExplosionRNG;
+	private EaglercraftRandom ExplosionRNG;
 	private World worldObj;
 	public double explosionX;
 	public double explosionY;

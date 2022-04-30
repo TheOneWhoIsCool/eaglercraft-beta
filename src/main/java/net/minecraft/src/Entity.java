@@ -5,7 +5,8 @@ package net.minecraft.src;
 // Decompiler options: packimports(3) braces deadcode 
 
 import java.util.List;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public abstract class Entity {
 
@@ -31,7 +32,7 @@ public abstract class Entity {
 		noClip = false;
 		entityCollisionReduction = 0.0F;
 		field_9313_bc = false;
-		rand = new Random();
+		rand = new EaglercraftRandom();
 		ticksExisted = 0;
 		fireResistance = 1;
 		fire = 0;
@@ -935,7 +936,7 @@ public abstract class Entity {
 	public boolean noClip;
 	public float entityCollisionReduction;
 	public boolean field_9313_bc;
-	protected Random rand;
+	protected EaglercraftRandom rand;
 	public int ticksExisted;
 	public int fireResistance;
 	public int fire;

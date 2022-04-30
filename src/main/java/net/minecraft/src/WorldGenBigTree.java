@@ -4,12 +4,12 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class WorldGenBigTree extends WorldGenerator {
 
 	public WorldGenBigTree() {
-		field_881_b = new Random();
+		field_881_b = new EaglercraftRandom();
 		field_878_e = 0;
 		field_876_g = 0.61799999999999999D;
 		field_875_h = 1.0D;
@@ -312,7 +312,7 @@ public class WorldGenBigTree extends WorldGenerator {
 		field_872_k = d2;
 	}
 
-	public boolean generate(World world, Random random, int i, int j, int k) {
+	public boolean generate(World world, EaglercraftRandom random, int i, int j, int k) {
 		worldObj = world;
 		long l = random.nextLong();
 		field_881_b.setSeed(l);
@@ -334,7 +334,7 @@ public class WorldGenBigTree extends WorldGenerator {
 	}
 
 	static final byte field_882_a[] = { 2, 0, 0, 1, 2, 1 };
-	Random field_881_b;
+	EaglercraftRandom field_881_b;
 	World worldObj;
 	int basePos[] = { 0, 0, 0 };
 	int field_878_e;

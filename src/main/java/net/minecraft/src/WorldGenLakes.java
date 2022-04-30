@@ -1,10 +1,11 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
-
-import java.util.Random;
 
 public class WorldGenLakes extends WorldGenerator {
 
@@ -12,7 +13,7 @@ public class WorldGenLakes extends WorldGenerator {
 		field_15235_a = i;
 	}
 
-	public boolean generate(World world, Random random, int i, int j, int k) {
+	public boolean generate(World world, EaglercraftRandom random, int i, int j, int k) {
 		i -= 8;
 		for (k -= 8; j > 0 && world.isAirBlock(i, j, k); j--) {
 		}

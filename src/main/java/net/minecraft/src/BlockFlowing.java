@@ -1,10 +1,12 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.Random;
 
 public class BlockFlowing extends BlockFluids {
 
@@ -22,7 +24,7 @@ public class BlockFlowing extends BlockFluids {
 		world.markBlockNeedsUpdate(i, j, k);
 	}
 
-	public void updateTick(World world, int i, int j, int k, Random random) {
+	public void updateTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		int l = func_290_h(world, i, j, k);
 		byte byte0 = 1;
 		if (blockMaterial == Material.lava && !world.worldProvider.isHellWorld) {

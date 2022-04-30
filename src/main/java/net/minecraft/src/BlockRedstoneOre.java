@@ -1,10 +1,12 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.Random;
 
 public class BlockRedstoneOre extends Block {
 
@@ -42,28 +44,28 @@ public class BlockRedstoneOre extends Block {
 		}
 	}
 
-	public void updateTick(World world, int i, int j, int k, Random random) {
+	public void updateTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		if (blockID == Block.oreRedstoneGlowing.blockID) {
 			world.setBlockWithNotify(i, j, k, Block.oreRedstone.blockID);
 		}
 	}
 
-	public int idDropped(int i, Random random) {
+	public int idDropped(int i, EaglercraftRandom random) {
 		return Item.redstone.shiftedIndex;
 	}
 
-	public int quantityDropped(Random random) {
+	public int quantityDropped(EaglercraftRandom random) {
 		return 4 + random.nextInt(2);
 	}
 
-	public void randomDisplayTick(World world, int i, int j, int k, Random random) {
+	public void randomDisplayTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		if (field_468_a) {
 			func_319_i(world, i, j, k);
 		}
 	}
 
 	private void func_319_i(World world, int i, int j, int k) {
-		Random random = world.rand;
+		EaglercraftRandom random = world.rand;
 		double d = 0.0625D;
 		for (int l = 0; l < 6; l++) {
 			double d1 = (float) i + random.nextFloat();

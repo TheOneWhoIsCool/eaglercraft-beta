@@ -1,10 +1,11 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
-
-import java.util.Random;
 
 public class EntitySheep extends EntityAnimals {
 
@@ -80,7 +81,7 @@ public class EntitySheep extends EntityAnimals {
 		}
 	}
 
-	public static int func_21070_a(Random random) {
+	public static int func_21070_a(EaglercraftRandom random) {
 		int i = random.nextInt(100);
 		if (i < 5) {
 			return 15;

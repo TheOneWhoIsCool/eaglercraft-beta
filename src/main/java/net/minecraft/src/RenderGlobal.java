@@ -8,6 +8,7 @@ import java.nio.IntBuffer;
 import java.util.*;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 import net.minecraft.client.Minecraft;
@@ -84,7 +85,7 @@ public class RenderGlobal implements IWorldAccess {
 	}
 
 	private void func_950_f() {
-		Random random = new Random(10842L);
+		EaglercraftRandom random = new EaglercraftRandom(10842L);
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
 		for (int i = 0; i < 1500; i++) {

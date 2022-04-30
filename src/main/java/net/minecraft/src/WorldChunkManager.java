@@ -1,10 +1,12 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.Random;
 
 public class WorldChunkManager {
 
@@ -12,9 +14,9 @@ public class WorldChunkManager {
 	}
 
 	public WorldChunkManager(World world) {
-		field_4194_e = new NoiseGeneratorOctaves2(new Random(world.func_22138_q() * 9871L), 4);
-		field_4193_f = new NoiseGeneratorOctaves2(new Random(world.func_22138_q() * 39811L), 4);
-		field_4192_g = new NoiseGeneratorOctaves2(new Random(world.func_22138_q() * 0x84a59L), 2);
+		field_4194_e = new NoiseGeneratorOctaves2(new EaglercraftRandom(world.func_22138_q() * 9871L), 4);
+		field_4193_f = new NoiseGeneratorOctaves2(new EaglercraftRandom(world.func_22138_q() * 39811L), 4);
+		field_4192_g = new NoiseGeneratorOctaves2(new EaglercraftRandom(world.func_22138_q() * 0x84a59L), 2);
 	}
 
 	public MobSpawnerBase func_4074_a(ChunkCoordIntPair chunkcoordintpair) {

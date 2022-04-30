@@ -1,10 +1,12 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.Random;
 
 public class TexturePortalFX extends TextureFX {
 
@@ -12,7 +14,7 @@ public class TexturePortalFX extends TextureFX {
 		super(Block.portal.blockIndexInTexture);
 		field_4227_g = 0;
 		field_4226_h = new byte[32][1024];
-		Random random = new Random(100L);
+		EaglercraftRandom random = new EaglercraftRandom(100L);
 		for (int i = 0; i < 32; i++) {
 			for (int j = 0; j < 16; j++) {
 				for (int k = 0; k < 16; k++) {

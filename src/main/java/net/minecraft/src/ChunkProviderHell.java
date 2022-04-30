@@ -1,10 +1,11 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
-
-import java.util.Random;
 
 public class ChunkProviderHell implements IChunkProvider {
 
@@ -14,7 +15,7 @@ public class ChunkProviderHell implements IChunkProvider {
 		field_4160_r = new double[256];
 		field_4159_s = new MapGenCavesHell();
 		field_4164_n = world;
-		hellRNG = new Random(l);
+		hellRNG = new EaglercraftRandom(l);
 		field_4169_i = new NoiseGeneratorOctaves(hellRNG, 16);
 		field_4168_j = new NoiseGeneratorOctaves(hellRNG, 16);
 		field_4167_k = new NoiseGeneratorOctaves(hellRNG, 8);
@@ -336,7 +337,7 @@ public class ChunkProviderHell implements IChunkProvider {
 		return "HellRandomLevelSource";
 	}
 
-	private Random hellRNG;
+	private EaglercraftRandom hellRNG;
 	private NoiseGeneratorOctaves field_4169_i;
 	private NoiseGeneratorOctaves field_4168_j;
 	private NoiseGeneratorOctaves field_4167_k;

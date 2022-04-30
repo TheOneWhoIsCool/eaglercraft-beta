@@ -4,7 +4,7 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class ModelGhast extends ModelBase {
 
@@ -14,7 +14,7 @@ public class ModelGhast extends ModelBase {
 		body = new ModelRenderer(0, 0);
 		body.addBox(-8F, -8F, -8F, 16, 16, 16);
 		body.offsetY += 24 + byte0;
-		Random random = new Random(1660L);
+		EaglercraftRandom random = new EaglercraftRandom(1660L);
 		for (int i = 0; i < tentacles.length; i++) {
 			tentacles[i] = new ModelRenderer(0, 0);
 			float f = (((((float) (i % 3) - (float) ((i / 3) % 2) * 0.5F) + 0.25F) / 2.0F) * 2.0F - 1.0F) * 5F;

@@ -7,6 +7,8 @@ package net.minecraft.src;
 import java.io.PrintStream;
 import java.util.*;
 
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 public class World implements IBlockAccess {
 
 	public WorldChunkManager getWorldChunkManager() {
@@ -24,12 +26,12 @@ public class World implements IBlockAccess {
 		playerEntities = new ArrayList();
 		field_1019_F = 0xffffffL;
 		skylightSubtracted = 0;
-		field_9437_g = (new Random()).nextInt();
+		rand = new EaglercraftRandom();
+		field_9437_g = rand.nextInt();
 		field_9436_h = 0x3c6ef35f;
 		field_1043_h = false;
 		lockTimestamp = System.currentTimeMillis();
 		autosavePeriod = 40;
-		rand = new Random();
 		isNewWorld = false;
 		worldAccesses = new ArrayList();
 		field_9428_I = new ArrayList();
@@ -59,12 +61,12 @@ public class World implements IBlockAccess {
 		playerEntities = new ArrayList();
 		field_1019_F = 0xffffffL;
 		skylightSubtracted = 0;
-		field_9437_g = (new Random()).nextInt();
+		rand = new EaglercraftRandom();
+		field_9437_g = rand.nextInt();
 		field_9436_h = 0x3c6ef35f;
 		field_1043_h = false;
 		lockTimestamp = System.currentTimeMillis();
 		autosavePeriod = 40;
-		rand = new Random();
 		isNewWorld = false;
 		worldAccesses = new ArrayList();
 		field_9428_I = new ArrayList();
@@ -103,12 +105,12 @@ public class World implements IBlockAccess {
 		playerEntities = new ArrayList();
 		field_1019_F = 0xffffffL;
 		skylightSubtracted = 0;
-		field_9437_g = (new Random()).nextInt();
+		rand = new EaglercraftRandom();
+		field_9437_g = rand.nextInt();
 		field_9436_h = 0x3c6ef35f;
 		field_1043_h = false;
 		lockTimestamp = System.currentTimeMillis();
 		autosavePeriod = 40;
-		rand = new Random();
 		isNewWorld = false;
 		worldAccesses = new ArrayList();
 		field_9428_I = new ArrayList();
@@ -1556,7 +1558,7 @@ public class World implements IBlockAccess {
 
 	public void randomDisplayUpdates(int i, int j, int k) {
 		byte byte0 = 16;
-		Random random = new Random();
+		EaglercraftRandom random = new EaglercraftRandom();
 		for (int l = 0; l < 1000; l++) {
 			int i1 = (i + rand.nextInt(byte0)) - rand.nextInt(byte0);
 			int j1 = (j + rand.nextInt(byte0)) - rand.nextInt(byte0);
@@ -1980,7 +1982,7 @@ public class World implements IBlockAccess {
 	private long lockTimestamp;
 	protected int autosavePeriod;
 	public int difficultySetting;
-	public Random rand;
+	public EaglercraftRandom rand;
 	public boolean isNewWorld;
 	public final WorldProvider worldProvider;
 	protected List worldAccesses;

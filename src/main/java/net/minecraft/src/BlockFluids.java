@@ -4,7 +4,8 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public abstract class BlockFluids extends Block {
 
@@ -86,11 +87,11 @@ public abstract class BlockFluids extends Block {
 		return 4;
 	}
 
-	public int idDropped(int i, Random random) {
+	public int idDropped(int i, EaglercraftRandom random) {
 		return 0;
 	}
 
-	public int quantityDropped(Random random) {
+	public int quantityDropped(EaglercraftRandom random) {
 		return 0;
 	}
 
@@ -185,7 +186,7 @@ public abstract class BlockFluids extends Block {
 		return f <= f1 ? f1 : f;
 	}
 
-	public void updateTick(World world, int i, int j, int k, Random random) {
+	public void updateTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		super.updateTick(world, i, j, k, random);
 	}
 
@@ -193,7 +194,7 @@ public abstract class BlockFluids extends Block {
 		return blockMaterial != Material.water ? 0 : 1;
 	}
 
-	public void randomDisplayTick(World world, int i, int j, int k, Random random) {
+	public void randomDisplayTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		if (blockMaterial == Material.water && random.nextInt(64) == 0) {
 			int l = world.getBlockMetadata(i, j, k);
 			if (l > 0 && l < 8) {

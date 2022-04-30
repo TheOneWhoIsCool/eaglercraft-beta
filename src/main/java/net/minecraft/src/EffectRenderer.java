@@ -6,7 +6,7 @@ package net.minecraft.src;
 
 import java.util.*;
 
-import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
@@ -18,7 +18,7 @@ public class EffectRenderer {
 	
 	public EffectRenderer(World world, RenderEngine renderengine) {
 		fxLayers = new List[4];
-		rand = new Random();
+		rand = new EaglercraftRandom();
 		if (world != null) {
 			worldObj = world;
 		}
@@ -169,5 +169,5 @@ public class EffectRenderer {
 	protected World worldObj;
 	private List fxLayers[];
 	private RenderEngine renderer;
-	private Random rand;
+	private EaglercraftRandom rand;
 }

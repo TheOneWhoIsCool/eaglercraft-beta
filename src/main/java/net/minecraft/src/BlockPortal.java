@@ -4,8 +4,8 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.io.PrintStream;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockPortal extends BlockBreakable {
 
@@ -48,7 +48,6 @@ public class BlockPortal extends BlockBreakable {
 				|| world.getBlockId(i, j, k + 1) == Block.obsidian.blockID) {
 			i1 = 1;
 		}
-		System.out.println((new StringBuilder()).append(l).append(", ").append(i1).toString());
 		if (l == i1) {
 			return false;
 		}
@@ -130,7 +129,7 @@ public class BlockPortal extends BlockBreakable {
 		return true;
 	}
 
-	public int quantityDropped(Random random) {
+	public int quantityDropped(EaglercraftRandom random) {
 		return 0;
 	}
 
@@ -147,7 +146,7 @@ public class BlockPortal extends BlockBreakable {
 		}
 	}
 
-	public void randomDisplayTick(World world, int i, int j, int k, Random random) {
+	public void randomDisplayTick(World world, int i, int j, int k, EaglercraftRandom random) {
 		if (random.nextInt(100) == 0) {
 			world.playSoundEffect((double) i + 0.5D, (double) j + 0.5D, (double) k + 0.5D, "portal.portal", 1.0F,
 					random.nextFloat() * 0.4F + 0.8F);

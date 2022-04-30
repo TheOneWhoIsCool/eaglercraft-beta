@@ -1,10 +1,11 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
-
-import java.util.Random;
 
 public class WorldGenMinable extends WorldGenerator {
 
@@ -13,7 +14,7 @@ public class WorldGenMinable extends WorldGenerator {
 		numberOfBlocks = j;
 	}
 
-	public boolean generate(World world, Random random, int i, int j, int k) {
+	public boolean generate(World world, EaglercraftRandom random, int i, int j, int k) {
 		float f = random.nextFloat() * 3.141593F;
 		double d = (float) (i + 8) + (MathHelper.sin(f) * (float) numberOfBlocks) / 8F;
 		double d1 = (float) (i + 8) - (MathHelper.sin(f) * (float) numberOfBlocks) / 8F;

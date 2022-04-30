@@ -4,11 +4,8 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.List;
-import java.util.Random;
-
 import net.lax1dude.eaglercraft.EaglerAdapter;
-import net.minecraft.client.Minecraft;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class GuiCreateWorld extends GuiScreen {
 
@@ -71,7 +68,7 @@ public class GuiCreateWorld extends GuiScreen {
 				return;
 			}
 			field_22130_l = true;
-			long l = (new Random()).nextLong();
+			long l = (new EaglercraftRandom()).nextLong();
 			String s = field_22133_i.func_22071_a();
 			if (!MathHelper.func_22282_a(s)) {
 				try {

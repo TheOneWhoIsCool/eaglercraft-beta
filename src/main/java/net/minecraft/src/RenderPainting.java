@@ -4,9 +4,8 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.Random;
-
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
@@ -15,7 +14,7 @@ public class RenderPainting extends Render {
 	private static final TextureLocation paintingTexture = new TextureLocation("/art/kz.png");
 
 	public RenderPainting() {
-		rand = new Random();
+		rand = new EaglercraftRandom();
 	}
 
 	public void func_158_a(EntityPainting entitypainting, double d, double d1, double d2, float f, float f1) {
@@ -124,7 +123,7 @@ public class RenderPainting extends Render {
 		func_158_a((EntityPainting) entity, d, d1, d2, f, f1);
 	}
 
-	private Random rand;
+	private EaglercraftRandom rand;
 
 	@Override
 	protected boolean loadDownloadableImageTexture(String s, String s1) {

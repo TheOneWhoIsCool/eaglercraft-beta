@@ -1,16 +1,17 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.Random;
-
 public class MapGenBase {
 
 	public MapGenBase() {
 		field_1306_a = 8;
-		rand = new Random();
+		rand = new EaglercraftRandom();
 	}
 
 	public void func_867_a(IChunkProvider ichunkprovider, World world, int i, int j, byte abyte0[]) {
@@ -32,5 +33,5 @@ public class MapGenBase {
 	}
 
 	protected int field_1306_a;
-	protected Random rand;
+	protected EaglercraftRandom rand;
 }
