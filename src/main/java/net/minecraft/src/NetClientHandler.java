@@ -24,7 +24,7 @@ public class NetClientHandler extends NetHandler {
 		} catch (IOException e) {
 			throw new UnexpectedThrowable(e);
 		}
-		netManager = new NetworkManager(socket, "Client", this);
+		//netManager = new NetworkManager(socket, "Client", this);
 	}
 
 	public void processReadPackets() {

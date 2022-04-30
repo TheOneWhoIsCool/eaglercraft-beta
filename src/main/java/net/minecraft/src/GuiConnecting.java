@@ -4,7 +4,6 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.List;
 import net.minecraft.client.Minecraft;
 
 public class GuiConnecting extends GuiScreen {
@@ -12,7 +11,7 @@ public class GuiConnecting extends GuiScreen {
 	public GuiConnecting(Minecraft minecraft, String s, int i) {
 		cancelled = false;
 		minecraft.changeWorld1(null);
-		(new ThreadConnectToServer(this, minecraft, s, i)).start();
+		//(new ThreadConnectToServer(this, minecraft, s, i)).start();
 	}
 
 	public void updateScreen() {

@@ -12,6 +12,7 @@ import java.util.*;
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
+import net.lax1dude.eaglercraft.beta.GuiNoMultiplayer;
 
 public class GuiMainMenu extends GuiScreen {
 
@@ -90,7 +91,7 @@ public class GuiMainMenu extends GuiScreen {
 			mc.displayGuiScreen(new GuiSelectWorld(this));
 		}
 		if (guibutton.id == 2) {
-			mc.displayGuiScreen(new GuiMultiplayer(this));
+			mc.displayGuiScreen(new GuiNoMultiplayer(this));
 		}
 		//if (guibutton.id == 3) {
 		//	mc.displayGuiScreen(new GuiTexturePacks(this));
