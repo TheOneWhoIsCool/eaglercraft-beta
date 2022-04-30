@@ -15,7 +15,8 @@ public class WorldRenderer {
 		glRenderList = -1;
 		isInFrustum = false;
 		skipRenderPass = new boolean[2];
-		isVisible = true;
+		isVisible = 0;
+		isNowVisible = true;
 		isInitialized = false;
 		tileEntityRenderers = new ArrayList();
 		worldObj = world;
@@ -51,9 +52,6 @@ public class WorldRenderer {
 			float f = 6F;
 			renderBoundingBox = AxisAlignedBB.getBoundingBox((float) i - f, (float) j - f, (float) k - f,
 					(float) (i + sizeWidth) + f, (float) (j + sizeHeight) + f, (float) (k + sizeDepth) + f);
-			//RenderItem.renderAABB(AxisAlignedBB.getBoundingBoxFromPool((float) field_1752_l - f,
-			//		(float) field_1751_m - f, (float) field_1750_n - f, (float) (field_1752_l + sizeWidth) + f,
-			//		(float) (field_1751_m + sizeHeight) + f, (float) (field_1750_n + sizeDepth) + f));
 			markDirty();
 			return;
 		}
@@ -228,7 +226,8 @@ public class WorldRenderer {
 	public boolean needsUpdate;
 	public AxisAlignedBB renderBoundingBox;
 	public int chunkIndex;
-	public boolean isVisible;
+	public int isVisible;
+	public boolean isNowVisible;
 	public boolean isWaitingOnOcclusionQuery;
 	public int field_1732_z;
 	public boolean field_1747_A;

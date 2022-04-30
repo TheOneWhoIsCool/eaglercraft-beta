@@ -10,4 +10,5 @@ bin
 /lwjgl-rundir/lwjgl_saves
 /lwjgl-rundir/filesystem
 /lwjgl-rundir/texturepacks
+/lwjgl-rundir/downloads
 /lwjgl-rundir/options.txt
