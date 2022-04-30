@@ -28,6 +28,7 @@ class GuiWorldSlot extends GuiSlot {
 		GuiSelectWorld.func_22083_c(field_22266_a).enabled = flag1;
 		GuiSelectWorld.func_22085_d(field_22266_a).enabled = flag1;
 		GuiSelectWorld.func_22092_e(field_22266_a).enabled = flag1;
+		GuiSelectWorld.getExportButton(field_22266_a).enabled = flag1;
 		if (flag && flag1) {
 			field_22266_a.selectWorld(i);
 		}
@@ -58,8 +59,7 @@ class GuiWorldSlot extends GuiSlot {
 				GuiSelectWorld.func_22093_g(field_22266_a).format(new Date(saveformatcomparator.func_22163_e())))
 				.toString();
 		long l1 = saveformatcomparator.func_22159_c();
-		s1 = (new StringBuilder()).append(s1).append(", ").append((float) (((l1 / 1024L) * 100L) / 1024L) / 100F)
-				.append(" MB)").toString();
+		s1 = (new StringBuilder()).append(s1).append(")").toString();
 		String s2 = "";
 		if (saveformatcomparator.func_22161_d()) {
 			s2 = (new StringBuilder()).append(GuiSelectWorld.func_22088_h(field_22266_a)).append(" ").append(s2)

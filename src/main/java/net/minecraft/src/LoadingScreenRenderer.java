@@ -67,6 +67,23 @@ public class LoadingScreenRenderer implements IProgressUpdate {
 			return;
 		}
 	}
+	
+	public void displayLoadingString(String s, String s1) {
+		if (!mc.running) {
+			if (field_1005_e) {
+				return;
+			} else {
+				throw new MinecraftError();
+			}
+		} else {
+			field_1006_d = 0L;
+			field_1004_a = s1;
+			field_1007_c = s;
+			setLoadingProgress(-1);
+			field_1006_d = 0L;
+			return;
+		}
+	}
 
 	public void setLoadingProgress(int i) {
 		if (!mc.running) {

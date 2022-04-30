@@ -49,7 +49,6 @@ public class EaglercraftSaveManager implements ISaveFormat {
 				}
 				String folderName = t.getName();
 				String dir = t.path;
-				System.out.println(dir);
 				byte[] lvl = EaglerAdapter.readFile(dir + "/lvl");
 				if(lvl != null) {
 					try {

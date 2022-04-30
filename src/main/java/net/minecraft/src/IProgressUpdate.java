@@ -9,6 +9,8 @@ public interface IProgressUpdate {
 	public abstract void func_594_b(String s);
 
 	public abstract void displayLoadingString(String s);
+	
+	public abstract void displayLoadingString(String s, String s1);
 
 	public abstract void setLoadingProgress(int i);
 }

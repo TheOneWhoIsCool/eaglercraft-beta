@@ -155,7 +155,7 @@ public class GuiScreen extends Gui {
 		return true;
 	}
 
-	public void deleteWorld(boolean flag, int i) {
+	public void confirmClicked(boolean flag, int i) {
 	}
 
 	protected Minecraft mc;

@@ -11,13 +11,14 @@ import net.lax1dude.eaglercraft.SHA1Digest;
 
 public class EPKCompiler {
 	
-	private final ByteArrayOutputStream osb = new ByteArrayOutputStream();
+	private final ByteArrayOutputStream osb;
 	private DataOutputStream os;
 	private Deflater d;
 	private final SHA1Digest dig = new SHA1Digest();
 	
-	public EPKCompiler(String name) {
+	public EPKCompiler(String name, int initialSize) {
 		try {
+			osb = new ByteArrayOutputStream(initialSize);
 			d = new Deflater(9);
 			os = new DataOutputStream(osb);
 			os.write("EAGPKG!!".getBytes(Charset.forName("UTF-8")));

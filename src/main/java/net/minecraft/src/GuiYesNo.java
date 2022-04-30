@@ -23,7 +23,7 @@ public class GuiYesNo extends GuiScreen {
 	}
 
 	protected void actionPerformed(GuiButton guibutton) {
-		parentScreen.deleteWorld(guibutton.id == 0, worldNumber);
+		parentScreen.confirmClicked(guibutton.id == 0, worldNumber);
 	}
 
 	public void drawScreen(int i, int j, float f) {

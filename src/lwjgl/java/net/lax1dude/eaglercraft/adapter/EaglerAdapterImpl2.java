@@ -14,7 +14,6 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -1577,6 +1576,10 @@ public class EaglerAdapterImpl2 {
 		return (new File(filesystemBaseDirectory, stripPath(path))).isDirectory();
 	}
 	
+	public static final boolean pathExists(String path) {
+		return (new File(filesystemBaseDirectory, stripPath(path))).exists();
+	}
+	
 	public static final void writeFile(String path, byte[] data) {
 		try {
 			File f = new File(filesystemBaseDirectory, stripPath(path));
@@ -1770,6 +1773,20 @@ public class EaglerAdapterImpl2 {
 	
 	public static final ISaveFormat getConfiguredSaveFormat() {
 		return svformat;
+	}
+	
+	public static final void downloadFile(String filename, byte[] data) {
+		File downloadDir = new File("downloads");
+		downloadDir.mkdirs();
+		try {
+			FileOutputStream out = new FileOutputStream(new File(downloadDir, filename));
+			out.write(data);
+			out.close();
+			System.out.println("fake downloaded file '" + filename + "' to the debug directory");
+		} catch (IOException e) {
+			System.err.println("Failed to 'download' file: " + filename);
+			e.printStackTrace();
+		}
 	}
 
 }

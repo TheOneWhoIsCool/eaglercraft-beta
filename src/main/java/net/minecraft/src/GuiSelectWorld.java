@@ -8,6 +8,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
+
+import net.lax1dude.eaglercraft.beta.GuiCreateOrImport;
+import net.lax1dude.eaglercraft.beta.GuiSomethingFailed;
+import net.lax1dude.eaglercraft.beta.ImportExport;
 import net.minecraft.client.Minecraft;
 
 public class GuiSelectWorld extends GuiScreen {
@@ -52,19 +56,16 @@ public class GuiSelectWorld extends GuiScreen {
 
 	public void initGui2() {
 		StringTranslate stringtranslate = StringTranslate.getInstance();
-		controlList.add(field_22104_s = new GuiButton(1, width / 2 - 154, height - 52, 150, 20,
-				stringtranslate.translateKey("selectWorld.select")));
-		controlList.add(field_22095_r = new GuiButton(6, width / 2 - 154, height - 28, 70, 20,
-				stringtranslate.translateKey("selectWorld.rename")));
-		controlList.add(field_22103_t = new GuiButton(2, width / 2 - 74, height - 28, 70, 20,
-				stringtranslate.translateKey("selectWorld.delete")));
-		controlList.add(new GuiButton(3, width / 2 + 4, height - 52, 150, 20,
-				stringtranslate.translateKey("selectWorld.create")));
-		controlList
-				.add(new GuiButton(0, width / 2 + 4, height - 28, 150, 20, stringtranslate.translateKey("gui.cancel")));
+		controlList.add(field_22104_s = new GuiButton(1, width / 2 - 154, height - 52, 150, 20, stringtranslate.translateKey("selectWorld.select")));
+		controlList.add(field_22095_r = new GuiButton(6, width / 2 - 154, height - 28, 70, 20, stringtranslate.translateKey("selectWorld.rename")));
+		controlList.add(field_22103_t = new GuiButton(2, width / 2 - 74, height - 28, 70, 20, stringtranslate.translateKey("selectWorld.delete")));
+		controlList.add(new GuiButton(3, width / 2 + 4, height - 52, 150, 20, stringtranslate.translateKey("selectWorld.create")));
+		controlList.add(export = new GuiButton(7, width / 2 + 4, height - 28, 70, 20, stringtranslate.translateKey("selectWorld.export")));
+		controlList.add(new GuiButton(0, width / 2 + 4 + 80, height - 28, 70, 20, stringtranslate.translateKey("gui.cancel")));
 		field_22104_s.enabled = false;
 		field_22095_r.enabled = false;
 		field_22103_t.enabled = false;
+		export.enabled = false;
 	}
 
 	protected void actionPerformed(GuiButton guibutton) {
@@ -87,9 +88,21 @@ public class GuiSelectWorld extends GuiScreen {
 		} else if (guibutton.id == 1) {
 			selectWorld(field_22101_l);
 		} else if (guibutton.id == 3) {
-			mc.displayGuiScreen(new GuiCreateWorld(this));
+			mc.displayGuiScreen(new GuiCreateOrImport(this));
 		} else if (guibutton.id == 6) {
 			mc.displayGuiScreen(new GuiRenameWorld(this, func_22091_c(field_22101_l)));
+		} else if (guibutton.id == 7) {
+			String s = func_22094_d(field_22101_l);
+			if (s != null) {
+				isExporting = true;
+				StringTranslate stringtranslate = StringTranslate.getInstance();
+				String s1 = stringtranslate.translateKey("selectWorld.exportQuestion1");
+				String s2 = stringtranslate.translateKey("selectWorld.exportQuestion2");
+				String s3 = stringtranslate.translateKey("selectWorld.export");
+				String s4 = stringtranslate.translateKey("gui.cancel");
+				GuiYesNo guiyesno = new GuiYesNo(this, s1, s2, s3, s4, field_22101_l);
+				mc.displayGuiScreen(guiyesno);
+			}
 		} else if (guibutton.id == 0) {
 			mc.displayGuiScreen(parentScreen);
 		} else {
@@ -112,7 +125,7 @@ public class GuiSelectWorld extends GuiScreen {
 		mc.displayGuiScreen(null);
 	}
 
-	public void deleteWorld(boolean flag, int i) {
+	public void confirmClicked(boolean flag, int i) {
 		if (field_22096_q) {
 			field_22096_q = false;
 			if (flag) {
@@ -122,6 +135,17 @@ public class GuiSelectWorld extends GuiScreen {
 				func_22084_k();
 			}
 			mc.displayGuiScreen(this);
+		}else if (isExporting) {
+			isExporting = false;
+			if (flag) {
+				if(!ImportExport.exportWorld(mc.loadingScreen, func_22091_c(i), func_22094_d(i) + ".epk")) {
+					mc.displayGuiScreen(new GuiSomethingFailed(this, "Export Failed", "An exception was encountered while exporting '" + func_22091_c(i) + "'", "Check the game's console"));
+				}else {
+					mc.displayGuiScreen(this);
+				}
+			}else {
+				mc.displayGuiScreen(this);
+			}
 		}
 	}
 
@@ -155,6 +179,10 @@ public class GuiSelectWorld extends GuiScreen {
 		return guiselectworld.field_22103_t;
 	}
 
+	static GuiButton getExportButton(GuiSelectWorld guiselectworld) {
+		return guiselectworld.export;
+	}
+
 	static String func_22087_f(GuiSelectWorld guiselectworld) {
 		return guiselectworld.field_22098_o;
 	}
@@ -177,7 +205,9 @@ public class GuiSelectWorld extends GuiScreen {
 	private String field_22098_o;
 	private String field_22097_p;
 	private boolean field_22096_q;
+	private boolean isExporting;
 	private GuiButton field_22095_r;
 	private GuiButton field_22104_s;
 	private GuiButton field_22103_t;
+	private GuiButton export;
 }

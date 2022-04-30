@@ -31,6 +31,15 @@ selectWorld.enterName=World Name
 selectWorld.resultFolder=Will be saved in:
 selectWorld.enterSeed=Seed for the World Generator
 selectWorld.seedInfo=Leave blank for a random seed
+selectWorld.export=Export
+selectWorld.wannaImport=what do you wanna do?
+selectWorld.import=Import Existing World
+selectWorld.exportQuestion1=Are you sure you want to export this world?
+selectWorld.exportQuestion2=You cannot exit this page until the export is complete
+selectWorld.importQuestion1=Are you sure you want to import a world?
+selectWorld.importQuestion2=You cannot exit this page until the import is complete
+selectWorld.importConfirm=Import
+selectWorld.importName=What do you want to name this world?
 
 multiplayer.title=Play Multiplayer
 multiplayer.connect=Connect
