@@ -6,8 +6,6 @@ package net.minecraft.src;
 
 import java.util.*;
 
-import net.lax1dude.eaglercraft.anvil.SaveHandlerMP;
-
 public class WorldClient extends World {
 
 	public WorldClient(NetClientHandler netclienthandler, long l, int i) {

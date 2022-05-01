@@ -138,7 +138,7 @@ public class FontRenderer {
 			}
 
 			if (i1 < s.length()) {
-				int k1 = FontAllowedCharacters.allowedCharacters.indexOf(s.charAt(i1));
+				int k1 = FontAllowedCharacters.isAllowed(s.charAt(i1));
 				if (k1 >= 0) {
 					EaglerAdapter.glCallList(fontDisplayLists + k1 + 32);
 					EaglerAdapter.glTranslatef(charWidth[k1 + 32], 0.0F, 0.0F);
@@ -159,7 +159,7 @@ public class FontRenderer {
 				j++;
 				continue;
 			}
-			int k = FontAllowedCharacters.allowedCharacters.indexOf(s.charAt(j));
+			int k = FontAllowedCharacters.isAllowed(s.charAt(j));
 			if (k >= 0) {
 				i += charWidth[k + 32];
 			}

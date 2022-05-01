@@ -4,8 +4,6 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.*;
-
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.TextureLocation;
@@ -60,11 +58,6 @@ public class GuiMainMenu extends GuiScreen {
 	}
 
 	public void initGui() {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(new Date());
-		if (calendar.get(2) + 1 == 11 && calendar.get(5) == 19) {
-			splashText = "Happy birthday, lax1dude!";
-		}
 		StringTranslate stringtranslate = StringTranslate.getInstance();
 		int i = height / 4 + 48;
 		controlList.add(new GuiButton(1, width / 2 - 100, i, stringtranslate.translateKey("menu.singleplayer")));
@@ -74,7 +67,7 @@ public class GuiMainMenu extends GuiScreen {
 			controlList.add(new GuiButton(0, width / 2 - 100, i + 72, stringtranslate.translateKey("menu.options")));
 		} else {
 			controlList.add(new GuiButton(0, width / 2 - 100, i + 72 + 12, 98, 20, stringtranslate.translateKey("menu.options")));
-			controlList.add(new GuiButton(4, width / 2 + 2, i + 72 + 12, 98, 20, stringtranslate.translateKey("menu.quit")));
+			controlList.add(new GuiButton(4, width / 2 + 2, i + 72 + 12, 98, 20, stringtranslate.translateKey("menu.editProfile")));
 		}
 		if (mc.session == null) {
 			((GuiButton) controlList.get(1)).enabled = false;
@@ -95,7 +88,7 @@ public class GuiMainMenu extends GuiScreen {
 		//	mc.displayGuiScreen(new GuiTexturePacks(this));
 		//}
 		if (guibutton.id == 4) {
-			mc.shutdown();
+			mc.displayGuiScreen(new GuiNoMultiplayer(this));
 		}
 	}
 

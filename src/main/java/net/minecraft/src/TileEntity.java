@@ -7,17 +7,18 @@ package net.minecraft.src;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class TileEntity {
 
 	public TileEntity() {
 	}
 
-	private static void addMapping(Class class1, String s) {
+	private static void addMapping(Class class1, Supplier<TileEntity> construct, String s) {
 		if (classToNameMap.containsKey(s)) {
 			throw new IllegalArgumentException((new StringBuilder()).append("Duplicate id: ").append(s).toString());
 		} else {
-			nameToClassMap.put(s, class1);
+			nameToClassMap.put(s, construct);
 			classToNameMap.put(class1, s);
 			return;
 		}
@@ -49,9 +50,9 @@ public class TileEntity {
 	public static TileEntity createAndLoadEntity(NBTTagCompound nbttagcompound) {
 		TileEntity tileentity = null;
 		try {
-			Class class1 = (Class) nameToClassMap.get(nbttagcompound.getString("id"));
+			Supplier<TileEntity> class1 = (Supplier<TileEntity>) nameToClassMap.get(nbttagcompound.getString("id"));
 			if (class1 != null) {
-				tileentity = (TileEntity) class1.newInstance();
+				tileentity = class1.get();
 			}
 		} catch (Exception exception) {
 			exception.printStackTrace();
@@ -102,11 +103,11 @@ public class TileEntity {
 	public int zCoord;
 
 	static {
-		addMapping(TileEntityFurnace.class, "Furnace");
-		addMapping(TileEntityChest.class, "Chest");
-		addMapping(TileEntityDispenser.class, "Trap");
-		addMapping(TileEntitySign.class, "Sign");
-		addMapping(TileEntityMobSpawner.class, "MobSpawner");
-		addMapping(TileEntityNote.class, "Music");
+		addMapping(TileEntityFurnace.class, () -> new TileEntityFurnace(), "Furnace");
+		addMapping(TileEntityChest.class, () -> new TileEntityChest(), "Chest");
+		addMapping(TileEntityDispenser.class, () -> new TileEntityDispenser(), "Trap");
+		addMapping(TileEntitySign.class, () -> new TileEntitySign(), "Sign");
+		addMapping(TileEntityMobSpawner.class, () -> new TileEntityMobSpawner(), "MobSpawner");
+		addMapping(TileEntityNote.class, () -> new TileEntityNote(), "Music");
 	}
 }

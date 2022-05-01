@@ -44,6 +44,7 @@ public abstract class Minecraft implements Runnable {
 		systemTime = System.currentTimeMillis();
 		field_6300_ab = 0;
 		hideQuitButton = false;
+		awaitPointerLock = false;
 		field_21900_a = this;
 	}
 	
@@ -62,7 +63,7 @@ public abstract class Minecraft implements Runnable {
 			field_22008_V = new EaglercraftSaveManager("saves");
 		}
 		
-		gameSettings = new GameSettings();
+		gameSettings = new GameSettings(this);
 		texturePackList = new TexturePackList(this);
 		renderEngine = new RenderEngine(texturePackList, gameSettings);
 		fontRenderer = new FontRenderer(gameSettings, "/font/default.png", renderEngine);
@@ -87,7 +88,7 @@ public abstract class Minecraft implements Runnable {
 		renderEngine.registerTextureFX(new TexturePortalFX());
 		renderEngine.registerTextureFX(new TextureCompassFX(this));
 		renderEngine.registerTextureFX(new TextureWatchFX(this));
-		renderEngine.registerTextureFX(new TexureWaterFlowFX());
+		renderEngine.registerTextureFX(new TextureWaterFlowFX());
 		renderEngine.registerTextureFX(new TextureLavaFlowFX());
 		renderEngine.registerTextureFX(new TextureFlamesFX(0));
 		renderEngine.registerTextureFX(new TextureFlamesFX(1));
@@ -95,6 +96,9 @@ public abstract class Minecraft implements Runnable {
 		EaglerAdapter.glViewport(0, 0, displayWidth, displayHeight);
 		effectRenderer = new EffectRenderer(theWorld, renderEngine);
 		checkGLError("Post startup");
+
+		while(EaglerAdapter.keysNext());
+		while(EaglerAdapter.mouseNext());
 		ingameGUI = new GuiIngame(this);
 		if (serverName != null) {
 			displayGuiScreen(new GuiConnecting(this, serverName, serverPort));
@@ -104,13 +108,14 @@ public abstract class Minecraft implements Runnable {
 	}
 
 	private void loadScreen() {
-		ScaledResolution scaledresolution = new ScaledResolution(displayWidth, displayHeight);
-		int i = scaledresolution.getScaledWidth();
-		int j = scaledresolution.getScaledHeight();
+		int xx = displayWidth;
+		if(xx > displayHeight) {
+			xx = displayHeight;
+		}
 		EaglerAdapter.glClear(16640);
 		EaglerAdapter.glMatrixMode(5889 /* GL_PROJECTION */);
 		EaglerAdapter.glLoadIdentity();
-		EaglerAdapter.glOrtho(0.0F, i, j, 0.0F, 1000F, 3000F);
+		EaglerAdapter.glOrtho(0.0F, displayWidth, displayHeight, 0.0F, 1000F, 3000F);
 		EaglerAdapter.glMatrixMode(5888 /* GL_MODELVIEW0_ARB */);
 		EaglerAdapter.glLoadIdentity();
 		EaglerAdapter.glTranslatef(0.0F, 0.0F, -2000F);
@@ -128,11 +133,16 @@ public abstract class Minecraft implements Runnable {
 		tessellator.addVertexWithUV(displayWidth, 0.0D, 0.0D, 0.0D, 0.0D);
 		tessellator.addVertexWithUV(0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
 		tessellator.draw();
-		char c = '\u0100';
-		char c1 = '\u0100';
 		EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		tessellator.startDrawingQuads();
 		tessellator.setColorOpaque_I(0xffffff);
-		func_6274_a((displayWidth / 2 - c) / 2, (displayHeight / 2 - c1) / 2, 0, 0, c, c1);
+		int marginX = (displayWidth - xx) / 2;
+		int marginY = (displayHeight - xx) / 2;
+		tessellator.addVertexWithUV(marginX, displayHeight - marginY, 0.0D, 0.0D, 1.0D);
+		tessellator.addVertexWithUV(displayWidth - marginX, displayHeight - marginY, 0.0D, 1.0D, 1.0D);
+		tessellator.addVertexWithUV(displayWidth - marginX, marginY, 0.0D, 1.0D, 0.0D);
+		tessellator.addVertexWithUV(marginX, marginY, 0.0D, 0.0D, 0.0D);
+		tessellator.draw();
 		EaglerAdapter.glDisable(2896 /* GL_LIGHTING */);
 		EaglerAdapter.glDisable(2912 /* GL_FOG */);
 		EaglerAdapter.glEnable(3008 /* GL_ALPHA_TEST */);
@@ -170,14 +180,14 @@ public abstract class Minecraft implements Runnable {
 		}
 		currentScreen = guiscreen;
 		if (guiscreen != null) {
-			func_6273_f();
+			ungrabMouseCursor();
 			ScaledResolution scaledresolution = new ScaledResolution(displayWidth, displayHeight);
 			int i = scaledresolution.getScaledWidth();
 			int j = scaledresolution.getScaledHeight();
 			guiscreen.setWorldAndResolution(this, i, j);
 			field_6307_v = false;
 		} else {
-			func_6259_e();
+			grabMouseCursor();
 		}
 	}
 
@@ -188,7 +198,6 @@ public abstract class Minecraft implements Runnable {
 			System.out.println("########## GL ERROR ##########");
 			System.out.println((new StringBuilder()).append("@ ").append(s).toString());
 			System.out.println((new StringBuilder()).append(i).append(": ").append(s1).toString());
-			System.exit(0);
 		}
 	}
 
@@ -203,7 +212,7 @@ public abstract class Minecraft implements Runnable {
 		} catch (Throwable throwable1) {
 		}
 		EaglerAdapter.destroyContext();
-		System.exit(0);
+		EaglerAdapter.exit();
 	}
 
 	public void run() {
@@ -395,10 +404,11 @@ public abstract class Minecraft implements Runnable {
 		running = false;
 	}
 
-	public void func_6259_e() {
+	public void grabMouseCursor() {
 		if (!EaglerAdapter.isFocused()) {
 			return;
 		}
+		awaitPointerLock = true;
 		if (field_6289_L) {
 			return;
 		} else {
@@ -410,7 +420,7 @@ public abstract class Minecraft implements Runnable {
 		}
 	}
 
-	public void func_6273_f() {
+	public void ungrabMouseCursor() {
 		if (!field_6289_L) {
 			return;
 		}
@@ -422,11 +432,8 @@ public abstract class Minecraft implements Runnable {
 	}
 
 	public void func_6252_g() {
-		if (currentScreen != null) {
-			return;
-		} else {
+		if (currentScreen == null) {
 			displayGuiScreen(new GuiIngameMenu());
-			return;
 		}
 	}
 
@@ -601,7 +608,7 @@ public abstract class Minecraft implements Runnable {
 					}
 					if (currentScreen == null) {
 						if (!field_6289_L && EaglerAdapter.mouseGetEventButtonState()) {
-							func_6259_e();
+							grabMouseCursor();
 						} else {
 							if (EaglerAdapter.mouseGetEventButton() == 0 && EaglerAdapter.mouseGetEventButtonState()) {
 								clickMouse(0);
@@ -668,15 +675,21 @@ public abstract class Minecraft implements Runnable {
 				}
 			} while (true);
 			if (currentScreen == null) {
-				if (EaglerAdapter.mouseIsButtonDown(0) && (float) (ticksRan - field_6302_aa) >= timer.ticksPerSecond / 4F
-						&& field_6289_L) {
-					clickMouse(0);
-					field_6302_aa = ticksRan;
-				}
-				if (EaglerAdapter.mouseIsButtonDown(1) && (float) (ticksRan - field_6302_aa) >= timer.ticksPerSecond / 4F
-						&& field_6289_L) {
-					clickMouse(1);
-					field_6302_aa = ticksRan;
+				if(EaglerAdapter.isPointerLocked()) {
+					awaitPointerLock = false;
+					if (EaglerAdapter.mouseIsButtonDown(0) && (float) (ticksRan - field_6302_aa) >= timer.ticksPerSecond / 4F
+							&& field_6289_L) {
+						clickMouse(0);
+						field_6302_aa = ticksRan;
+					}
+					if (EaglerAdapter.mouseIsButtonDown(1) && (float) (ticksRan - field_6302_aa) >= timer.ticksPerSecond / 4F
+							&& field_6289_L) {
+						clickMouse(1);
+						field_6302_aa = ticksRan;
+					}
+				}else if(!awaitPointerLock) {
+					field_6289_L = false;
+					func_6252_g();
 				}
 			}
 			func_6254_a(0, currentScreen == null && EaglerAdapter.mouseIsButtonDown(0) && field_6289_L);
@@ -1028,6 +1041,7 @@ public abstract class Minecraft implements Runnable {
 	public boolean isRaining;
 	long systemTime;
 	private int field_6300_ab;
+	private boolean awaitPointerLock;
 
 	private static Minecraft instance = null;
 

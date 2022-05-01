@@ -39,7 +39,8 @@ public class GuiDisableButton extends Gui {
 		if (!this.field_22081_b || !this.field_22082_a) {
 			return;
 		}
-		if (c == '') {
+		
+		if ((int)c == 16) {
 			int n2;
 			String string = GuiScreen.getClipboardString();
 			if (string == null) {
@@ -55,7 +56,7 @@ public class GuiDisableButton extends Gui {
 		if (n == 14 && this.field_22075_h.length() > 0) {
 			this.field_22075_h = this.field_22075_h.substring(0, this.field_22075_h.length() - 1);
 		}
-		if (FontAllowedCharacters.allowedCharacters.indexOf(c) >= 0
+		if (FontAllowedCharacters.isAllowed(c) >= 0
 				&& (this.field_22075_h.length() < this.field_22074_i || this.field_22074_i == 0)) {
 			this.field_22075_h = this.field_22075_h + c;
 		}

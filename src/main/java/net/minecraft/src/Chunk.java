@@ -309,8 +309,7 @@ public class Chunk {
 		int i = MathHelper.floor_double(entity.posX / 16D);
 		int j = MathHelper.floor_double(entity.posZ / 16D);
 		if (i != xPosition || j != zPosition) {
-			System.out.println((new StringBuilder()).append("Wrong location! ").append(entity).toString());
-			Thread.dumpStack();
+			System.out.println((new StringBuilder()).append("Wrong entity location! ").append(entity).toString());
 		}
 		int k = MathHelper.floor_double(entity.posY / 16D);
 		if (k < 0) {

@@ -4,8 +4,7 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.util.List;
-import org.lwjgl.input.Keyboard;
+import net.lax1dude.eaglercraft.EaglerAdapter;
 
 public class GuiSleepMP extends GuiChat {
 
@@ -13,14 +12,14 @@ public class GuiSleepMP extends GuiChat {
 	}
 
 	public void initGui() {
-		Keyboard.enableRepeatEvents(true);
+		EaglerAdapter.enableRepeatEvents(true);
 		StringTranslate stringtranslate = StringTranslate.getInstance();
 		controlList.add(new GuiButton(1, width / 2 - 100, height - 40,
 				stringtranslate.translateKey("multiplayer.stopSleeping")));
 	}
 
 	public void onGuiClosed() {
-		Keyboard.enableRepeatEvents(false);
+		EaglerAdapter.enableRepeatEvents(false);
 	}
 
 	protected void keyTyped(char c, int i) {

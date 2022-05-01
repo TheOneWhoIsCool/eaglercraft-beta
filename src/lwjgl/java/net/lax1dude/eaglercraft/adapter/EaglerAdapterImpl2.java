@@ -946,6 +946,10 @@ public class EaglerAdapterImpl2 {
 	public static final void mouseSetGrabbed(boolean grabbed) {
 		Mouse.setGrabbed(grabbed);
 	}
+	
+	public static final boolean isPointerLocked() {
+		return Mouse.isGrabbed();
+	}
 
 	public static final int mouseGetDX() {
 		return Mouse.getDX();
@@ -1616,14 +1620,6 @@ public class EaglerAdapterImpl2 {
 		return (new File(filesystemBaseDirectory, stripPath(path))).lastModified();
 	}
 	
-	public static final void setLastModified(String path, long t) {
-		(new File(filesystemBaseDirectory, stripPath(path))).setLastModified(t);
-	}
-	
-	public static final void touchFile(String path) {
-		(new File(filesystemBaseDirectory, stripPath(path))).setLastModified(System.currentTimeMillis());
-	}
-	
 	public static final int getFileSize(String path) {
 		return (int)(new File(filesystemBaseDirectory, stripPath(path))).length();
 	}
@@ -1689,18 +1685,18 @@ public class EaglerAdapterImpl2 {
 		ArrayList<FileEntry> ret = new ArrayList<>();
 		File f = new File(filesystemBaseDirectory, path);
 		if(f.isFile()) {
-			ret.add(new FileEntry(path, false, f.lastModified(), (int)f.length()));
+			ret.add(new FileEntry(path, false, f.lastModified()));
 		}else if(f.isDirectory()) {
 			for(File ff : f.listFiles()) {
 				if(ff.isDirectory()) {
 					if(listDirs && !recursiveDirs) {
-						ret.add(new FileEntry(path + "/" + ff.getName(), true, -1l, -1));
+						ret.add(new FileEntry(path + "/" + ff.getName(), true, -1l));
 					}
 					if(recursiveDirs) {
 						recursiveListing(path + "/" + ff.getName(), ff, ret, listDirs, recursiveDirs);
 					}
 				}else {
-					ret.add(new FileEntry(path + "/" + ff.getName(), false, ff.lastModified(), (int)ff.length()));
+					ret.add(new FileEntry(path + "/" + ff.getName(), false, ff.lastModified()));
 				}
 			}
 		}
@@ -1709,10 +1705,10 @@ public class EaglerAdapterImpl2 {
 	
 	private static void recursiveListing(String path, File f, Collection<FileEntry> lst, boolean listDirs, boolean recursiveDirs) {
 		if(f.isFile()) {
-			lst.add(new FileEntry(path, false, f.lastModified(), (int)f.length()));
+			lst.add(new FileEntry(path, false, f.lastModified()));
 		}else if(f.isDirectory()) {
 			if(listDirs) {
-				lst.add(new FileEntry(path, true, -1l, -1));
+				lst.add(new FileEntry(path, true, -1l));
 			}
 			if(recursiveDirs) {
 				for(File ff : f.listFiles()) {
@@ -1735,13 +1731,11 @@ public class EaglerAdapterImpl2 {
 		public final String path;
 		public final boolean isDirectory;
 		public final long lastModified;
-		public final int fileSize;
 		
-		protected FileEntry(String path, boolean isDirectory, long lastModified, int fileSize) {
+		protected FileEntry(String path, boolean isDirectory, long lastModified) {
 			this.path = path;
 			this.isDirectory = isDirectory;
 			this.lastModified = lastModified;
-			this.fileSize = fileSize;
 		}
 		
 		public String getName() {

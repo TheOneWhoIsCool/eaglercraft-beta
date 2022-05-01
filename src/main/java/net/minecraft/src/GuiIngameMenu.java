@@ -38,7 +38,7 @@ public class GuiIngameMenu extends GuiScreen {
 		}
 		if (guibutton.id == 4) {
 			mc.displayGuiScreen(null);
-			mc.func_6259_e();
+			mc.grabMouseCursor();
 		}
 	}
 

@@ -430,7 +430,13 @@ public class EntityRenderer {
 			EaglerAdapter.glEnable(2912 /* GL_FOG */);
 			terrainTexture.bindTexture();
 			RenderHelper.disableStandardItemLighting();
+			if(i == 0) {
+				EaglerAdapter.glAlphaFunc(516, 0.5F);
+			}
 			renderglobal.sortAndRender(entityliving, 0, f);
+			if(i == 0) {
+				EaglerAdapter.glAlphaFunc(516, 0.1F);
+			}
 			EaglerAdapter.glShadeModel(7424 /* GL_FLAT */);
 			RenderHelper.enableStandardItemLighting();
 			renderglobal.func_951_a(entityliving.getPosition(f), frustrum, f);
@@ -453,7 +459,7 @@ public class EntityRenderer {
 			EaglerAdapter.glEnable(3042 /* GL_BLEND */);
 			EaglerAdapter.glDisable(2884 /* GL_CULL_FACE */);
 			terrainTexture.bindTexture();
-			if (mc.gameSettings.fancyGraphics) {
+			//if (mc.gameSettings.fancyGraphics) {
 				EaglerAdapter.glColorMask(false, false, false, false);
 				int l = renderglobal.sortAndRender(entityliving, 1, f);
 				EaglerAdapter.glColorMask(true, true, true, true);
@@ -467,9 +473,9 @@ public class EntityRenderer {
 				if (l > 0) {
 					renderglobal.sortAndRender(entityliving, 1, f);
 				}
-			} else {
-				renderglobal.sortAndRender(entityliving, 1, f);
-			}
+			//} else {
+			//	renderglobal.sortAndRender(entityliving, 1, f);
+			//}
 			EaglerAdapter.glDepthMask(true);
 			EaglerAdapter.glEnable(2884 /* GL_CULL_FACE */);
 			EaglerAdapter.glDisable(3042 /* GL_BLEND */);

@@ -60,10 +60,9 @@ public class WorldProvider {
 
 	public float[] func_4097_b(float f, float f1) {
 		float f2 = 0.4F;
-		float f3 = MathHelper.cos(f * 3.141593F * 2.0F) - 0.0F;
-		float f4 = -0F;
-		if (f3 >= f4 - f2 && f3 <= f4 + f2) {
-			float f5 = ((f3 - f4) / f2) * 0.5F + 0.5F;
+		float f3 = MathHelper.cos(f * 3.141593F * 2.0F);
+		if (f3 >= -f2 && f3 <= f2) {
+			float f5 = (f3 / f2) * 0.5F + 0.5F;
 			float f6 = 1.0F - (1.0F - MathHelper.sin(f5 * 3.141593F)) * 0.99F;
 			f6 *= f6;
 			field_4217_f[0] = f5 * 0.3F + 0.7F;

@@ -1,4 +1,7 @@
 package net.minecraft.src;
+
+import java.util.ArrayList;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
@@ -7,7 +10,9 @@ package net.minecraft.src;
 public class MobSpawnerHell extends MobSpawnerBase {
 
 	public MobSpawnerHell() {
-		biomeMonsters = (new Class[] { EntityGhast.class, EntityPigZombie.class });
-		biomeCreatures = new Class[0];
+		biomeMonsters = new ArrayList();
+		biomeMonsters.add((w) -> new EntityGhast(w));
+		biomeMonsters.add((w) -> new EntityPigZombie(w));
+		biomeCreatures = new ArrayList();
 	}
 }

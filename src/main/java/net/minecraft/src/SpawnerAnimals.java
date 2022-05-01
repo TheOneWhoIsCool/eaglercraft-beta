@@ -2,14 +2,21 @@
 // Class Version: 5
 package net.minecraft.src;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 public final class SpawnerAnimals {
 	private static Set<ChunkCoordIntPair> field_6544_a = new HashSet();
-	protected static final Class[] field_22391_a = new Class[] { EntitySpider.class, EntityZombie.class,
-			EntitySkeleton.class };
+	protected static final List<Function<World, EntityLiving>> field_22391_a = new ArrayList();
+			
+	static {
+		field_22391_a.add((w) -> new EntitySpider(w));
+		field_22391_a.add((w) -> new EntityZombie(w));
+		field_22391_a.add((w) -> new EntitySkeleton(w));
+	}
 
 	protected static ChunkPosition func_4153_a(World world, int n, int n2) {
 		int n3 = n + world.rand.nextInt(16);
@@ -46,10 +53,10 @@ public final class SpawnerAnimals {
 				continue;
 			block6: for (ChunkCoordIntPair chunkCoordIntPair : field_6544_a) {
 				MobSpawnerBase mobSpawnerBase = world.getWorldChunkManager().func_4074_a(chunkCoordIntPair);
-				Class[] classArray = mobSpawnerBase.getEntitiesForType(enumCreatureType);
-				if (classArray == null || classArray.length == 0)
+				List<Function<World, EntityLiving>> classArray = mobSpawnerBase.getEntitiesForType(enumCreatureType);
+				if (classArray == null || classArray.size() == 0)
 					continue;
-				int n5 = world.rand.nextInt(classArray.length);
+				int n5 = world.rand.nextInt(classArray.size());
 				ChunkPosition chunkPosition = SpawnerAnimals.func_4153_a(world, chunkCoordIntPair.chunkXPos * 16,
 						chunkCoordIntPair.chunkZPos * 16);
 				int n6 = chunkPosition.x;
@@ -84,7 +91,7 @@ public final class SpawnerAnimals {
 										+ (f = f5 - (float) ((ChunkCoordinates) object).field_22396_c) * f) < 576.0f)
 							continue;
 						try {
-							entityLiving = (EntityLiving) classArray[n5].getConstructor(World.class).newInstance(world);
+							entityLiving = classArray.get(n5).apply(world);
 						} catch (Exception exception) {
 							exception.printStackTrace();
 							return n;
@@ -127,8 +134,8 @@ public final class SpawnerAnimals {
 		boolean bl = false;
 		Pathfinder pathfinder = new Pathfinder(world);
 		for (EntityPlayer entityPlayer : (List<EntityPlayer>) list) {
-			Class[] classArray = field_22391_a;
-			if (classArray == null || classArray.length == 0)
+			List<Function<World, EntityLiving>> classArray = field_22391_a;
+			if (classArray == null || classArray.size() == 0)
 				continue;
 			boolean bl2 = false;
 			for (int i = 0; i < 20 && !bl2; ++i) {
@@ -143,7 +150,7 @@ public final class SpawnerAnimals {
 				} else if (n4 > 128) {
 					n4 = 128;
 				}
-				int n5 = world.rand.nextInt(classArray.length);
+				int n5 = world.rand.nextInt(classArray.size());
 				for (n = n4; n > 2 && !world.isBlockOpaqueCube(n2, n - 1, n3); --n) {
 				}
 				while (!SpawnerAnimals.func_21203_a(EnumCreatureType.monster, world, n2, n, n3) && n < n4 + 16
@@ -158,7 +165,7 @@ public final class SpawnerAnimals {
 				float f2 = n;
 				float f3 = (float) n3 + 0.5f;
 				try {
-					entityLiving = (EntityLiving) classArray[n5].getConstructor(World.class).newInstance(world);
+					entityLiving = (EntityLiving) classArray.get(n5).apply(world);
 				} catch (Exception exception) {
 					exception.printStackTrace();
 					return bl;

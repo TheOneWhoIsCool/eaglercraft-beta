@@ -232,88 +232,61 @@ public class RenderEngine {
 			imageDataA.put(texturefx.imageData);
 			imageDataA.position(0).limit(tileSize);
 			texturefx.bindImage(this);
+			
+			imageDataA.position(0).limit(tileSize);
+
 			for (int k = 0; k < texturefx.tileSize; k++) {
-				label0: for (int i1 = 0; i1 < texturefx.tileSize; i1++) {
+				for (int i1 = 0; i1 < texturefx.tileSize; i1++) {
 					int idx = texturefx.iconIndex + k + i1 * 16;
-					imageDataA.position(0).limit(tileSize);
+					imageDataA.mark();
 					EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, 0, (idx % 16) * 16, (idx / 16) * 16, 16, 16, 6408 /* GL_RGBA */,
 							5121 /* GL_UNSIGNED_BYTE */, imageDataA);
-					if(texturefx.tileImage == 0) {
-						imageDataA.position(0).limit(tileSize);
-						imageDataB1.clear();
-						imageDataB1.put(imageDataA);
-						imageDataB1.flip();
-						int k1 = 1;
-						do {
-							if (k1 > 4) {
-								continue label0;
-							}
-							int i2 = 16 >> k1 - 1;
-							int k2 = 16 >> k1;
-							imageDataB2.clear();
-							for (int i3 = 0; i3 < k2; i3++) {
-								for (int k3 = 0; k3 < k2; k3++) {
-									int i4 = imageDataB1.getInt((i3 * 2 + 0 + (k3 * 2 + 0) * i2) * 4);
-									int k4 = imageDataB1.getInt((i3 * 2 + 1 + (k3 * 2 + 0) * i2) * 4);
-									int i5 = imageDataB1.getInt((i3 * 2 + 1 + (k3 * 2 + 1) * i2) * 4);
-									int k5 = imageDataB1.getInt((i3 * 2 + 0 + (k3 * 2 + 1) * i2) * 4);
-									int l5 = averageColor(averageColor(i4, k4), averageColor(i5, k5));
-									imageDataB2.putInt((i3 + k3 * k2) * 4, l5);
-								}
-							}
+					imageDataA.rewind();
+				}
+			}
+			
+			if(texturefx.tileImage == 0) {
+				imageDataA.position(0).limit(tileSize);
+				imageDataB1.clear();
+				imageDataB1.put(imageDataA);
+				imageDataB1.flip();
+				int k1 = 1;
+				do {
+					if (k1 > 4) {
+						break;
+					}
+					int i2 = 16 >> k1 - 1;
+					int k2 = 16 >> k1;
+					imageDataB2.clear();
+					for (int i3 = 0; i3 < k2; i3++) {
+						for (int k3 = 0; k3 < k2; k3++) {
+							int i4 = imageDataB1.getInt((i3 * 2 + 0 + (k3 * 2 + 0) * i2) * 4);
+							int k4 = imageDataB1.getInt((i3 * 2 + 1 + (k3 * 2 + 0) * i2) * 4);
+							int i5 = imageDataB1.getInt((i3 * 2 + 1 + (k3 * 2 + 1) * i2) * 4);
+							int k5 = imageDataB1.getInt((i3 * 2 + 0 + (k3 * 2 + 1) * i2) * 4);
+							int l5 = averageColor(averageColor(i4, k4), averageColor(i5, k5));
+							imageDataB2.putInt((i3 + k3 * k2) * 4, l5);
+						}
+					}
+					
+					for (int k = 0; k < texturefx.tileSize; k++) {
+						for (int i1 = 0; i1 < texturefx.tileSize; i1++) {
+							int idx = texturefx.iconIndex + k + i1 * 16;
+							imageDataB2.mark();
 							EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, k1, (idx % 16) * k2, (idx / 16) * k2, k2, k2, 6408 /* GL_RGBA */,
 									5121 /* GL_UNSIGNED_BYTE */, imageDataB2);
-							k1++;
-							ByteBuffer tmp = imageDataB1;
-							imageDataB1 = imageDataB2;
-							imageDataB2 = tmp;
-						} while (true);
+							imageDataB2.rewind();
+						}
 					}
-				}
+					
+					k1++;
+					ByteBuffer tmp = imageDataB1;
+					imageDataB1 = imageDataB2;
+					imageDataB2 = tmp;
+				} while (true);
 			}
 
 		}
-
-//		label1: for (int j = 0; j < textureList.size(); j++) {
-//			TextureFX texturefx1 = (TextureFX) textureList.get(j);
-//			if (texturefx1.field_1130_d <= 0) {
-//				continue;
-//			}
-//			imageDataA.clear();
-//			imageDataA.put(texturefx1.imageData);
-//			imageDataA.position(0).limit(texturefx1.imageData.length);
-//			EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, texturefx1.field_1130_d);
-//			EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, 0, 0, 0, 16, 16, 6408 /* GL_RGBA */,
-//					5121 /* GL_UNSIGNED_BYTE */, imageDataA);
-//			if(texturefx1.tileImage == 0) {
-//				int l = 1;
-//				do {
-//					if (l > 4) {
-//						continue label1;
-//					}
-//					int j1 = 16 >> l - 1;
-//					int l1 = 16 >> l;
-//					for (int j2 = 0; j2 < l1; j2++) {
-//						for (int l2 = 0; l2 < l1; l2++) {
-//							int j3 = imageDataA.getInt((j2 * 2 + 0 + (l2 * 2 + 0) * j1) * 4);
-//							int l3 = imageDataA.getInt((j2 * 2 + 1 + (l2 * 2 + 0) * j1) * 4);
-//							int j4 = imageDataA.getInt((j2 * 2 + 1 + (l2 * 2 + 1) * j1) * 4);
-//							int l4 = imageDataA.getInt((j2 * 2 + 0 + (l2 * 2 + 1) * j1) * 4);
-//							int j5 = averageColor(averageColor(j3, l3), averageColor(j4, l4));
-//							imageDataB.putInt((j2 + l2 * l1) * 4, j5);
-//						}
-//	
-//					}
-//	
-//					EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, l, 0, 0, l1, l1, 6408 /* GL_RGBA */,
-//							5121 /* GL_UNSIGNED_BYTE */, imageDataB);
-//					ByteBuffer tmp = imageDataA;
-//					imageDataA = imageDataB;
-//					imageDataB = tmp;
-//					l++;
-//				} while (true);
-//			}
-//		}
 
 	}
 

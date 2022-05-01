@@ -4,10 +4,6 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
 import java.util.ArrayList;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
@@ -36,20 +32,17 @@ public class GuiScreen extends Gui {
 	protected void keyTyped(char c, int i) {
 		if (i == 1) {
 			mc.displayGuiScreen(null);
-			mc.func_6259_e();
+			mc.grabMouseCursor();
 		}
 	}
 
 	public static String getClipboardString() {
 		try {
-			Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
-			if (transferable != null && transferable.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-				String s = (String) transferable.getTransferData(DataFlavor.stringFlavor);
-				return s;
-			}
-		} catch (Exception exception) {
+			String s = EaglerAdapter.getClipboard();
+			return s == null ? "" : s;
+		}catch(Throwable t) {
+			return "";
 		}
-		return null;
 	}
 
 	protected void mouseClicked(int i, int j, int k) {

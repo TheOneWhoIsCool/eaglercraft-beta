@@ -3,7 +3,6 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.TextureLocation;
 
 public class TextureFX {
@@ -30,11 +29,12 @@ public class TextureFX {
 			itemsTexture.bindTexture();
 		}
 	}
-
+	
 	public byte imageData[];
 	public int iconIndex;
 	public boolean anaglyphEnabled;
 	public int field_1130_d;
 	public int tileSize;
 	public int tileImage;
+	public int firstTick = 0;
 }

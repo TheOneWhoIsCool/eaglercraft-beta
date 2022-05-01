@@ -1,5 +1,9 @@
 package net.minecraft.src;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+
 import net.lax1dude.eaglercraft.AWTColor;
 import net.lax1dude.eaglercraft.EaglercraftRandom;
 
@@ -15,10 +19,19 @@ public class MobSpawnerBase {
 		topBlock = (byte) Block.grass.blockID;
 		fillerBlock = (byte) Block.dirt.blockID;
 		field_6502_q = 0x4ee031;
-		biomeMonsters = (new Class[] { EntitySpider.class, EntityZombie.class, EntitySkeleton.class,
-				EntityCreeper.class, EntitySlime.class });
-		biomeCreatures = (new Class[] { EntitySheep.class, EntityPig.class, EntityChicken.class, EntityCow.class });
-		biomeWaterCreatures = (new Class[] { EntitySquid.class });
+		biomeMonsters = new ArrayList();
+		biomeMonsters.add((w) -> new EntitySpider(w));
+		biomeMonsters.add((w) -> new EntityZombie(w));
+		biomeMonsters.add((w) -> new EntitySkeleton(w));
+		biomeMonsters.add((w) -> new EntityCreeper(w));
+		biomeMonsters.add((w) -> new EntitySlime(w));
+		biomeCreatures = new ArrayList();
+		biomeCreatures.add((w) -> new EntitySheep(w));
+		biomeCreatures.add((w) -> new EntityPig(w));
+		biomeCreatures.add((w) -> new EntityChicken(w));
+		biomeCreatures.add((w) -> new EntityCow(w));
+		biomeWaterCreatures = new ArrayList();
+		biomeWaterCreatures.add((w) -> new EntitySquid(w));
 	}
 
 	public static void generateBiomeLookup() {
@@ -115,7 +128,7 @@ public class MobSpawnerBase {
 		return AWTColor.HSBtoRGB(0.6222222F - f * 0.05F, 0.5F + f * 0.1F, 1.0F);
 	}
 
-	public Class[] getEntitiesForType(EnumCreatureType enumcreaturetype) {
+	public List<Function<World, EntityLiving>> getEntitiesForType(EnumCreatureType enumcreaturetype) {
 		if (enumcreaturetype == EnumCreatureType.monster) {
 			return biomeMonsters;
 		}
@@ -153,9 +166,9 @@ public class MobSpawnerBase {
 	public byte topBlock;
 	public byte fillerBlock;
 	public int field_6502_q;
-	protected Class biomeMonsters[];
-	protected Class biomeCreatures[];
-	protected Class biomeWaterCreatures[];
+	protected List<Function<World, EntityLiving>> biomeMonsters;
+	protected List<Function<World, EntityLiving>> biomeCreatures;
+	protected List<Function<World, EntityLiving>> biomeWaterCreatures;
 	private static MobSpawnerBase biomeLookupTable[] = new MobSpawnerBase[4096];
 
 	static {

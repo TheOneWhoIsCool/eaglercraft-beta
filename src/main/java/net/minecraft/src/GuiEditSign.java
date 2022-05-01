@@ -9,7 +9,6 @@ public class GuiEditSign extends GuiScreen {
 	private TileEntitySign field_1002_h;
 	private int field_4189_i;
 	private int field_1000_j = 0;
-	private static final String field_20083_l = FontAllowedCharacters.allowedCharacters;
 
 	public GuiEditSign(TileEntitySign tileEntitySign) {
 		this.field_1002_h = tileEntitySign;
@@ -54,7 +53,7 @@ public class GuiEditSign extends GuiScreen {
 			this.field_1002_h.signText[this.field_1000_j] = this.field_1002_h.signText[this.field_1000_j].substring(0,
 					this.field_1002_h.signText[this.field_1000_j].length() - 1);
 		}
-		if (field_20083_l.indexOf(c) >= 0 && this.field_1002_h.signText[this.field_1000_j].length() < 15) {
+		if (FontAllowedCharacters.isAllowed(c) >= 0 && this.field_1002_h.signText[this.field_1000_j].length() < 15) {
 			int n2 = this.field_1000_j;
 			this.field_1002_h.signText[n2] = this.field_1002_h.signText[n2] + c;
 		}

@@ -162,12 +162,13 @@ public class GuiIngame extends Gui {
 		}
 		if (mc.gameSettings.showDebugInfo) {
 			fontrenderer.drawStringWithShadow(
-					(new StringBuilder()).append("Minecraft Beta 1.3_01 (").append(mc.debug).append(")").toString(), 2,
+					(new StringBuilder()).append("Minecraft (Eaglercraft) Beta 1.3_01 (").append(mc.debug).append(")").toString(), 2,
 					2, 0xffffff);
 			fontrenderer.drawStringWithShadow(mc.func_6241_m(), 2, 12, 0xffffff);
 			fontrenderer.drawStringWithShadow(mc.func_6262_n(), 2, 22, 0xffffff);
 			fontrenderer.drawStringWithShadow(mc.func_6245_o(), 2, 32, 0xffffff);
 			fontrenderer.drawStringWithShadow(mc.func_21002_o(), 2, 42, 0xffffff);
+			/*
 			long l2 = Runtime.getRuntime().maxMemory();
 			long l4 = Runtime.getRuntime().totalMemory();
 			long l6 = Runtime.getRuntime().freeMemory();
@@ -178,6 +179,7 @@ public class GuiIngame extends Gui {
 			s = (new StringBuilder()).append("Allocated memory: ").append((l4 * 100L) / l2).append("% (")
 					.append(l4 / 1024L / 1024L).append("MB)").toString();
 			drawString(fontrenderer, s, k - fontrenderer.getStringWidth(s) - 2, 12, 0xe0e0e0);
+			*/
 			drawString(fontrenderer, (new StringBuilder()).append("x: ").append(mc.thePlayer.posX).toString(), 2, 64,
 					0xe0e0e0);
 			drawString(fontrenderer, (new StringBuilder()).append("y: ").append(mc.thePlayer.posY).toString(), 2, 72,

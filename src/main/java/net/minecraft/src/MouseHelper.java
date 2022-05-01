@@ -4,19 +4,9 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-import java.nio.IntBuffer;
-
 import net.lax1dude.eaglercraft.EaglerAdapter;
 
 public class MouseHelper {
-
-	public MouseHelper() {
-		field_1115_e = 10;
-		IntBuffer intbuffer = GLAllocation.createDirectIntBuffer(1);
-		intbuffer.put(0);
-		intbuffer.flip();
-		IntBuffer intbuffer1 = GLAllocation.createDirectIntBuffer(1024);
-	}
 
 	public void func_774_a() {
 		EaglerAdapter.mouseSetGrabbed(true);
@@ -36,5 +26,4 @@ public class MouseHelper {
 	
 	public int deltaX;
 	public int deltaY;
-	private int field_1115_e;
 }

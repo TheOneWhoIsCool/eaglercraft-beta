@@ -1,15 +1,10 @@
-package net.lax1dude.eaglercraft.anvil;
+package net.minecraft.src;
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
 import java.util.List;
-
-import net.minecraft.src.IChunkLoader;
-import net.minecraft.src.ISaveHandler;
-import net.minecraft.src.WorldInfo;
-import net.minecraft.src.WorldProvider;
 
 public class SaveHandlerMP implements ISaveHandler {
 

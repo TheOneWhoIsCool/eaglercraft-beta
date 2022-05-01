@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
 
 public class GameSettings {
 
-	public GameSettings() {
+	public GameSettings(Minecraft mcc) {
 		musicVolume = 1.0F;
 		soundVolume = 1.0F;
 		mouseSensitivity = 0.5F;
@@ -46,6 +46,7 @@ public class GameSettings {
 		field_22273_E = false;
 		field_22272_F = 1.0F;
 		field_22271_G = 1.0F;
+		mc = mcc;
 		loadOptions();
 	}
 
@@ -99,11 +100,15 @@ public class GameSettings {
 		}
 		if (enumoptions == EnumOptions.GRAPHICS) {
 			fancyGraphics = !fancyGraphics;
-			mc.renderGlobal.loadRenderers();
+			if(mc.renderGlobal != null) {
+				mc.renderGlobal.loadRenderers();
+			}
 		}
 		if (enumoptions == EnumOptions.AMBIENT_OCCLUSION) {
 			field_22278_j = !field_22278_j;
-			mc.renderGlobal.loadRenderers();
+			if(mc.renderGlobal != null) {
+				mc.renderGlobal.loadRenderers();
+			}
 		}
 		if (enumoptions == EnumOptions.ANTIALIASING) {
 			antialiasing = (antialiasing + i) % 3;

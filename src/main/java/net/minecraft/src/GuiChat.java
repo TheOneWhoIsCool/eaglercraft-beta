@@ -7,7 +7,6 @@ import net.lax1dude.eaglercraft.EaglerAdapter;
 public class GuiChat extends GuiScreen {
 	protected String field_985_a = "";
 	private int field_986_h = 0;
-	private static final String field_20082_i = FontAllowedCharacters.allowedCharacters;
 
 	public void initGui() {
 		EaglerAdapter.enableRepeatEvents(true);
@@ -42,7 +41,7 @@ public class GuiChat extends GuiScreen {
 		if (n == 14 && this.field_985_a.length() > 0) {
 			this.field_985_a = this.field_985_a.substring(0, this.field_985_a.length() - 1);
 		}
-		if (field_20082_i.indexOf(c) >= 0 && this.field_985_a.length() < 100) {
+		if (FontAllowedCharacters.isAllowed(c) >= 0 && this.field_985_a.length() < 100) {
 			this.field_985_a = this.field_985_a + c;
 		}
 	}

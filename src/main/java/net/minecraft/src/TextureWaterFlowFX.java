@@ -4,9 +4,9 @@ package net.minecraft.src;
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
-public class TexureWaterFlowFX extends TextureFX {
+public class TextureWaterFlowFX extends TextureFX {
 
-	public TexureWaterFlowFX() {
+	public TextureWaterFlowFX() {
 		super(Block.waterStill.blockIndexInTexture + 1);
 		field_1138_g = new float[256];
 		field_1137_h = new float[256];
