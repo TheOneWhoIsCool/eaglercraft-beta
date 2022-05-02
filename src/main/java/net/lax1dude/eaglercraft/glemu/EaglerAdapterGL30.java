@@ -561,6 +561,9 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 	}
 
 	public static final void glTexParameteri(int p1, int p2, int p3) {
+		if(p3 == RealOpenGLEnums.GL_CLAMP_TO_EDGE || p3 == 10496) {
+			p3 = _wGL_CLAMP;
+		}
 		_wglTexParameteri(p1, p2, p3);
 	}
 
