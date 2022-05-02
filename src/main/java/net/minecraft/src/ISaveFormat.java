@@ -18,7 +18,7 @@ public interface ISaveFormat {
 
 	public abstract WorldInfo getWorldInfoForWorld(String s);
 
-	public abstract void deleteWorldByDirectory(String s);
+	public abstract void deleteWorldByDirectory(String s, IProgressUpdate progress);
 
 	public abstract void renameWorldData(String s, String s1);
 

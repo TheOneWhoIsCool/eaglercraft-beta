@@ -235,6 +235,7 @@ public class EaglerAdapterImpl2 {
 				mouseEvents.add(evt);
 				evt.preventDefault();
 				evt.stopPropagation();
+				forceMouseGrabbed();
 			}
 		});
 		canvas.addEventListener("mouseup", mouseup = new EventListener<MouseEvent>() {
@@ -266,6 +267,7 @@ public class EaglerAdapterImpl2 {
 				keyEvents.add(evt);
 				evt.preventDefault();
 				evt.stopPropagation();
+				forceMouseGrabbed();
 			}
 		});
 		win.addEventListener("keyup", keyup = new EventListener<KeyboardEvent>() {
@@ -304,6 +306,7 @@ public class EaglerAdapterImpl2 {
 			@Override
 			public void handleEvent(WheelEvent evt) {
 				isWindowFocused = true;
+				forceMouseGrabbed();
 			}
 		});
 		onBeforeCloseRegister();
@@ -916,7 +919,9 @@ public class EaglerAdapterImpl2 {
 	}
 	private static long mouseUngrabTimer = 0l;
 	private static int mouseUngrabTimeout = 0;
+	private static boolean needsPointerLock = false;
 	public static final void mouseSetGrabbed(boolean grabbed) {
+		needsPointerLock = grabbed;
 		if(grabbed) {
 			canvas.requestPointerLock();
 			long t = System.currentTimeMillis();
@@ -933,6 +938,17 @@ public class EaglerAdapterImpl2 {
 			mouseUngrabTimer = System.currentTimeMillis();
 			if(mouseUngrabTimeout != 0) Window.clearTimeout(mouseUngrabTimeout);
 			doc.exitPointerLock();
+		}
+	}
+	private static void forceMouseGrabbed() {
+		long t = System.currentTimeMillis();
+		if(t - mouseUngrabTimer > 3000l) {
+			if(needsPointerLock && !isPointerLocked()) {
+				canvas.requestPointerLock();
+				if(isPointerLocked()) {
+					needsPointerLock = false;
+				}
+			}
 		}
 	}
 	public static final int mouseGetDX() {

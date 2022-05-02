@@ -889,7 +889,10 @@ public abstract class Minecraft implements Runnable {
 				world.func_651_a(loadingScreen);
 			}
 			field_22009_h = thePlayer;
+			field_6289_L = true;
+			mouseHelper.func_774_a();
 		} else {
+			ungrabMouseCursor();
 			thePlayer = null;
 		}
 		System.gc();

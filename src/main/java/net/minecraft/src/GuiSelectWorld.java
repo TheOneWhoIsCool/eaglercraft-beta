@@ -131,7 +131,7 @@ public class GuiSelectWorld extends GuiScreen {
 			if (flag) {
 				ISaveFormat isaveformat = mc.func_22004_c();
 				isaveformat.flushCache();
-				isaveformat.deleteWorldByDirectory(func_22091_c(i));
+				isaveformat.deleteWorldByDirectory(func_22091_c(i), mc.loadingScreen);
 				func_22084_k();
 			}
 			mc.displayGuiScreen(this);

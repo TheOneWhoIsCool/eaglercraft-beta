@@ -99,8 +99,8 @@ public class EaglercraftSaveManager implements ISaveFormat {
 	}
 
 	@Override
-	public void deleteWorldByDirectory(String s) {
-		FilesystemUtils.recursiveDeleteDirectory(directory + "/" + s);
+	public void deleteWorldByDirectory(String s, IProgressUpdate progress) {
+		FilesystemUtils.recursiveDeleteDirectoryWithProgress(directory + "/" + s, "Deleting World", "%i chunks", progress);
 	}
 
 	@Override
