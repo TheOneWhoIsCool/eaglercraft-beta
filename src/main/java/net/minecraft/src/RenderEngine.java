@@ -10,11 +10,13 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.EaglerImage;
 import net.lax1dude.eaglercraft.TextureLocation;
+import net.lax1dude.eaglercraft.beta.SpriteSheetTexture;
 
 public class RenderEngine {
 
@@ -22,11 +24,11 @@ public class RenderEngine {
 		textureMap = new HashMap();
 		textureNameToImageMap = new HashMap();
 		singleIntBuffer = GLAllocation.createDirectIntBuffer(1);
-		imageDataA = GLAllocation.createDirectByteBuffer(0x100000);
 		imageDataB1 = GLAllocation.createDirectByteBuffer(0x100000);
 		imageDataB2 = GLAllocation.createDirectByteBuffer(0x100000);
+		//imageDataInt = GLAllocation.createDirectIntBuffer(0x40000);
 		textureList = new ArrayList();
-		urlToImageDataMap = new HashMap();
+		textureSpriteList = new ArrayList();
 		clampTexture = false;
 		blurTexture = false;
 		field_6527_k = texturepacklist;
@@ -67,19 +69,7 @@ public class RenderEngine {
 			throw new RuntimeException("!!");
 		}
 	}
-/*
-	private BufferedImage unwrapImageByColumns(BufferedImage bufferedimage) {
-		int i = bufferedimage.getWidth() / 16;
-		BufferedImage bufferedimage1 = new BufferedImage(16, bufferedimage.getHeight() * i, 2);
-		Graphics g = bufferedimage1.getGraphics();
-		for (int j = 0; j < i; j++) {
-			g.drawImage(bufferedimage, -j * 16, j * bufferedimage.getHeight(), null);
-		}
-
-		g.dispose();
-		return bufferedimage1;
-	}
-*/
+	
 	public int allocateAndSetupTexture(EaglerImage bufferedimage) {
 		singleIntBuffer.clear();
 		GLAllocation.generateTextureNames(singleIntBuffer);
@@ -170,125 +160,99 @@ public class RenderEngine {
 	}
 
 	public int getTextureForDownloadableImage(String s, String s1) {
-		/*
-		ThreadDownloadImageData threaddownloadimagedata = (ThreadDownloadImageData) urlToImageDataMap.get(s);
-		if (threaddownloadimagedata != null && threaddownloadimagedata.image != null
-				&& !threaddownloadimagedata.textureSetupComplete) {
-			if (threaddownloadimagedata.textureName < 0) {
-				threaddownloadimagedata.textureName = allocateAndSetupTexture(threaddownloadimagedata.image);
-			} else {
-				setupTexture(threaddownloadimagedata.image, threaddownloadimagedata.textureName);
-			}
-			threaddownloadimagedata.textureSetupComplete = true;
-		}
-		if (threaddownloadimagedata == null || threaddownloadimagedata.textureName < 0) {
-			if (s1 == null) {
-				return getTexture("/mob/char.png");
-			} else {
-				return getTexture(s1);
-			}
-		} else {
-			return threaddownloadimagedata.textureName;
-		}
-		*/
 		return getTexture("/mob/char.png");
 	}
-/*
-	public ThreadDownloadImageData obtainImageData(String s, ImageBuffer imagebuffer) {
-		ThreadDownloadImageData threaddownloadimagedata = (ThreadDownloadImageData) urlToImageDataMap.get(s);
-		if (threaddownloadimagedata == null) {
-			urlToImageDataMap.put(s, new ThreadDownloadImageData(s, imagebuffer));
-		} else {
-			threaddownloadimagedata.referenceCount++;
-		}
-		return threaddownloadimagedata;
-	}
-
-	public void releaseImageData(String s) {
-		ThreadDownloadImageData threaddownloadimagedata = (ThreadDownloadImageData) urlToImageDataMap.get(s);
-		if (threaddownloadimagedata != null) {
-			threaddownloadimagedata.referenceCount--;
-			if (threaddownloadimagedata.referenceCount == 0) {
-				if (threaddownloadimagedata.textureName >= 0) {
-					deleteTexture(threaddownloadimagedata.textureName);
-				}
-				urlToImageDataMap.remove(s);
-			}
-		}
-	}
-*/
+	
 	public void registerTextureFX(TextureFX texturefx) {
 		textureList.add(texturefx);
 		texturefx.onTick();
 	}
 
-	public void updateTerrainTextures() {
-		for (int i = 0; i < textureList.size(); i++) {
-			TextureFX texturefx = (TextureFX) textureList.get(i);
-			texturefx.anaglyphEnabled = options.anaglyph;
-			texturefx.onTick();
-			int tileSize = 16 * 16 * 4;
-			imageDataA.clear();
-			imageDataA.put(texturefx.imageData);
-			imageDataA.position(0).limit(tileSize);
-			texturefx.bindImage(this);
-			
-			imageDataA.position(0).limit(tileSize);
-
-			for (int k = 0; k < texturefx.tileSize; k++) {
-				for (int i1 = 0; i1 < texturefx.tileSize; i1++) {
-					int idx = texturefx.iconIndex + k + i1 * 16;
-					imageDataA.mark();
-					EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, 0, (idx % 16) * 16, (idx / 16) * 16, 16, 16, 6408 /* GL_RGBA */,
-							5121 /* GL_UNSIGNED_BYTE */, imageDataA);
-					imageDataA.rewind();
-				}
-			}
-			
-			if(texturefx.tileImage == 0) {
-				imageDataA.position(0).limit(tileSize);
-				imageDataB1.clear();
-				imageDataB1.put(imageDataA);
-				imageDataB1.flip();
-				int k1 = 1;
-				do {
-					if (k1 > 4) {
-						break;
-					}
-					int i2 = 16 >> k1 - 1;
-					int k2 = 16 >> k1;
-					imageDataB2.clear();
-					for (int i3 = 0; i3 < k2; i3++) {
-						for (int k3 = 0; k3 < k2; k3++) {
-							int i4 = imageDataB1.getInt((i3 * 2 + 0 + (k3 * 2 + 0) * i2) * 4);
-							int k4 = imageDataB1.getInt((i3 * 2 + 1 + (k3 * 2 + 0) * i2) * 4);
-							int i5 = imageDataB1.getInt((i3 * 2 + 1 + (k3 * 2 + 1) * i2) * 4);
-							int k5 = imageDataB1.getInt((i3 * 2 + 0 + (k3 * 2 + 1) * i2) * 4);
-							int l5 = averageColor(averageColor(i4, k4), averageColor(i5, k5));
-							imageDataB2.putInt((i3 + k3 * k2) * 4, l5);
-						}
-					}
-					
-					for (int k = 0; k < texturefx.tileSize; k++) {
-						for (int i1 = 0; i1 < texturefx.tileSize; i1++) {
-							int idx = texturefx.iconIndex + k + i1 * 16;
-							imageDataB2.mark();
-							EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, k1, (idx % 16) * k2, (idx / 16) * k2, k2, k2, 6408 /* GL_RGBA */,
-									5121 /* GL_UNSIGNED_BYTE */, imageDataB2);
-							imageDataB2.rewind();
-						}
-					}
-					
-					k1++;
-					ByteBuffer tmp = imageDataB1;
-					imageDataB1 = imageDataB2;
-					imageDataB2 = tmp;
-				} while (true);
-			}
-
-		}
-
-	}
+//	public void updateTerrainTextures() {
+//		for (int i = 0; i < textureList.size(); i++) {
+//			TextureFX texturefx = (TextureFX) textureList.get(i);
+//			texturefx.anaglyphEnabled = options.anaglyph;
+//			texturefx.onTick();
+//			int tileSize = 16 * 16 * 4;
+//			imageDataB1.clear();
+//			imageDataB1.put(texturefx.imageData);
+//			imageDataB1.position(0).limit(tileSize);
+//			texturefx.bindImage(this);
+//			
+//			imageDataB1.position(0).limit(tileSize);
+//
+//			for (int k = 0; k < texturefx.tileSize; k++) {
+//				for (int i1 = 0; i1 < texturefx.tileSize; i1++) {
+//					int idx = texturefx.iconIndex + k + i1 * 16;
+//					imageDataB1.mark();
+//					EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, 0, (idx % 16) * 16, (idx / 16) * 16, 16, 16, 6408 /* GL_RGBA */,
+//							5121 /* GL_UNSIGNED_BYTE */, imageDataB1);
+//					imageDataB1.rewind();
+//				}
+//			}
+//		}
+//		TextureFX.terrainTexture.bindTexture();
+//		IntBuffer buf = imageDataInt;
+//		for (int i = 0; i < textureSpriteList.size(); i++) {
+//			Object obj = textureSpriteList.get(i);
+//			PXSpriteSheet s;
+//			int ticksCount = -1;
+//			if(obj instanceof PXSpriteSheet) {
+//				s = (PXSpriteSheet)obj;
+//				s.onUpdate();
+//				ticksCount = s.ticks;
+//			}else if(obj instanceof PXSpriteSheet.PXSpriteSheetOffset) {
+//				PXSpriteSheet.PXSpriteSheetOffset ss = (PXSpriteSheet.PXSpriteSheetOffset) obj;
+//				s = ss.src;
+//				ticksCount = (s.ticks + ss.offset) % s.sheetLength;
+//			}else {
+//				continue;
+//			}
+//			
+//			int idx = s.tileIndex;
+//			
+//			int tileSize = 16 * s.tileSize * 16 * s.tileSize;
+//			int offsetIndex = ticksCount * tileSize;
+//			buf.clear();
+//			buf.put(s.pixels0, offsetIndex, tileSize);
+//			buf.flip();
+//			EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, 0, (idx % 16) * 16, (idx / 16) * 16, 16 * s.tileSize, 16 * s.tileSize, 6408 /* GL_RGBA */,
+//					5121 /* GL_UNSIGNED_BYTE */, buf);
+//			
+//			tileSize = 8 * s.tileSize * 8 * s.tileSize;
+//			offsetIndex = ticksCount * tileSize;
+//			buf.clear();
+//			buf.put(s.pixels1, offsetIndex, tileSize);
+//			buf.flip();
+//			EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, 1, (idx % 16) * 8, (idx / 16) * 8, 8 * s.tileSize, 8 * s.tileSize, 6408 /* GL_RGBA */,
+//					5121 /* GL_UNSIGNED_BYTE */, buf);
+//			
+//			tileSize = 4 * s.tileSize * 4 * s.tileSize;
+//			offsetIndex = ticksCount * tileSize;
+//			buf.clear();
+//			buf.put(s.pixels2, offsetIndex, tileSize);
+//			buf.flip();
+//			EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, 2, (idx % 16) * 4, (idx / 16) * 4, 4 * s.tileSize, 4 * s.tileSize, 6408 /* GL_RGBA */,
+//					5121 /* GL_UNSIGNED_BYTE */, buf);
+//			
+//			tileSize = 2 * s.tileSize * 2 * s.tileSize;
+//			offsetIndex = ticksCount * tileSize;
+//			buf.clear();
+//			buf.put(s.pixels3, offsetIndex, tileSize);
+//			buf.flip();
+//			EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, 3, (idx % 16) * 2, (idx / 16) * 2, 2 * s.tileSize, 2 * s.tileSize, 6408 /* GL_RGBA */,
+//					5121 /* GL_UNSIGNED_BYTE */, buf);
+//			
+//			tileSize = s.tileSize * s.tileSize;
+//			offsetIndex = ticksCount * tileSize;
+//			buf.clear();
+//			buf.put(s.pixels4, offsetIndex, tileSize);
+//			buf.flip();
+//			EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, 4, (idx % 16), (idx / 16), 1 * s.tileSize, 1 * s.tileSize, 6408 /* GL_RGBA */,
+//					5121 /* GL_UNSIGNED_BYTE */, buf);
+//		}
+//		
+//	}
 
 	private int averageColor(int i, int j) {
 		int k = (i & 0xff000000) >> 24 & 0xff;
@@ -296,28 +260,7 @@ public class RenderEngine {
 		return ((k + l >> 1) << 24) + ((i & 0xfefefe) + (j & 0xfefefe) >> 1);
 		
 	}
-/*
-	private int weightedAverageColor(int i, int j) {
-		int k = (i & 0xff000000) >> 24 & 0xff;
-		int l = (j & 0xff000000) >> 24 & 0xff;
-		char c = '\377';
-		if (k + l == 0) {
-			k = 1;
-			l = 1;
-			c = '\0';
-		}
-		int i1 = (i >> 16 & 0xff) * k;
-		int j1 = (i >> 8 & 0xff) * k;
-		int k1 = (i & 0xff) * k;
-		int l1 = (j >> 16 & 0xff) * l;
-		int i2 = (j >> 8 & 0xff) * l;
-		int j2 = (j & 0xff) * l;
-		int k2 = (i1 + l1) / (k + l);
-		int l2 = (j1 + i2) / (k + l);
-		int i3 = (k1 + j2) / (k + l);
-		return c << 24 | k2 << 16 | l2 << 8 | i3;
-	}
-*/
+	
 	public void refreshTextures() {
 		TextureLocation.freeTextures();
 		TexturePackBase texturepackbase = field_6527_k.selectedTexturePack;
@@ -361,6 +304,10 @@ public class RenderEngine {
 				ioexception.printStackTrace();
 			}
 		}
+		
+		for(int j = 0, l = textureSpriteList.size(); j < l; ++j) {
+			textureSpriteList.get(j).reloadData();
+		}
 
 	}
 
@@ -381,14 +328,46 @@ public class RenderEngine {
 	private HashMap textureMap;
 	private HashMap textureNameToImageMap;
 	private IntBuffer singleIntBuffer;
-	private ByteBuffer imageDataA;
 	private ByteBuffer imageDataB1;
 	private ByteBuffer imageDataB2;
-	private java.util.List textureList;
-	private Map urlToImageDataMap;
+	private java.util.List<TextureFX> textureList;
+	private java.util.List<SpriteSheetTexture> textureSpriteList;
 	private GameSettings options;
 	private boolean clampTexture;
 	private boolean blurTexture;
 	private TexturePackList field_6527_k;
+	
+	public void updateTerrainTextures() {
+		
+		for (int i = 0; i < textureList.size(); i++) {
+			TextureFX texturefx = (TextureFX) textureList.get(i);
+			texturefx.anaglyphEnabled = options.anaglyph;
+			texturefx.onTick();
+			int tileSize = 16 * 16 * 4;
+			imageDataB1.clear();
+			imageDataB1.put(texturefx.imageData);
+			imageDataB1.position(0).limit(tileSize);
+			texturefx.bindImage(this);
+			EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, 0, (texturefx.iconIndex % 16) * 16, (texturefx.iconIndex / 16) * 16, 16, 16,
+					6408 /* GL_RGBA */, 5121 /* GL_UNSIGNED_BYTE */, imageDataB1);
+		}
+		
+		TextureFX.terrainTexture.bindTexture();
+		for(int i = 0, l = textureSpriteList.size(); i < l; ++i) {
+			SpriteSheetTexture sp = textureSpriteList.get(i);
+			sp.update();
+			int w = 16;
+			for(int j = 0; j < 5; ++j) {
+				EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, j, (sp.iconIndex % 16) * w, (sp.iconIndex / 16) * w, w * sp.iconTileSize, w * sp.iconTileSize,
+						6408 /* GL_RGBA */, 5121 /* GL_UNSIGNED_BYTE */, sp.grabFrame(j));
+				w /= 2;
+			}
+		}
+		
+	}
+	
+	public void registerSpriteSheet(String name, int iconIndex, int iconTileSize) {
+		textureSpriteList.add(new SpriteSheetTexture(name, iconIndex, iconTileSize));
+	}
 
 }

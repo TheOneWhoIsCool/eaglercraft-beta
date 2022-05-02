@@ -20,8 +20,13 @@ public class MouseHelper {
 	}
 
 	public void mouseXYChange() {
-		deltaX = EaglerAdapter.mouseGetDX();
-		deltaY = EaglerAdapter.mouseGetDY();
+		if(EaglerAdapter.isPointerLocked()) {
+			deltaX = EaglerAdapter.mouseGetDX();
+			deltaY = EaglerAdapter.mouseGetDY();
+		}else {
+			deltaX = 0;
+			deltaY = 0;
+		}
 	}
 	
 	public int deltaX;

@@ -1003,9 +1003,12 @@ public class EaglerAdapterImpl2 {
 		return false;
 	}
 	public static final boolean isFunctionKeyDown(boolean mod, int p1) {
-		return mod && p1 >= 59 && p1 <= 67 && isKeyDown(2 + (p1 - 59));
+		return mod && p1 >= 59 && p1 <= 67 && getEventKey() == (2 + (p1 - 59));
 	}
 	public static final boolean isFunctionKeyDown(int mod, int p1) {
+		return isKeyDown(mod) && p1 >= 59 && p1 <= 67 & getEventKey() == (2 + (p1 - 59));
+	}
+	public static final boolean isFunctionKeyHeldDown(int mod, int p1) {
 		return isKeyDown(mod) && p1 >= 59 && p1 <= 67 & isKeyDown(2 + (p1 - 59));
 	}
 	

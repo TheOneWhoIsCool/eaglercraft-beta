@@ -106,6 +106,10 @@ public class WorldProvider {
 			return null;
 		}
 	}
+	
+	public boolean isSurfaceWorld() {
+		return true;
+	}
 
 	public World worldObj;
 	public WorldChunkManager worldChunkMgr;

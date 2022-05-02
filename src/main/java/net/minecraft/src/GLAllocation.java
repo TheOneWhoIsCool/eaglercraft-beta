@@ -45,18 +45,17 @@ public class GLAllocation {
 		displayLists.clear();
 		textureNames.clear();
 	}
-
-	public static synchronized ByteBuffer createDirectByteBuffer(int i) {
-		ByteBuffer bytebuffer = ByteBuffer.allocateDirect(i).order(ByteOrder.nativeOrder());
-		return bytebuffer;
+	
+	public static ByteBuffer createDirectByteBuffer(int par0) {
+		return EaglerAdapter.isWebGL ? ByteBuffer.wrap(new byte[par0]).order(ByteOrder.nativeOrder()) : ByteBuffer.allocateDirect(par0).order(ByteOrder.nativeOrder());
 	}
-
-	public static IntBuffer createDirectIntBuffer(int i) {
-		return createDirectByteBuffer(i << 2).asIntBuffer();
+	
+	public static IntBuffer createDirectIntBuffer(int par0) {
+		return EaglerAdapter.isWebGL ? IntBuffer.wrap(new int[par0]) : createDirectByteBuffer(par0 << 2).asIntBuffer();
 	}
-
-	public static FloatBuffer createDirectFloatBuffer(int i) {
-		return createDirectByteBuffer(i << 2).asFloatBuffer();
+	
+	public static FloatBuffer createDirectFloatBuffer(int par0) {
+		return EaglerAdapter.isWebGL ? FloatBuffer.wrap(new float[par0]) : createDirectByteBuffer(par0 << 2).asFloatBuffer();
 	}
 
 	private static List displayLists = new ArrayList();

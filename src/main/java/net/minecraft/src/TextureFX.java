@@ -7,8 +7,8 @@ import net.lax1dude.eaglercraft.TextureLocation;
 
 public class TextureFX {
 
-	private static final TextureLocation terrainTexture = new TextureLocation("/terrain.png");
-	private static final TextureLocation itemsTexture = new TextureLocation("/gui/items.png");
+	public static final TextureLocation terrainTexture = new TextureLocation("/terrain.png");
+	public static final TextureLocation itemsTexture = new TextureLocation("/gui/items.png");
 
 	public TextureFX(int i) {
 		imageData = new byte[1024 /* GL_FRONT_LEFT */];

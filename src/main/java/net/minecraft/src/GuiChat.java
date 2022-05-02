@@ -10,6 +10,7 @@ public class GuiChat extends GuiScreen {
 
 	public void initGui() {
 		EaglerAdapter.enableRepeatEvents(true);
+		controlList.add(new GuiButton(0, width - 110, 10, 100, 20, StringTranslate.getInstance().translateKey("menu.exitChat")));
 	}
 
 	public void onGuiClosed() {
@@ -38,6 +39,17 @@ public class GuiChat extends GuiScreen {
 			this.mc.displayGuiScreen(null);
 			return;
 		}
+		if((int)c == 16 || (GuiScreen.isCtrlKeyDown() && n == 47)) {
+			String string = GuiScreen.getClipboardString();
+			if (string == null) {
+				string = "";
+			}
+			this.field_985_a = this.field_985_a + string;
+			if(this.field_985_a.length() > 100) {
+				this.field_985_a = this.field_985_a.substring(0, 100);
+			}
+			return;
+		}
 		if (n == 14 && this.field_985_a.length() > 0) {
 			this.field_985_a = this.field_985_a.substring(0, this.field_985_a.length() - 1);
 		}
@@ -51,6 +63,13 @@ public class GuiChat extends GuiScreen {
 		this.drawString(this.fontRenderer, "> " + this.field_985_a + (this.field_986_h / 6 % 2 == 0 ? "_" : ""), 4,
 				this.height - 12, 0xE0E0E0);
 		super.drawScreen(n, n2, f);
+		
+		// debug code that displays the block texture map:
+		
+		//EaglerAdapter.glEnable(EaglerAdapter.GL_TEXTURE_2D);
+		//TextureFX.terrainTexture.bindTexture();
+		//this.drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+		//EaglerAdapter.glDisable(EaglerAdapter.GL_TEXTURE_2D);
 	}
 
 	protected void mouseClicked(int n, int n2, int n3) {
@@ -67,6 +86,12 @@ public class GuiChat extends GuiScreen {
 			} else {
 				super.mouseClicked(n, n2, n3);
 			}
+		}
+	}
+	
+	protected void actionPerformed(GuiButton bnt) {
+		if(bnt.id == 0) {
+			mc.displayGuiScreen(null);
 		}
 	}
 	

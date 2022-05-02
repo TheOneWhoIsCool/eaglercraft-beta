@@ -1,6 +1,8 @@
 package net.minecraft.src;
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
+import net.lax1dude.eaglercraft.ConfigConstants;
+
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
 
@@ -19,26 +21,6 @@ public class GuiMainMenu extends GuiScreen {
 	public GuiMainMenu() {
 		updateCounter = 0.0F;
 		splashText = "Singleplayer!";
-		/*
-		try {
-			ArrayList arraylist = new ArrayList();
-			BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(
-					(GuiMainMenu.class).getResourceAsStream("/title/splashes.txt"), Charset.forName("UTF-8")));
-			String s = "";
-			do {
-				String s1;
-				if ((s1 = bufferedreader.readLine()) == null) {
-					break;
-				}
-				s1 = s1.trim();
-				if (s1.length() > 0) {
-					arraylist.add(s1);
-				}
-			} while (true);
-			splashText = (String) arraylist.get(rand.nextInt(arraylist.size()));
-		} catch (Exception exception) {
-		}
-		*/
 	}
 
 	public void updateScreen() {
@@ -111,6 +93,22 @@ public class GuiMainMenu extends GuiScreen {
 		//String s = "Copyright Mojang AB. Do not distribute.";
 		String s = "site resources - Copyright Mojang AB.";
 		drawString(fontRenderer, s, width - fontRenderer.getStringWidth(s) - 2, height - 10, 0xffffff);
+		drawString(fontRenderer, ConfigConstants.mainMenuString, 2, height - 10, 0xffffff);
+		
+		EaglerAdapter.glPushMatrix();
+		float ff = 0.75f;
+		EaglerAdapter.glScalef(ff, ff, ff);
+		
+		String str = "DO NOT DM LAX1DUDE WITH QUESTIONS/COMPLAINTS";
+		int w = fontRenderer.getStringWidth(str);
+		drawString(fontRenderer, str, (int)(((width / ff) - w) / 2), (int)((height / 4 + 102) / ff), 0xffeeee);
+		
+		str = "HE IS BUSY, HE WILL NOT ANSWER";
+		w = fontRenderer.getStringWidth(str);
+		drawString(fontRenderer, str, (int)(((width / ff) - w) / 2), (int)((height / 4 + 112) / ff), 0xffeeee);
+		
+		EaglerAdapter.glPopMatrix();
+		
 		super.drawScreen(i, j, f);
 	}
 

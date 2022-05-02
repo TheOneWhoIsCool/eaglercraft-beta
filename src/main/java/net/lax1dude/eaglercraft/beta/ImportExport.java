@@ -21,7 +21,12 @@ public class ImportExport {
 	private static long lastProgressUpdate = 0l;
 	
 	private static String formatFloat(float f) {
-		return String.format("%.2f", f);
+		String ret = Float.toString(f);
+		int idx = ret.indexOf('.');
+		if(ret.length() >= (idx + 3)) {
+			ret = ret.substring(0, idx + 3);
+		}
+		return ret;
 	}
 	
 	private static void progress(int p) {

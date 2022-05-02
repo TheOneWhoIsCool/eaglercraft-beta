@@ -13,6 +13,7 @@ menu.mods=Mods and Texture Packs
 menu.options=Options...
 menu.quit=Quit Game
 menu.editProfile=Edit Profile
+menu.exitChat=Exit Chat
 
 selectWorld.title=Select World
 selectWorld.empty=empty

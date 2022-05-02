@@ -9,6 +9,8 @@ import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 import net.lax1dude.eaglercraft.beta.EaglercraftSaveManager;
 import net.lax1dude.eaglercraft.beta.SingleplayerCommands;
+import net.lax1dude.eaglercraft.beta.TextureNewClockFX;
+import net.lax1dude.eaglercraft.beta.TextureNewCompassFX;
 import net.minecraft.src.*;
 
 public abstract class Minecraft implements Runnable {
@@ -32,8 +34,6 @@ public abstract class Minecraft implements Runnable {
 		field_9242_w = new ModelBiped(0.0F);
 		objectMouseOver = null;
 		sndManager = new SoundManager();
-		textureWaterFX = new TextureWaterFX();
-		textureLavaFX = new TextureLavaFX();
 		running = true;
 		debug = "";
 		isTakingScreenshot = false;
@@ -83,15 +83,30 @@ public abstract class Minecraft implements Runnable {
 		checkGLError("Startup");
 		glCapabilities = new OpenGlCapsChecker();
 		sndManager.loadSoundSettings(gameSettings);
-		renderEngine.registerTextureFX(textureLavaFX);
-		renderEngine.registerTextureFX(textureWaterFX);
-		renderEngine.registerTextureFX(new TexturePortalFX());
-		renderEngine.registerTextureFX(new TextureCompassFX(this));
-		renderEngine.registerTextureFX(new TextureWatchFX(this));
-		renderEngine.registerTextureFX(new TextureWaterFlowFX());
-		renderEngine.registerTextureFX(new TextureLavaFlowFX());
-		renderEngine.registerTextureFX(new TextureFlamesFX(0));
-		renderEngine.registerTextureFX(new TextureFlamesFX(1));
+		renderEngine.registerTextureFX(new TextureNewCompassFX());
+		renderEngine.registerTextureFX(new TextureNewClockFX());
+		renderEngine.registerSpriteSheet("portal", Block.portal.blockIndexInTexture, 1);
+		renderEngine.registerSpriteSheet("water", Block.waterStill.blockIndexInTexture, 1);
+		renderEngine.registerSpriteSheet("water_flow", Block.waterMoving.blockIndexInTexture + 1, 2);
+		renderEngine.registerSpriteSheet("lava", Block.lavaStill.blockIndexInTexture, 1);
+		renderEngine.registerSpriteSheet("lava_flow", Block.lavaMoving.blockIndexInTexture + 1, 2);
+		renderEngine.registerSpriteSheet("fire_0", Block.fire.blockIndexInTexture, 1);
+		renderEngine.registerSpriteSheet("fire_1", Block.fire.blockIndexInTexture + 16, 1);
+		/*
+		renderEngine.registerPXSpriteSheet("/sprite_sheet/portal.png.px", Block.portal.blockIndexInTexture, 1);
+		renderEngine.registerPXSpriteSheet("/sprite_sheet/water.px", Block.waterStill.blockIndexInTexture, 1);
+		renderEngine.registerPXSpriteSheet("/sprite_sheet/water_flow.px", Block.waterMoving.blockIndexInTexture, 2);
+		renderEngine.registerPXSpriteSheet("/sprite_sheet/lava.px", Block.lavaStill.blockIndexInTexture, 1);
+		renderEngine.registerPXSpriteSheet("/sprite_sheet/lava_flow.px", Block.lavaMoving.blockIndexInTexture, 2);
+		renderEngine.registerPXSpriteSheet("/sprite_sheet/fire.px", Block.fire.blockIndexInTexture, 1);
+		renderEngine.registerPXOffsetSpriteSheet("/sprite_sheet/fire.px", Block.fire.blockIndexInTexture + 16, 23);
+		*/
+		//renderEngine.registerTextureFX(new TexturePortalFX());
+		//renderEngine.registerTextureFX(new TextureWaterFlowFX());
+		//renderEngine.registerTextureFX(new TextureLavaFlowFX());
+		//renderEngine.registerTextureFX(new TextureFlamesFX(0));
+		//renderEngine.registerTextureFX(new TextureFlamesFX(1));
+		
 		renderGlobal = new RenderGlobal(this, renderEngine);
 		EaglerAdapter.glViewport(0, 0, displayWidth, displayHeight);
 		effectRenderer = new EffectRenderer(theWorld, renderEngine);
@@ -563,6 +578,12 @@ public abstract class Minecraft implements Runnable {
 		}
 		if (!isWorldLoaded && theWorld != null) {
 			playerController.updateController();
+			if(++holdStillTimer == 150) {
+				if (thePlayer != null) {
+					ingameGUI.addChatMessage("Note, the game can lag when chunks are generated");
+					ingameGUI.addChatMessage("hold still for a few moments and the lag will stop");
+				}
+			}
 		}
 		terrainTexture.bindTexture();
 		if (!isWorldLoaded) {
@@ -636,35 +657,44 @@ public abstract class Minecraft implements Runnable {
 				}
 				thePlayer.handleKeyPress(EaglerAdapter.getEventKey(), EaglerAdapter.getEventKeyState());
 				if (EaglerAdapter.getEventKeyState()) {
+					if (EaglerAdapter.getEventKey() == 31 && EaglerAdapter.isFunctionKeyHeldDown(gameSettings.keyBindFunction.keyCode, 61)) {
+						forceReload();
+						continue;
+					}
 					if (currentScreen != null) {
 						currentScreen.handleKeyboardInput();
 					} else {
 						if (EaglerAdapter.getEventKey() == 1) {
 							func_6252_g();
-						}
-						if (EaglerAdapter.getEventKey() == 31 && EaglerAdapter.isFunctionKeyDown(gameSettings.keyBindFunction.keyCode, 61)) {
-							forceReload();
+							continue;
 						}
 						if (EaglerAdapter.isFunctionKeyDown(gameSettings.keyBindFunction.keyCode, 59)) {
 							gameSettings.field_22277_y = !gameSettings.field_22277_y;
+							continue;
 						}
 						if (EaglerAdapter.isFunctionKeyDown(gameSettings.keyBindFunction.keyCode, 61)) {
 							gameSettings.showDebugInfo = !gameSettings.showDebugInfo;
+							continue;
 						}
 						if (EaglerAdapter.isFunctionKeyDown(gameSettings.keyBindFunction.keyCode, 63)) {
 							gameSettings.thirdPersonView = !gameSettings.thirdPersonView;
+							continue;
 						}
 						if (EaglerAdapter.isFunctionKeyDown(gameSettings.keyBindFunction.keyCode, 66)) {
 							gameSettings.field_22274_D = !gameSettings.field_22274_D;
+							continue;
 						}
 						if (EaglerAdapter.getEventKey() == gameSettings.keyBindInventory.keyCode) {
 							displayGuiScreen(new GuiInventory(thePlayer));
+							continue;
 						}
 						if (EaglerAdapter.getEventKey() == gameSettings.keyBindDrop.keyCode) {
 							thePlayer.dropCurrentItem();
+							continue;
 						}
 						if (EaglerAdapter.getEventKey() == gameSettings.keyBindChat.keyCode) {
 							displayGuiScreen(new GuiChat());
+							continue;
 						}
 					}
 					for (int i = 0; i < 9; i++) {
@@ -734,6 +764,8 @@ public abstract class Minecraft implements Runnable {
 		System.out.println("FORCING RELOAD!");
 		sndManager = new SoundManager();
 		sndManager.loadSoundSettings(gameSettings);
+		renderEngine.refreshTextures();
+		renderGlobal.loadRenderers();
 	}
 
 	public boolean isMultiplayerWorld() {
@@ -749,6 +781,7 @@ public abstract class Minecraft implements Runnable {
 	}
 
 	public void startWorld(String s, String s1, long l) {
+		holdStillTimer = 0;
 		changeWorld1(null);
 		System.gc();
 		if (field_22008_V.worldNeedsConvert_maybe(s)) {
@@ -1030,8 +1063,6 @@ public abstract class Minecraft implements Runnable {
 	public static int numRecordedFrameTimes = 0;
 	private String serverName;
 	private int serverPort;
-	private TextureWaterFX textureWaterFX;
-	private TextureLavaFX textureLavaFX;
 	public volatile boolean running;
 	public String debug;
 	boolean isTakingScreenshot;
@@ -1042,6 +1073,7 @@ public abstract class Minecraft implements Runnable {
 	long systemTime;
 	private int field_6300_ab;
 	private boolean awaitPointerLock;
+	public int holdStillTimer = 0;
 
 	private static Minecraft instance = null;
 

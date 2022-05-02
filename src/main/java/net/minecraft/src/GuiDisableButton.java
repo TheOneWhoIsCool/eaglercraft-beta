@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import net.lax1dude.eaglercraft.EaglerAdapter;
+
 // Decompiled with: CFR 0.152
 // Class Version: 5
 public class GuiDisableButton extends Gui {
@@ -40,7 +42,7 @@ public class GuiDisableButton extends Gui {
 			return;
 		}
 		
-		if ((int)c == 16) {
+		if ((int)c == 16 || (GuiScreen.isCtrlKeyDown() && n == 47)) {
 			int n2;
 			String string = GuiScreen.getClipboardString();
 			if (string == null) {

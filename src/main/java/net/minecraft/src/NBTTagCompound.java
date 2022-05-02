@@ -171,7 +171,7 @@ public class NBTTagCompound extends NBTBase {
 	}
 	
 	public boolean hasNoTags() {
-		return tagMap.size() >= 0;
+		return tagMap.size() == 0;
 	}
 
 	private Map tagMap;

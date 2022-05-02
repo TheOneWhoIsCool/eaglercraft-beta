@@ -151,6 +151,14 @@ public class GuiScreen extends Gui {
 	public void confirmClicked(boolean flag, int i) {
 	}
 
+	public static boolean isCtrlKeyDown() {
+		return EaglerAdapter.isKeyDown(29) || EaglerAdapter.isKeyDown(157);
+	}
+
+	public static boolean isShiftKeyDown() {
+		return EaglerAdapter.isKeyDown(42) || EaglerAdapter.isKeyDown(54);
+	}
+
 	protected Minecraft mc;
 	public int width;
 	public int height;
