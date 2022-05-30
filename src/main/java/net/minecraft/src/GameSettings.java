@@ -23,6 +23,8 @@ public class GameSettings {
 		fancyGraphics = false;
 		field_22278_j = false;
 		antialiasing = 1;
+		lastPasswordHash = "null";
+		lastPasswordLength = -1;
 		keyBindForward = new KeyBinding("key.forward", 17);
 		keyBindLeft = new KeyBinding("key.left", 30);
 		keyBindBack = new KeyBinding("key.back", 31);
@@ -223,7 +225,8 @@ public class GameSettings {
 			if(yee.hasKey("ao")) field_22278_j = yee.getBoolean("ao");
 			if(yee.hasKey("antialiasing")) antialiasing = (int)yee.getByte("antialiasing") & 0xFF;
 			if(yee.hasKey("lastServer")) lastServer = yee.getString("lastServer");
-			if(yee.hasKey("texturePack")) texturePack = yee.getString("texturePack");
+			if(yee.hasKey("lastPasswordHashed")) lastPasswordHash = yee.getString("lastPasswordHashed");
+			if(yee.hasKey("lastPasswordLength")) lastPasswordLength = yee.getInteger("lastPasswordLength");
 			for(int i = 0; i < keyBindings.length; ++i) {
 				String k = "key_" + keyBindings[i].keyDescription;
 				if(yee.hasKey(k)) keyBindings[i].keyCode = (int)yee.getShort(k) & 0xFFFF;
@@ -247,6 +250,8 @@ public class GameSettings {
 		yee.setByte("antialiasing", (byte)antialiasing);
 		yee.setString("lastServer", lastServer);
 		yee.setString("texturePack", texturePack);
+		yee.setString("lastPasswordHashed", lastPasswordHash);
+		yee.setInteger("lastPasswordLength", lastPasswordLength);
 		for(int i = 0; i < keyBindings.length; ++i) {
 			String k = "key_" + keyBindings[i].keyDescription;
 			yee.setShort(k, (short)keyBindings[i].keyCode);
@@ -294,5 +299,9 @@ public class GameSettings {
 	public boolean field_22273_E;
 	public float field_22272_F;
 	public float field_22271_G;
+	public String lastPasswordHash;
+	public int lastPasswordLength;
+
+	public static String currentSessionPasswordPlaintext = null;
 
 }

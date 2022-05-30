@@ -17,7 +17,7 @@ public class TerrainTextureManager {
 		field_1184_e = new int[5120];
 		field_1183_f = new int[34];
 		field_1182_g = new int[768];
-		int ai[] = EaglerImage.loadImage(EaglerAdapter.loadResourceBytes("/terrain.png")).data;
+		int ai[] = EaglerAdapter.loadPNG(EaglerAdapter.loadResourceBytes("/terrain.png")).data;
 		for (int j = 0; j < 256; j++) {
 			int k = 0;
 			int l = 0;

@@ -18,7 +18,7 @@ public class TextureNewCompassFX extends TextureFX {
 	public TextureNewCompassFX() {
 		super(Item.compass.getIconIndex(null));
 		tileImage = 1;
-		this.compassSpriteSheet = EaglerImage.loadImage(EaglerAdapter.loadResourceBytes("/sprite_sheet/compass.png")).data;
+		this.compassSpriteSheet = EaglerAdapter.loadPNG(EaglerAdapter.loadResourceBytes("/sprite_sheet/compass.png")).data;
 		this.compassSpriteSheetLength = compassSpriteSheet.length / 256;
 	}
 	

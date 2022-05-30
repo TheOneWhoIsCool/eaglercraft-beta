@@ -16,7 +16,7 @@ public class GuiRenameWorld extends GuiScreen {
 	}
 
 	public void updateScreen() {
-		field_22114_h.func_22070_b();
+		field_22114_h.onUpdate();
 	}
 
 	public void initGui() {
@@ -30,9 +30,9 @@ public class GuiRenameWorld extends GuiScreen {
 		ISaveFormat isaveformat = mc.func_22004_c();
 		WorldInfo worldinfo = isaveformat.getWorldInfoForWorld(field_22113_i);
 		String s = worldinfo.getWorldName();
-		field_22114_h = new GuiDisableButton(fontRenderer, width / 2 - 100, 60, 200, 20, s);
+		field_22114_h = new GuiTextField(fontRenderer, width / 2 - 100, 60, 200, 20, s);
 		field_22114_h.field_22082_a = true;
-		field_22114_h.func_22066_a(32);
+		field_22114_h.setMaxLength(32);
 	}
 
 	public void onGuiClosed() {
@@ -47,14 +47,14 @@ public class GuiRenameWorld extends GuiScreen {
 			mc.displayGuiScreen(field_22112_a);
 		} else if (guibutton.id == 0) {
 			ISaveFormat isaveformat = mc.func_22004_c();
-			isaveformat.renameWorldData(field_22113_i, field_22114_h.func_22071_a().trim());
+			isaveformat.renameWorldData(field_22113_i, field_22114_h.getTextBoxText().trim());
 			mc.displayGuiScreen(field_22112_a);
 		}
 	}
 
 	protected void keyTyped(char c, int i) {
-		field_22114_h.func_22072_a(c, i);
-		((GuiButton) controlList.get(0)).enabled = field_22114_h.func_22071_a().trim().length() > 0;
+		field_22114_h.handleKeyboardInput(c, i);
+		((GuiButton) controlList.get(0)).enabled = field_22114_h.getTextBoxText().trim().length() > 0;
 		if (c == '\r') {
 			actionPerformed((GuiButton) controlList.get(0));
 		}
@@ -62,7 +62,7 @@ public class GuiRenameWorld extends GuiScreen {
 
 	protected void mouseClicked(int i, int j, int k) {
 		super.mouseClicked(i, j, k);
-		field_22114_h.func_22069_a(i, j, k);
+		field_22114_h.handleMouseInput(i, j, k);
 	}
 
 	public void drawScreen(int i, int j, float f) {
@@ -71,11 +71,11 @@ public class GuiRenameWorld extends GuiScreen {
 		drawCenteredString(fontRenderer, stringtranslate.translateKey("selectWorld.renameTitle"), width / 2,
 				(height / 4 - 60) + 20, 0xffffff);
 		drawString(fontRenderer, stringtranslate.translateKey("selectWorld.enterName"), width / 2 - 100, 47, 0xa0a0a0);
-		field_22114_h.func_22067_c();
+		field_22114_h.drawTextBox();
 		super.drawScreen(i, j, f);
 	}
 
 	private GuiScreen field_22112_a;
-	private GuiDisableButton field_22114_h;
+	private GuiTextField field_22114_h;
 	private final String field_22113_i;
 }

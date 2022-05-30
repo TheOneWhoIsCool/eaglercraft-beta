@@ -8,19 +8,19 @@ import net.lax1dude.eaglercraft.EaglerAdapter;
 
 public class MouseHelper {
 
-	public void func_774_a() {
+	public void grabMouse() {
 		EaglerAdapter.mouseSetGrabbed(true);
 		deltaX = 0;
 		deltaY = 0;
 	}
 
-	public void func_773_b() {
+	public void ungrabMouse() {
 		EaglerAdapter.mouseSetCursorPosition(EaglerAdapter.getCanvasWidth() / 2, EaglerAdapter.getCanvasHeight() / 2);
 		EaglerAdapter.mouseSetGrabbed(false);
 	}
 
 	public void mouseXYChange() {
-		if(EaglerAdapter.isPointerLocked()) {
+		if(EaglerAdapter.isPointerLocked2()) {
 			deltaX = EaglerAdapter.mouseGetDX();
 			deltaY = EaglerAdapter.mouseGetDY();
 		}else {

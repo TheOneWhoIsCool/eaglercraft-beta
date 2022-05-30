@@ -16,7 +16,7 @@ public class TextureNewClockFX extends TextureFX {
 	public TextureNewClockFX() {
 		super(Item.pocketSundial.getIconIndex(null));
 		tileImage = 1;
-		this.clockSpriteSheet = EaglerImage.loadImage(EaglerAdapter.loadResourceBytes("/sprite_sheet/clock.png")).data;
+		this.clockSpriteSheet = EaglerAdapter.loadPNG(EaglerAdapter.loadResourceBytes("/sprite_sheet/clock.png")).data;
 		this.clockSpriteSheetLength = clockSpriteSheet.length / 256;
 	}
 

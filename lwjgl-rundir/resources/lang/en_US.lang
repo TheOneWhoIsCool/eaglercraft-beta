@@ -45,9 +45,11 @@ selectWorld.importName=What do you want to name this world?
 
 multiplayer.title=Play Multiplayer
 multiplayer.connect=Connect
-multiplayer.info1=Minecraft Multiplayer is currently not finished, but there
-multiplayer.info2=is some buggy early testing going on.
-multiplayer.ipinfo=Enter the IP of a server to connect to it:
+multiplayer.info1=Eaglercraft Multiplayer is really insecure, don't expect a
+multiplayer.info2=public server to patch any exploits
+multiplayer.ipinfo=Enter the URL of a server to connect to:
+multiplayer.passinfo1=Enter your password to join the server:
+multiplayer.passinfo2=(leave blank for public servers)
 
 multiplayer.downloadingTerrain=Downloading terrain
 

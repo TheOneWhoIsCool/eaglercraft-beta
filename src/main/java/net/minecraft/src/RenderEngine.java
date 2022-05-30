@@ -312,7 +312,7 @@ public class RenderEngine {
 	}
 
 	private EaglerImage readTextureImage(byte[] inputstream) throws IOException {
-		return EaglerImage.loadImage(inputstream);
+		return EaglerAdapter.loadPNG(inputstream);
 	}
 
 	public void bindTexture(int i) {

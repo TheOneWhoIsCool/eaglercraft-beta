@@ -15,7 +15,7 @@ public class ColorizerFoliage {
 
 	public static int getFoliageColor(double d, double d1) {
 		if(foliageBuffer == null) {
-			foliageBuffer = EaglerImage.loadImage(EaglerAdapter.loadResourceBytes("/misc/foliagecolor.png")).data;
+			foliageBuffer = EaglerAdapter.loadPNG(EaglerAdapter.loadResourceBytes("/misc/foliagecolor.png")).data;
 		}
 		d1 *= d;
 		int i = (int) ((1.0D - d) * 255D);

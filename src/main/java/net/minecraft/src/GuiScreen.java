@@ -89,6 +89,7 @@ public class GuiScreen extends Gui {
 	}
 
 	public void handleMouseInput() {
+		EaglerAdapter.mouseSetGrabbed(false);
 		if (EaglerAdapter.mouseGetEventButtonState()) {
 			int i = (EaglerAdapter.mouseGetEventX() * width) / mc.displayWidth;
 			int k = height - (EaglerAdapter.mouseGetEventY() * height) / mc.displayHeight - 1;
@@ -157,6 +158,10 @@ public class GuiScreen extends Gui {
 
 	public static boolean isShiftKeyDown() {
 		return EaglerAdapter.isKeyDown(42) || EaglerAdapter.isKeyDown(54);
+	}
+	
+	public Minecraft getMinecraft() {
+		return mc == null ? Minecraft.getMinecraft() : mc;
 	}
 
 	protected Minecraft mc;

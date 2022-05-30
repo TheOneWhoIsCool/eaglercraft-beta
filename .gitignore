@@ -12,3 +12,5 @@ bin
 /lwjgl-rundir/texturepacks
 /lwjgl-rundir/downloads
 /lwjgl-rundir/options.txt
+/bukkit/rundir*
+/bukkit/server/craftbukkit-src/*

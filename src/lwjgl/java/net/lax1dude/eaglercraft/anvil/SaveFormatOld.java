@@ -82,7 +82,7 @@ public class SaveFormatOld implements ISaveFormat {
 		}
 	}
 
-	public void deleteWorldByDirectory(String s) {
+	public void deleteWorldByDirectory(String s, IProgressUpdate iprogressupdate) {
 		File file = new File(field_22180_a, s);
 		if (!file.exists()) {
 			return;

@@ -330,12 +330,12 @@ public class EntityRenderer {
 	public void func_4136_b(float f) {
 		if (!EaglerAdapter.isFocused()) {
 			if (System.currentTimeMillis() - field_1384_l > 500L) {
-				mc.func_6252_g();
+				mc.displayIngameMenu();
 			}
 		} else {
 			field_1384_l = System.currentTimeMillis();
 		}
-		if (mc.field_6289_L) {
+		if (EaglerAdapter.isPointerLocked2()) {
 			mc.mouseHelper.mouseXYChange();
 			float f1 = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
 			float f2 = f1 * f1 * f1 * 8F;

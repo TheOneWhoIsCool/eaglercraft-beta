@@ -15,7 +15,7 @@ public class FontRenderer {
 	public FontRenderer(GameSettings gamesettings, String s, RenderEngine renderengine) {
 		charWidth = new int[256];
 		fontTextureName = 0;
-		EaglerImage bufferedimage = EaglerImage.loadImage(EaglerAdapter.loadResourceBytes(s));
+		EaglerImage bufferedimage = EaglerAdapter.loadPNG(EaglerAdapter.loadResourceBytes(s));
 		int i = bufferedimage.w;
 		int j = bufferedimage.h;
 		int ai[] = bufferedimage.data;

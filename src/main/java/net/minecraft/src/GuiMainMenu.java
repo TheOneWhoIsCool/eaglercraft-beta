@@ -8,6 +8,7 @@ import net.lax1dude.eaglercraft.ConfigConstants;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.EaglercraftRandom;
+import net.lax1dude.eaglercraft.GuiMultiplayer;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 import net.lax1dude.eaglercraft.beta.GuiNoMultiplayer;
@@ -64,13 +65,15 @@ public class GuiMainMenu extends GuiScreen {
 			mc.displayGuiScreen(new GuiSelectWorld(this));
 		}
 		if (guibutton.id == 2) {
-			mc.displayGuiScreen(new GuiNoMultiplayer(this));
+			//mc.displayGuiScreen(new GuiNoMultiplayer(this));
+			mc.displayGuiScreen(new GuiMultiplayer(this));
 		}
 		//if (guibutton.id == 3) {
 		//	mc.displayGuiScreen(new GuiTexturePacks(this));
 		//}
 		if (guibutton.id == 4) {
 			mc.displayGuiScreen(new GuiNoMultiplayer(this));
+			//mc.displayGuiScreen(new GuiMultiplayer(this));
 		}
 	}
 
@@ -99,13 +102,9 @@ public class GuiMainMenu extends GuiScreen {
 		float ff = 0.75f;
 		EaglerAdapter.glScalef(ff, ff, ff);
 		
-		String str = "DO NOT DM LAX1DUDE WITH QUESTIONS/COMPLAINTS";
+		String str = "THIS IS INCOMPLETE, IT STILL CONTAINS BUGS. BE PATIENT";
 		int w = fontRenderer.getStringWidth(str);
 		drawString(fontRenderer, str, (int)(((width / ff) - w) / 2), (int)((height / 4 + 102) / ff), 0xffeeee);
-		
-		str = "HE IS BUSY, HE WILL NOT ANSWER";
-		w = fontRenderer.getStringWidth(str);
-		drawString(fontRenderer, str, (int)(((width / ff) - w) / 2), (int)((height / 4 + 112) / ff), 0xffeeee);
 		
 		EaglerAdapter.glPopMatrix();
 		

@@ -51,7 +51,7 @@ public class SpriteSheetTexture {
 		}
 		
 		int dim = iconTileSize * iconTileSize * 256;
-		EaglerImage img = EaglerImage.loadImage(imgBytes);
+		EaglerImage img = EaglerAdapter.loadPNG(imgBytes);
 		dataFrameCount = img.data.length / dim;
 		
 		ArrayList<Integer> loadedFrameSet = new ArrayList();

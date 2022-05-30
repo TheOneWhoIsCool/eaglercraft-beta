@@ -15,7 +15,7 @@ public class ColorizerGrass {
 
 	public static int getGrassColor(double d, double d1) {
 		if(grassBuffer == null) {
-			grassBuffer = EaglerImage.loadImage(EaglerAdapter.loadResourceBytes("/misc/grasscolor.png")).data;
+			grassBuffer = EaglerAdapter.loadPNG(EaglerAdapter.loadResourceBytes("/misc/grasscolor.png")).data;
 		}
 		d1 *= d;
 		int i = (int) ((1.0D - d) * 255D);

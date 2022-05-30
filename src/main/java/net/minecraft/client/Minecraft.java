@@ -5,6 +5,7 @@
 package net.minecraft.client;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.GuiMultiplayer;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 import net.lax1dude.eaglercraft.beta.EaglercraftSaveManager;
@@ -38,7 +39,6 @@ public abstract class Minecraft implements Runnable {
 		debug = "";
 		isTakingScreenshot = false;
 		prevFrameTime = -1L;
-		field_6289_L = false;
 		field_6302_aa = 0;
 		isRaining = false;
 		systemTime = System.currentTimeMillis();
@@ -49,11 +49,6 @@ public abstract class Minecraft implements Runnable {
 	}
 	
 	public abstract void displayCrashScreen(Throwable t);
-
-	public void setServer(String s, int i) {
-		serverName = s;
-		serverPort = i;
-	}
 
 	public void startGame() {
 		RenderManager.instance.itemRenderer = new ItemRenderer(this);
@@ -92,21 +87,6 @@ public abstract class Minecraft implements Runnable {
 		renderEngine.registerSpriteSheet("lava_flow", Block.lavaMoving.blockIndexInTexture + 1, 2);
 		renderEngine.registerSpriteSheet("fire_0", Block.fire.blockIndexInTexture, 1);
 		renderEngine.registerSpriteSheet("fire_1", Block.fire.blockIndexInTexture + 16, 1);
-		/*
-		renderEngine.registerPXSpriteSheet("/sprite_sheet/portal.png.px", Block.portal.blockIndexInTexture, 1);
-		renderEngine.registerPXSpriteSheet("/sprite_sheet/water.px", Block.waterStill.blockIndexInTexture, 1);
-		renderEngine.registerPXSpriteSheet("/sprite_sheet/water_flow.px", Block.waterMoving.blockIndexInTexture, 2);
-		renderEngine.registerPXSpriteSheet("/sprite_sheet/lava.px", Block.lavaStill.blockIndexInTexture, 1);
-		renderEngine.registerPXSpriteSheet("/sprite_sheet/lava_flow.px", Block.lavaMoving.blockIndexInTexture, 2);
-		renderEngine.registerPXSpriteSheet("/sprite_sheet/fire.px", Block.fire.blockIndexInTexture, 1);
-		renderEngine.registerPXOffsetSpriteSheet("/sprite_sheet/fire.px", Block.fire.blockIndexInTexture + 16, 23);
-		*/
-		//renderEngine.registerTextureFX(new TexturePortalFX());
-		//renderEngine.registerTextureFX(new TextureWaterFlowFX());
-		//renderEngine.registerTextureFX(new TextureLavaFlowFX());
-		//renderEngine.registerTextureFX(new TextureFlamesFX(0));
-		//renderEngine.registerTextureFX(new TextureFlamesFX(1));
-		
 		renderGlobal = new RenderGlobal(this, renderEngine);
 		EaglerAdapter.glViewport(0, 0, displayWidth, displayHeight);
 		effectRenderer = new EffectRenderer(theWorld, renderEngine);
@@ -115,8 +95,9 @@ public abstract class Minecraft implements Runnable {
 		while(EaglerAdapter.keysNext());
 		while(EaglerAdapter.mouseNext());
 		ingameGUI = new GuiIngame(this);
-		if (serverName != null) {
-			displayGuiScreen(new GuiConnecting(this, serverName, serverPort));
+		String srv = EaglerAdapter.getServerToJoinOnLaunch();
+		if (srv != null && srv.length() > 0) {
+			displayGuiScreen(new GuiMultiplayer(new GuiMainMenu(), srv));
 		} else {
 			displayGuiScreen(new GuiMainMenu());
 		}
@@ -258,14 +239,7 @@ public abstract class Minecraft implements Runnable {
 				long l1 = System.nanoTime();
 				for (int j = 0; j < timer.elapsedTicks; j++) {
 					ticksRan++;
-					try {
-						runTick();
-						continue;
-					} catch (MinecraftException minecraftexception) {
-						theWorld = null;
-					}
-					changeWorld1(null);
-					displayGuiScreen(new GuiConflictWarning());
+					runTick();
 				}
 
 				long l2 = System.nanoTime() - l1;
@@ -424,29 +398,26 @@ public abstract class Minecraft implements Runnable {
 			return;
 		}
 		awaitPointerLock = true;
-		if (field_6289_L) {
+		if (EaglerAdapter.isPointerLocked2()) {
 			return;
 		} else {
-			field_6289_L = true;
-			mouseHelper.func_774_a();
-			displayGuiScreen(null);
+			mouseHelper.grabMouse();
 			field_6302_aa = ticksRan + 10000;
 			return;
 		}
 	}
 
 	public void ungrabMouseCursor() {
-		if (!field_6289_L) {
+		if (!EaglerAdapter.isPointerLocked2()) {
 			return;
 		}
 		if (thePlayer != null) {
 			thePlayer.resetPlayerKeyState();
 		}
-		field_6289_L = false;
-		mouseHelper.func_773_b();
+		mouseHelper.ungrabMouse();
 	}
 
-	public void func_6252_g() {
+	public void displayIngameMenu() {
 		if (currentScreen == null) {
 			displayGuiScreen(new GuiIngameMenu());
 		}
@@ -628,7 +599,7 @@ public abstract class Minecraft implements Runnable {
 						}
 					}
 					if (currentScreen == null) {
-						if (!field_6289_L && EaglerAdapter.mouseGetEventButtonState()) {
+						if (!EaglerAdapter.isPointerLocked() && EaglerAdapter.mouseGetEventButtonState()) {
 							grabMouseCursor();
 						} else {
 							if (EaglerAdapter.mouseGetEventButton() == 0 && EaglerAdapter.mouseGetEventButtonState()) {
@@ -665,7 +636,7 @@ public abstract class Minecraft implements Runnable {
 						currentScreen.handleKeyboardInput();
 					} else {
 						if (EaglerAdapter.getEventKey() == 1) {
-							func_6252_g();
+							displayIngameMenu();
 							continue;
 						}
 						if (EaglerAdapter.isFunctionKeyDown(gameSettings.keyBindFunction.keyCode, 59)) {
@@ -707,22 +678,19 @@ public abstract class Minecraft implements Runnable {
 			if (currentScreen == null) {
 				if(EaglerAdapter.isPointerLocked()) {
 					awaitPointerLock = false;
-					if (EaglerAdapter.mouseIsButtonDown(0) && (float) (ticksRan - field_6302_aa) >= timer.ticksPerSecond / 4F
-							&& field_6289_L) {
+					if (EaglerAdapter.mouseIsButtonDown(0) && (float) (ticksRan - field_6302_aa) >= timer.ticksPerSecond / 4F) {
 						clickMouse(0);
 						field_6302_aa = ticksRan;
 					}
-					if (EaglerAdapter.mouseIsButtonDown(1) && (float) (ticksRan - field_6302_aa) >= timer.ticksPerSecond / 4F
-							&& field_6289_L) {
+					if (EaglerAdapter.mouseIsButtonDown(1) && (float) (ticksRan - field_6302_aa) >= timer.ticksPerSecond / 4F) {
 						clickMouse(1);
 						field_6302_aa = ticksRan;
 					}
 				}else if(!awaitPointerLock) {
-					field_6289_L = false;
-					func_6252_g();
+					displayIngameMenu();
 				}
 			}
-			func_6254_a(0, currentScreen == null && EaglerAdapter.mouseIsButtonDown(0) && field_6289_L);
+			func_6254_a(0, currentScreen == null && EaglerAdapter.mouseIsButtonDown(0) && EaglerAdapter.isPointerLocked());
 		}
 		if (theWorld != null) {
 			if (thePlayer != null) {
@@ -889,8 +857,7 @@ public abstract class Minecraft implements Runnable {
 				world.func_651_a(loadingScreen);
 			}
 			field_22009_h = thePlayer;
-			field_6289_L = true;
-			mouseHelper.func_774_a();
+			mouseHelper.grabMouse();
 		} else {
 			ungrabMouseCursor();
 			thePlayer = null;
@@ -1064,13 +1031,10 @@ public abstract class Minecraft implements Runnable {
 	public static long frameTimes[] = new long[512];
 	public static long tickTimes[] = new long[512];
 	public static int numRecordedFrameTimes = 0;
-	private String serverName;
-	private int serverPort;
 	public volatile boolean running;
 	public String debug;
 	boolean isTakingScreenshot;
 	long prevFrameTime;
-	public boolean field_6289_L;
 	private int field_6302_aa;
 	public boolean isRaining;
 	long systemTime;

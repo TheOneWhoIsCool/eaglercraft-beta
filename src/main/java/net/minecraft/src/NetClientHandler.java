@@ -5,26 +5,20 @@ package net.minecraft.src;
 // Decompiler options: packimports(3) braces deadcode 
 
 import java.io.*;
-import java.net.*;
 
 import net.lax1dude.eaglercraft.EaglercraftRandom;
-import net.lax1dude.eaglercraft.compat.UnexpectedThrowable;
+import net.lax1dude.eaglercraft.GuiMultiplayer;
+import net.lax1dude.eaglercraft.WebsocketNetworkManager;
 import net.minecraft.client.Minecraft;
 
 public class NetClientHandler extends NetHandler {
 
-	public NetClientHandler(Minecraft minecraft, String s, int i) {
+	public NetClientHandler(Minecraft minecraft, String s, int i) throws IOException {
 		disconnected = false;
 		field_1210_g = false;
 		rand = new EaglercraftRandom();
 		mc = minecraft;
-		Socket socket;
-		try {
-			socket = new Socket(InetAddress.getByName(s), i);
-		} catch (IOException e) {
-			throw new UnexpectedThrowable(e);
-		}
-		//netManager = new NetworkManager(socket, "Client", this);
+		netManager = new WebsocketNetworkManager(s, this);
 	}
 
 	public void processReadPackets() {
@@ -42,7 +36,7 @@ public class NetClientHandler extends NetHandler {
 		worldClient.multiplayerWorld = true;
 		mc.changeWorld1(worldClient);
 		mc.displayGuiScreen(new GuiDownloadTerrain(this));
-		mc.thePlayer.entityId = packet1login.protocolVersion;
+		mc.thePlayer.entityId = packet1login.playerId;
 	}
 
 	public void handlePickupSpawn(Packet21PickupSpawn packet21pickupspawn) {
@@ -342,25 +336,14 @@ public class NetClientHandler extends NetHandler {
 	}
 
 	public void handleHandshake(Packet2Handshake packet2handshake) {
-		if (packet2handshake.username.equals("-")) {
-			addToSendQueue(new Packet1Login(mc.session.username, "Password", 9));
-		} else {
-			try {
-				URL url = new URL((new StringBuilder()).append("http://www.minecraft.net/game/joinserver.jsp?user=")
-						.append(mc.session.username).append("&sessionId=").append(mc.session.sessionId)
-						.append("&serverId=").append(packet2handshake.username).toString());
-				BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(url.openStream()));
-				String s = bufferedreader.readLine();
-				bufferedreader.close();
-				if (s.equalsIgnoreCase("ok")) {
-					addToSendQueue(new Packet1Login(mc.session.username, "Password", 9));
-				} else {
-					netManager.networkShutdown("disconnect.loginFailedInfo", new Object[] { s });
-				}
-			} catch (Exception exception) {
-				exception.printStackTrace();
-				netManager.networkShutdown("disconnect.genericReason", new Object[] { (new StringBuilder())
-						.append("Internal client error: ").append(exception.toString()).toString() });
+		if(packet2handshake.username.length() < 26 || mc.gameSettings.lastPasswordLength <= 0) {
+			addToSendQueue(new Packet1Login(mc.session.username, "NULL", 9));
+		}else {
+			String hsh = GuiMultiplayer.makeLoginHash(mc.gameSettings.lastPasswordHash, packet2handshake.username);
+			if(hsh != null) {
+				addToSendQueue(new Packet1Login(mc.session.username, hsh, 9));
+			}else {
+				addToSendQueue(new Packet1Login(mc.session.username, "NULL", 9));
 			}
 		}
 	}
@@ -540,7 +523,7 @@ public class NetClientHandler extends NetHandler {
 	}
 
 	private boolean disconnected;
-	private NetworkManager netManager;
+	private WebsocketNetworkManager netManager;
 	public String field_1209_a;
 	private Minecraft mc;
 	private WorldClient worldClient;
