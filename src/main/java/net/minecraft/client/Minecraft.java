@@ -555,7 +555,8 @@ public abstract class Minecraft implements Runnable {
 		if (!isWorldLoaded && theWorld != null) {
 			playerController.updateController();
 			if(++holdStillTimer == 150) {
-				if (thePlayer != null) {
+				if (thePlayer != null && !holdStillShownThisSession) {
+					holdStillShownThisSession = true;
 					if(isMultiplayerWorld()) {
 						//ingameGUI.addChatMessage("Known Multiplayer Bugs:");
 						//ingameGUI.addChatMessage(" - chunks may not show until you move around");
@@ -876,6 +877,7 @@ public abstract class Minecraft implements Runnable {
 			mouseHelper.grabMouse();
 		} else {
 			EaglerProfile.freeAllSkins();
+			holdStillShownThisSession = false;
 			ungrabMouseCursor();
 			thePlayer = null;
 		}
@@ -969,6 +971,7 @@ public abstract class Minecraft implements Runnable {
 		thePlayer.preparePlayerToSpawn();
 		playerController.flipPlayer(thePlayer);
 		theWorld.spawnPlayerWithLoadedChunks(thePlayer);
+		holdStillTimer = 0;
 		thePlayer.movementInput = new MovementInputFromOptions(gameSettings);
 		thePlayer.entityId = i;
 		thePlayer.func_6420_o();
@@ -1058,6 +1061,7 @@ public abstract class Minecraft implements Runnable {
 	private int field_6300_ab;
 	private boolean awaitPointerLock;
 	public int holdStillTimer = 0;
+	public boolean holdStillShownThisSession = false;
 
 	private static Minecraft instance = null;
 
