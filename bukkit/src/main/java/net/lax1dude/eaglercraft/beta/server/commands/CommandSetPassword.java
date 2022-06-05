@@ -12,6 +12,7 @@ public class CommandSetPassword extends EaglerCommand {
 
 	public CommandSetPassword() {
 		super("set-password");
+		setNeedsOp(true);
 		setAliases(Arrays.asList("set-pass"));
 		setTooltip("Sets a password on a username for Eaglercraft connections");
 		setUsage("/set-password <username> <password> [expires][s|m|h|d|w]");
