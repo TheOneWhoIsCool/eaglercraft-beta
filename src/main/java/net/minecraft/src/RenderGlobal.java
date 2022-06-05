@@ -835,33 +835,28 @@ public class RenderGlobal implements IWorldAccess {
 	}
 
 	public boolean updateRenderers(EntityLiving entityliving, boolean flag) {
-		boolean flag1 = false;
-		if (flag1) {
-			Collections.sort(worldRenderersToUpdate, new RenderSorter(entityliving));
-			int i = worldRenderersToUpdate.size() - 1;
-			int j = worldRenderersToUpdate.size();
-			for (int k = 0; k < j; k++) {
-				WorldRenderer worldrenderer = (WorldRenderer) worldRenderersToUpdate.get(i - k);
-				if (!flag) {
-					if (worldrenderer.distanceToEntity(entityliving) > 1024F) {
-						if (worldrenderer.isInFrustum) {
-							if (k >= 3) {
-								return false;
-							}
-						} else if (k >= 1) {
-							return false;
-						}
+		//boolean flag1 = false;
+		//if (flag1) {
+			int t = worldRenderersToUpdate.size();
+			if(t > 0) {
+				Collections.sort(worldRenderersToUpdate, new RenderSorter(entityliving));
+				boolean b = false;
+				for(int i = t - 1; i >= 0; --i) {
+					WorldRenderer worldrenderer = (WorldRenderer) worldRenderersToUpdate.get(i);
+					if(worldrenderer.isInFrustum || worldrenderer.distanceToEntity(entityliving) < 1024F) {
+						b = true;
+						worldrenderer.updateRenderer();
+						worldRenderersToUpdate.remove(i);
+						break;
 					}
-				} else if (!worldrenderer.isInFrustum) {
-					continue;
 				}
-				worldrenderer.updateRenderer();
-				worldRenderersToUpdate.remove(worldrenderer);
-				worldrenderer.needsUpdate = false;
+				if(!b) {
+					((WorldRenderer)worldRenderersToUpdate.remove(t - 1)).updateRenderer();
+				}
 			}
-
 			return worldRenderersToUpdate.size() == 0;
-		}
+		//}
+		/*
 		RenderSorter rendersorter = new RenderSorter(entityliving);
 		WorldRenderer aworldrenderer[] = new WorldRenderer[3];
 		ArrayList arraylist = null;
@@ -941,6 +936,7 @@ public class RenderGlobal implements IWorldAccess {
 			worldRenderersToUpdate.remove(j2);
 		}
 		return l == i1 + l1;
+		*/
 	}
 	
 	private static final TextureLocation terrainTexture = new TextureLocation("/terrain.png");

@@ -175,4 +175,12 @@ public class NBTTagCompound extends NBTBase {
 	}
 
 	private Map tagMap;
+
+	public NBTBase getTag(String s) {
+		return (NBTBase) tagMap.get(s);
+	}
+	
+	public static Map<String,NBTBase> getTagMap(NBTTagCompound nb) {
+		return nb.tagMap;
+	}
 }

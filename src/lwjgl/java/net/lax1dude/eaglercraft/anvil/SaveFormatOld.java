@@ -29,7 +29,7 @@ public class SaveFormatOld implements ISaveFormat {
 		return "Old Format";
 	}
 
-	public List getWorldList() {
+	public List getWorldList(IProgressUpdate progress) {
 		ArrayList arraylist = new ArrayList();
 		for (int i = 0; i < 5; i++) {
 			String s = (new StringBuilder()).append("World").append(i + 1).toString();

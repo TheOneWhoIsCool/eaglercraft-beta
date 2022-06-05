@@ -2,6 +2,7 @@ package net.minecraft.src;
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglerProfile;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
@@ -185,8 +186,13 @@ public class ItemRenderer {
 			f10 = MathHelper.sin(MathHelper.sqrt_float(f6) * 3.141593F);
 			EaglerAdapter.glRotatef(f10 * 70F, 0.0F, 1.0F, 0.0F);
 			EaglerAdapter.glRotatef(-f8 * 20F, 0.0F, 0.0F, 1.0F);
-			EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, mc.renderEngine
-					.getTextureForDownloadableImage(mc.thePlayer.skinUrl, mc.thePlayer.getEntityTexture()));
+//			EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, mc.renderEngine
+//					.getTextureForDownloadableImage(mc.thePlayer.skinUrl, mc.thePlayer.getEntityTexture()));
+			if(EaglerProfile.presetSkinId < 0) {
+				mc.renderEngine.bindTexture(EaglerProfile.skins.get(EaglerProfile.customSkinId).glTex);
+			}else {
+				EaglerProfile.defaultOptionsTextures[EaglerProfile.presetSkinId].bindTexture();
+			}
 			EaglerAdapter.glTranslatef(-1F, 3.6F, 3.5F);
 			EaglerAdapter.glRotatef(120F, 0.0F, 0.0F, 1.0F);
 			EaglerAdapter.glRotatef(200F, 1.0F, 0.0F, 0.0F);

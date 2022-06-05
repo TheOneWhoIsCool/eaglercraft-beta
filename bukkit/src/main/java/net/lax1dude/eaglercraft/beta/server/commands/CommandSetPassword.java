@@ -19,6 +19,10 @@ public class CommandSetPassword extends EaglerCommand {
 
 	@Override
 	protected void execute(CommandSender sender, String[] args) {
+		if(!EaglercraftServer.config.enablePasswordLogin()) {
+			sender.sendMessage(ChatColor.RED + "Error: password login is disabled");
+			return;
+		}
 		if(!EaglercraftServer.hasPasswordDB()) {
 			sender.sendMessage(ChatColor.RED + "Error: the password database is not initialized, it probably won't save your changes");
 		}
@@ -28,33 +32,26 @@ public class CommandSetPassword extends EaglerCommand {
 		if(args[0].length() > 16) {
 			throw new IncorrectUsageException("the maximum length for a username is 16 characters!");
 		}
-		int expires = -1;
+		if(args[1].length() < 3) {
+			throw new IncorrectUsageException("A password must be at least 3 characters!");
+		}
+		int expires = EaglercraftServer.config.defaultPasswordExpireTime();
 		if(args.length == 3) {
-			int mul = 60 * 60 * 24;
-			String exp = args[2].toLowerCase();
-			if(exp.endsWith("s")) {
-				mul = 1;
-				exp = exp.substring(0, exp.length() - 1);
-			}else if(exp.endsWith("m")) {
-				mul = 60;
-				exp = exp.substring(0, exp.length() - 1);
-			}else if(exp.endsWith("h")) {
-				mul = 60 * 60;
-				exp = exp.substring(0, exp.length() - 1);
-			}else if(exp.endsWith("d")) {
-				exp = exp.substring(0, exp.length() - 1);
-			}else if(exp.endsWith("w")) {
-				mul = 60 * 60 * 24 * 7;
-				exp = exp.substring(0, exp.length() - 1);
+			expires = CommandRenewPassword.tryParseTime(args[2]);
+			if(expires == -1) {
+				throw new IncorrectUsageException("Expires time is invalid!");
 			}
-			try {
-				expires = Integer.parseInt(exp) * mul;
-			}catch(NumberFormatException ex) {
-				throw new IncorrectUsageException("The number '" + exp + "' is invalid!");
+			if(expires == -2) {
+				expires = -1;
 			}
-			if(expires < 1) {
-				throw new IncorrectUsageException("Expires time must be positive!");
-			}
+		}
+		if(expires > EaglercraftServer.config.maximumPasswordExpireTime()) {
+			sender.sendMessage(ChatColor.RED + "Error: the maximum time before a password expires can be at most " + CommandListPasswords.expiresAfter(EaglercraftServer.config.maximumPasswordExpireTime()));
+			return;
+		}
+		if(expires == -1 && !EaglercraftServer.config.allowPasswordsWithoutExpire()) {
+			sender.sendMessage(ChatColor.RED + "Error: passwords that do not expire are disabled!");
+			return;
 		}
 		PasswordManager.create(args[0], args[1], expires);
 		sender.sendMessage("Password for '" + args[0] + "' was changed");

@@ -191,4 +191,8 @@ public class NetHandler {
 
 	public void func_22185_a(Packet27 packet27) {
 	}
+
+	public void handleEaglercraftData(Packet69EaglercraftData packet) {
+		registerPacket(packet);
+	}
 }

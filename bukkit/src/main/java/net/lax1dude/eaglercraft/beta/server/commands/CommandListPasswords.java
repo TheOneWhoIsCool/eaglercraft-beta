@@ -22,6 +22,10 @@ public class CommandListPasswords extends EaglerCommand {
 
 	@Override
 	protected void execute(CommandSender sender, String[] args) {
+		if(!EaglercraftServer.config.enablePasswordLogin()) {
+			sender.sendMessage(ChatColor.RED + "Error: password login is disabled");
+			return;
+		}
 		if(args.length != 0) {
 			throw new IncorrectUsageException("This command does not take any arguments");
 		}
@@ -36,24 +40,27 @@ public class CommandListPasswords extends EaglerCommand {
 			int characterWidth = (sender instanceof Player) ? 60 : 40;
 			String row = "";
 			for(PasswordEntry s : cc) {
-				String rowAdd = s.username + (s.expiresAfter <= 0 ? " (*)" : " (" + expiresAfter(s.expiresAfter) + ")");
+				String rowAdd = s.username + (s.expiresAfter <= 0 ? " (*)" : " (" + expiresAfter(s.secondsRemaining()) + ")");
 				if(row.length() + rowAdd.length() + 2 > characterWidth) {
-					sender.sendMessage("  " + row);
+					sender.sendMessage(" " + row);
 					row = "";
 				}
 				if(row.length() > 0) {
-					row = ", " + rowAdd;
+					row = row + ", " + rowAdd;
 				}else {
 					row = rowAdd;
 				}
 			}
 			if(row.length() > 0) {
-				sender.sendMessage("  " + row);
+				sender.sendMessage(" " + row);
 			}
 		}
 	}
 	
 	public static String expiresAfter(int remaining) {
+		if(remaining < 0) {
+			return "never";
+		}
 		if(remaining < 60) {
 			return remaining + "s";
 		}else if(remaining < 60 * 60) {

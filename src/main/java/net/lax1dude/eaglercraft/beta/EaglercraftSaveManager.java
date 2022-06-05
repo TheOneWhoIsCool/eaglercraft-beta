@@ -39,7 +39,8 @@ public class EaglercraftSaveManager implements ISaveFormat {
 	}
 
 	@Override
-	public List getWorldList() {
+	public List getWorldList(IProgressUpdate progress) {
+		progress.displayLoadingString("Loading Worlds...", "just wait a moment");
 		ArrayList<SaveFormatComparator> lst = new ArrayList<>();
 		EaglerAdapter.listFilesAndDirectories(directory).forEach(new Consumer<FileEntry>() {
 			@Override

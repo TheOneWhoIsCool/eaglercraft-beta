@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class EaglercraftVanillaNetworkManager implements NetworkManager {
+public class EaglercraftVanillaNetworkManager extends NetworkManager {
 	public static final Object a = new Object();
 	public static int b;
 	public static int c;

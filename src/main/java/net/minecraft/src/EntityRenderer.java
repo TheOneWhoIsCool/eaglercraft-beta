@@ -349,7 +349,9 @@ public class EntityRenderer {
 				f3 = field_22235_l.func_22386_a(f3, 0.05F * f2);
 				f4 = field_22234_m.func_22386_a(f4, 0.05F * f2);
 			}
-			mc.thePlayer.func_346_d(f3, f4 * (float) l);
+			if(mc.thePlayer != null) {
+				mc.thePlayer.func_346_d(f3, f4 * (float) l);
+			}
 		}
 		if (mc.field_6307_v) {
 			return;

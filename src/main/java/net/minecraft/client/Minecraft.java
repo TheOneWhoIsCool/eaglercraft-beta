@@ -5,7 +5,9 @@
 package net.minecraft.client;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglerProfile;
 import net.lax1dude.eaglercraft.GuiMultiplayer;
+import net.lax1dude.eaglercraft.GuiScreenEditProfile;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 import net.lax1dude.eaglercraft.beta.EaglercraftSaveManager;
@@ -91,15 +93,18 @@ public abstract class Minecraft implements Runnable {
 		EaglerAdapter.glViewport(0, 0, displayWidth, displayHeight);
 		effectRenderer = new EffectRenderer(theWorld, renderEngine);
 		checkGLError("Post startup");
-
+		
+		EaglerProfile.loadFromStorage();
+		session = new Session(EaglerProfile.username, "-");
+		
 		while(EaglerAdapter.keysNext());
 		while(EaglerAdapter.mouseNext());
 		ingameGUI = new GuiIngame(this);
 		String srv = EaglerAdapter.getServerToJoinOnLaunch();
 		if (srv != null && srv.length() > 0) {
-			displayGuiScreen(new GuiMultiplayer(new GuiMainMenu(), srv));
+			displayGuiScreen(new GuiScreenEditProfile(new GuiMultiplayer(new GuiMainMenu(), srv)));
 		} else {
-			displayGuiScreen(new GuiMainMenu());
+			displayGuiScreen(new GuiScreenEditProfile(new GuiMainMenu()));
 		}
 	}
 
@@ -551,8 +556,18 @@ public abstract class Minecraft implements Runnable {
 			playerController.updateController();
 			if(++holdStillTimer == 150) {
 				if (thePlayer != null) {
-					ingameGUI.addChatMessage("Note, the game can lag when chunks are generated");
-					ingameGUI.addChatMessage("hold still for a few moments and the lag will stop");
+					if(isMultiplayerWorld()) {
+						//ingameGUI.addChatMessage("Known Multiplayer Bugs:");
+						//ingameGUI.addChatMessage(" - chunks may not show until you move around");
+						//ingameGUI.addChatMessage(" - block crack animation is fucked up");
+					}else {
+						ingameGUI.addChatMessage("Note, the game can lag when chunks are generated");
+						ingameGUI.addChatMessage("hold still for a few moments and the lag will stop");
+					}
+				}
+			}else if(holdStillTimer == 10) {
+				if(isMultiplayerWorld()) {
+					renderGlobal.loadRenderers(); // dammit
 				}
 			}
 		}
@@ -705,6 +720,7 @@ public abstract class Minecraft implements Runnable {
 				theWorld.difficultySetting = 3;
 			}
 			if (!isWorldLoaded) {
+				EaglerProfile.freeSkins();
 				entityRenderer.updateRenderer();
 			}
 			if (!isWorldLoaded) {
@@ -749,7 +765,6 @@ public abstract class Minecraft implements Runnable {
 	}
 
 	public void startWorld(String s, String s1, long l) {
-		holdStillTimer = 0;
 		changeWorld1(null);
 		System.gc();
 		if (field_22008_V.worldNeedsConvert_maybe(s)) {
@@ -802,6 +817,7 @@ public abstract class Minecraft implements Runnable {
 	}
 
 	public void changeWorld2(World world, String s) {
+		holdStillTimer = 0;
 		changeWorld(world, s, null);
 	}
 
@@ -859,6 +875,7 @@ public abstract class Minecraft implements Runnable {
 			field_22009_h = thePlayer;
 			mouseHelper.grabMouse();
 		} else {
+			EaglerProfile.freeAllSkins();
 			ungrabMouseCursor();
 			thePlayer = null;
 		}

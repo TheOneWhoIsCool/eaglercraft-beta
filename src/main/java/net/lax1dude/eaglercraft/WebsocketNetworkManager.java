@@ -140,4 +140,8 @@ public class WebsocketNetworkManager {
 		return this.serverURI;
 	}
 
+	public boolean isSocketOpen() {
+		return EaglerAdapter.connectionOpen();
+	}
+
 }

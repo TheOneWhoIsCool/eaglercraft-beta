@@ -36,13 +36,20 @@ public class Client {
     	registerErrorHandler();
     	String[] e = getOpts();
     	try {
-    		EaglerAdapterImpl2.initializeContext(rootElement = Window.current().getDocument().getElementById(e[0]), e[1]);
-    	}catch(AbortedLaunchException ex) {
+	    	try {
+	    		EaglerAdapterImpl2.initializeContext(rootElement = Window.current().getDocument().getElementById(e[0]), e[1]);
+	    	}catch(AbortedLaunchException ex) {
+	    		return;
+	    	}
+    	}catch(Throwable ex2) {
+    		StringWriter s = new StringWriter();
+    		ex2.printStackTrace(new PrintWriter(s));
+			showCrashScreen(s.toString());
     		return;
     	}
     	LocalStorageManager.loadStorage();
     	if(e.length > 2) {
-    		EaglerAdapterImpl2.setServerToJoinOnLaunch(e[3]);
+    		EaglerAdapterImpl2.setServerToJoinOnLaunch(e[2]);
     	}
     	run0();
     }

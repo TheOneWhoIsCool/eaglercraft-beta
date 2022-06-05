@@ -16,6 +16,7 @@ public class EntityOtherPlayerMP extends EntityPlayer {
 			skinUrl = (new StringBuilder()).append("http://s3.amazonaws.com/MinecraftSkins/").append(s).append(".png")
 					.toString();
 		}
+		skinUrl = "MPSkin" + s;
 		noClip = true;
 		field_22062_y = 0.25F;
 		renderDistanceWeight = 10D;

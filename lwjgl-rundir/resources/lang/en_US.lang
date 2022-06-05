@@ -15,6 +15,12 @@ menu.quit=Quit Game
 menu.editProfile=Edit Profile
 menu.exitChat=Exit Chat
 
+profile.title=Edit Profile
+profile.screenname=Screenname
+profile.playerSkin=Player Skin
+profile.addSkin=Add Skin
+profile.clearSkin=Clear List
+
 selectWorld.title=Select World
 selectWorld.empty=empty
 selectWorld.world=World

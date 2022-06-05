@@ -25,6 +25,7 @@ public class RenderFallingSand extends Render {
 		Block block = Block.blocksList[entityfallingsand.blockID];
 		World world = entityfallingsand.func_465_i();
 		EaglerAdapter.glDisable(2896 /* GL_LIGHTING */);
+		EaglerAdapter.glColor4f(1f, 1f, 1f, 1f);
 		field_197_d.renderBlockFallingSand(block, world, MathHelper.floor_double(entityfallingsand.posX),
 				MathHelper.floor_double(entityfallingsand.posY), MathHelper.floor_double(entityfallingsand.posZ));
 		EaglerAdapter.glEnable(2896 /* GL_LIGHTING */);

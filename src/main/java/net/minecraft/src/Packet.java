@@ -151,6 +151,7 @@ public abstract class Packet {
 		addIdClassMapping(53, Packet53BlockChange.class);
 		addIdClassMapping(54, Packet54.class);
 		addIdClassMapping(60, Packet60.class);
+		addIdClassMapping(69, Packet69EaglercraftData.class);
 		addIdClassMapping(100, Packet100.class);
 		addIdClassMapping(101, Packet101.class);
 		addIdClassMapping(102, Packet102.class);

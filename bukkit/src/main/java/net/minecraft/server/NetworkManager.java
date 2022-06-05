@@ -2,45 +2,45 @@ package net.minecraft.server;
 
 import java.net.SocketAddress;
 
-public interface NetworkManager {
+public abstract class NetworkManager {
 	
 	/**
 	 * Set the NetHandler
 	 */
-	void a(NetHandler var1);
+	abstract void a(NetHandler var1);
 	
 	/**
 	 * addToSendQueue
 	 */
-	void a(Packet var1);
+	public abstract void a(Packet var1);
 	
 	/**
 	 * disconnect
 	 */
-	void a(String var1, Object... var2);
+	abstract void a(String var1, Object... var2);
 	
 	/**
 	 * processReadPackets
 	 */
-	void a();
+	abstract void a();
 	
 	/**
 	 * gets the remote address
 	 */
-	SocketAddress b();
+	abstract SocketAddress b();
 	
 	/**
 	 * shuts connection down
 	 */
-	void c();
+	public abstract void c();
 	
 	/**
 	 * gets a number of delayed packets
 	 */
-	int d();
+	abstract int d();
 	
 	/**
 	 * gets if the connection is closed
 	 */
-	boolean isDead();
+	abstract boolean isDead();
 }

@@ -6,6 +6,8 @@ package net.minecraft.src;
 
 import java.util.*;
 
+import net.lax1dude.eaglercraft.EaglerProfile;
+
 public class WorldClient extends World {
 
 	public WorldClient(NetClientHandler netclienthandler, long l, int i) {
@@ -102,6 +104,9 @@ public class WorldClient extends World {
 	}
 
 	public void setEntityDead(Entity entity) {
+		if(entity instanceof EntityOtherPlayerMP) {
+			EaglerProfile.freeUserSkin(((EntityOtherPlayerMP)entity).username);
+		}
 		super.setEntityDead(entity);
 		field_20914_E.remove(entity);
 	}
@@ -191,6 +196,10 @@ public class WorldClient extends World {
 
 	public void sendQuittingDisconnectingPacket() {
 		sendQueue.addToSendQueue(new Packet255KickDisconnect("Quitting"));
+	}
+	
+	public void sendPacket(Packet p) {
+		sendQueue.addToSendQueue(p);
 	}
 
 	private LinkedList field_1057_z;

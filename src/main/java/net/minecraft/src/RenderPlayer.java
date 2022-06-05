@@ -1,7 +1,14 @@
 package net.minecraft.src;
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglerProfile;
+import net.lax1dude.eaglercraft.EaglerProfile.EnumSkinType;
+import net.lax1dude.eaglercraft.EaglerProfile.UserSkin;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
@@ -25,6 +32,7 @@ public class RenderPlayer extends RenderLiving {
 	public RenderPlayer() {
 		super(new ModelBiped(0.0F), 0.5F);
 		modelBipedMain = (ModelBiped) mainModel;
+		modelBipedMain.blockTransparentSkins = true;
 		modelArmorChestplate = new ModelBiped(1.0F);
 		modelArmor = new ModelBiped(0.5F);
 	}
@@ -298,7 +306,47 @@ public class RenderPlayer extends RenderLiving {
 	
 	@Override
 	protected boolean loadDownloadableImageTexture(String s, String s1) {
-		defaultPlayerSkin.bindTexture();
+		RenderEngine re = Minecraft.getMinecraft().renderEngine;
+		if(s == null) {
+			defaultPlayerSkin.bindTexture();
+		}else if(s.equals("SPSkin")) {
+			if(EaglerProfile.presetSkinId < 0) {
+				re.bindTexture(EaglerProfile.skins.get(EaglerProfile.customSkinId).glTex);
+			}else {
+				EaglerProfile.defaultOptionsTextures[EaglerProfile.presetSkinId].bindTexture();
+			}
+		}else if(s.startsWith("MPSkin")) {
+			String un = s.substring(6);
+			UserSkin us = EaglerProfile.getUserSkin(un);
+			if(us == null) {
+				if(!EaglerProfile.skinRequestPending(un)) {
+					World w = Minecraft.getMinecraft().theWorld;
+					if(w != null && (w instanceof WorldClient)) {
+						try {
+							ByteArrayOutputStream bao = new ByteArrayOutputStream();
+							DataOutputStream dao = new DataOutputStream(bao);
+							dao.writeShort(EaglerProfile.beginSkinRequest(un));
+							dao.writeUTF(un);
+							((WorldClient)w).sendPacket(new Packet69EaglercraftData("EAG|RequestPlayerSkin", bao.toByteArray()));
+						}catch(IOException exx) {
+							// ?
+						}
+					}
+				}
+				defaultPlayerSkin.bindTexture();
+			}else {
+				EnumSkinType st = us.getSkinType();
+				if(st == EnumSkinType.PRESET) {
+					EaglerProfile.defaultOptionsTextures[us.getSkin()].bindTexture();
+				}else if(st == EnumSkinType.CUSTOM_LEGACY){
+					re.bindTexture(us.getTexture());
+				}else {
+					defaultPlayerSkin.bindTexture();
+				}
+			}
+		}else {
+			defaultPlayerSkin.bindTexture();
+		}
 		return true;
 	}
 

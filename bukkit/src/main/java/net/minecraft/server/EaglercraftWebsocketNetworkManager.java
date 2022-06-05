@@ -11,31 +11,23 @@ import java.util.List;
 
 import org.java_websocket.WebSocket;
 
-import net.minecraft.server.NetHandler;
-import net.minecraft.server.NetServerHandler;
-import net.minecraft.server.Packet;
-
-public class EaglercraftWebsocketNetworkManager implements NetworkManager {
+public class EaglercraftWebsocketNetworkManager extends NetworkManager {
 
 	public static final int PACKET_LIMIT = 300;
 	public static final int PACKET_PER_SECOND_QUOTA = 1000 / 35;
-	public static final int PACKET_MAX_SIZE = 1536;
+	public static final int PACKET_MAX_SIZE = 9600;
 	
 	final WebSocket websocket;
 	NetHandler netHandler;
-
-	// Next step: add cooldown to implement 'delayedPackets'
 	
 	private volatile int packetCounter = 0;
 	private long packetDecrement;
 	private int timeoutCounter = 0;
 
-	private final List<Packet> delayedPackets = new LinkedList();
 	private final List<Packet> readPackets = new LinkedList();
 	protected final List<Packet> writePackets = new LinkedList();
 	
-	private boolean delay = false;
-	private int delayTimer = 0;
+	public boolean disconnected = false;
 	
 	private final Thread writeThread;	
 	protected final Object writeThreadLock = new Object();
@@ -108,6 +100,10 @@ public class EaglercraftWebsocketNetworkManager implements NetworkManager {
 							manager.websocket.send(ByteBuffer.wrap(pktBytes));
 						}
 					}
+					if(manager.disconnected) {
+						manager.websocket.close();
+						break main_loop;
+					}
 				}catch(Throwable t) {
 					t.printStackTrace();
 					manager.a("disconnect.closed", "Packet write fault");
@@ -131,18 +127,11 @@ public class EaglercraftWebsocketNetworkManager implements NetworkManager {
 	 */
 	@Override
 	public void a(Packet var1) {
-		if (var1.k) {
-			synchronized(delayedPackets) {
-				delayedPackets.add(var1);
-			}
-		}else {
-			delay = true;
-			synchronized(writePackets) {
-				writePackets.add(var1);
-			}
-			synchronized(writeThreadLock) {
-				writeThreadLock.notify();
-			}
+		synchronized(writePackets) {
+			writePackets.add(var1);
+		}
+		synchronized(writeThreadLock) {
+			writeThreadLock.notify();
 		}
 	}
 
@@ -151,10 +140,8 @@ public class EaglercraftWebsocketNetworkManager implements NetworkManager {
 	 */
 	@Override
 	public void a(String var1, Object... var2) {
-		if(!websocket.isClosed()) {
-			netHandler.a(var1, var2);
-			websocket.close();
-		}
+		netHandler.a(var1, var2);
+		disconnected = true;
 	}
 
 	/**
@@ -175,7 +162,7 @@ public class EaglercraftWebsocketNetworkManager implements NetworkManager {
 		}
 		
 		long t = System.currentTimeMillis();
-		int decr = (int) ((packetDecrement - t) / PACKET_PER_SECOND_QUOTA);
+		int decr = (int) ((t - packetDecrement) / PACKET_PER_SECOND_QUOTA);
 		packetCounter -= decr;
 		packetDecrement += decr * PACKET_PER_SECOND_QUOTA;
 		
@@ -205,20 +192,6 @@ public class EaglercraftWebsocketNetworkManager implements NetworkManager {
 				p.a(netHandler);
 			}
 		}
-		
-		synchronized(delayedPackets) {
-			if(!delayedPackets.isEmpty() && (!delay || --delayTimer <= 0)) {
-				synchronized(writePackets) {
-					writePackets.add(delayedPackets.remove(0));
-				}
-				synchronized(writeThreadLock) {
-					writeThreadLock.notify();
-				}
-				delayTimer = 50;
-			}
-		}
-		
-		delay = false;
 	}
 
 	/**
@@ -242,9 +215,7 @@ public class EaglercraftWebsocketNetworkManager implements NetworkManager {
 	 */
 	@Override
 	public int d() {
-		synchronized(delayedPackets) {
-			return delayedPackets.size();
-		}
+		return 0;
 	}
 
 	@Override

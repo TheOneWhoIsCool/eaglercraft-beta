@@ -1,4 +1,7 @@
 package net.minecraft.src;
+
+import net.lax1dude.eaglercraft.EaglerAdapter;
+
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 
 // Jad home page: http://www.kpdus.com/jad.html
@@ -50,7 +53,17 @@ public class ModelBiped extends ModelBase {
 	public void render(float f, float f1, float f2, float f3, float f4, float f5) {
 		setRotationAngles(f, f1, f2, f3, f4, f5);
 		bipedHead.render(f5);
+		
+		if(blockTransparentSkins) {
+			EaglerAdapter.glDisable(EaglerAdapter.GL_ALPHA_TEST);
+		}
+		
 		bipedBody.render(f5);
+		
+		if(blockTransparentSkins) {
+			EaglerAdapter.glEnable(EaglerAdapter.GL_ALPHA_TEST);
+		}
+		
 		bipedRightArm.render(f5);
 		bipedLeftArm.render(f5);
 		bipedRightLeg.render(f5);
@@ -156,4 +169,6 @@ public class ModelBiped extends ModelBase {
 	public boolean field_1279_h;
 	public boolean field_1278_i;
 	public boolean isSneak;
+	public boolean blockTransparentSkins = false;
+	
 }

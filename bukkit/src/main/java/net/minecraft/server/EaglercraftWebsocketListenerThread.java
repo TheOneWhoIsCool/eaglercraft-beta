@@ -29,7 +29,10 @@ public class EaglercraftWebsocketListenerThread extends WebSocketServer {
 
 	@Override
 	public void onClose(WebSocket arg0, int arg1, String arg2, boolean arg3) {
-		// rip
+		EaglercraftWebsocketNetworkManager mgr = arg0.getAttachment();
+		if(mgr != null && !mgr.disconnected) {
+			mgr.a("disconnect.close");
+		}
 	}
 
 	@Override

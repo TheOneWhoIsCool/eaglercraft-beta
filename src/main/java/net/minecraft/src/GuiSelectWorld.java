@@ -35,7 +35,7 @@ public class GuiSelectWorld extends GuiScreen {
 
 	private void func_22084_k() {
 		ISaveFormat isaveformat = mc.func_22004_c();
-		field_22100_m = isaveformat.getWorldList();
+		field_22100_m = isaveformat.getWorldList(mc.loadingScreen);
 		Collections.sort(field_22100_m);
 		field_22101_l = -1;
 	}

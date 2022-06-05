@@ -12,7 +12,7 @@ public interface ISaveFormat {
 
 	public abstract ISaveHandler loadWorldHandler(String s, boolean flag);
 
-	public abstract List getWorldList();
+	public abstract List getWorldList(IProgressUpdate progress);
 
 	public abstract void flushCache();
 

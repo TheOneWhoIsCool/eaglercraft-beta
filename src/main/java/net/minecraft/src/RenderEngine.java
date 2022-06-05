@@ -78,9 +78,24 @@ public class RenderEngine {
 		textureNameToImageMap.put(Integer.valueOf(i), bufferedimage);
 		return i;
 	}
+	
+	public int allocateAndSetupTexture(byte[] data, int w, int h) {
+		int i = EaglerAdapter.glGenTextures();
+		bindTexture(i);
+		EaglerAdapter.glTexParameteri(3553 /* GL_TEXTURE_2D */, 10241 /* GL_TEXTURE_MIN_FILTER */, 9729 /* GL_LINEAR */);
+		EaglerAdapter.glTexParameteri(3553 /* GL_TEXTURE_2D */, 10240 /* GL_TEXTURE_MAG_FILTER */, 9728 /* GL_NEAREST */);
+		EaglerAdapter.glTexParameteri(3553 /* GL_TEXTURE_2D */, 10242 /* GL_TEXTURE_WRAP_S */, 10497 /* GL_REPEAT */);
+		EaglerAdapter.glTexParameteri(3553 /* GL_TEXTURE_2D */, 10243 /* GL_TEXTURE_WRAP_T */, 10497 /* GL_REPEAT */);
+		imageDataB1.clear();
+		imageDataB1.put(data);
+		imageDataB1.position(0).limit(data.length);
+		EaglerAdapter.glTexImage2D(3553 /* GL_TEXTURE_2D */, 0, 6408 /* GL_RGBA */, w, h, 0, 6408 /* GL_RGBA */,
+						5121 /* GL_UNSIGNED_BYTE */, imageDataB1);
+		return i;
+	}
 
 	public void setupTexture(EaglerImage bufferedimage, int i) {
-		EaglerAdapter.glBindTexture(3553 /* GL_TEXTURE_2D */, i);
+		bindTexture(i);
 		if (useMipmaps) {
 			EaglerAdapter.glTexParameteri(3553 /* GL_TEXTURE_2D */, 10241 /* GL_TEXTURE_MIN_FILTER */, EaglerAdapter.GL_NEAREST_MIPMAP_LINEAR);
 			EaglerAdapter.glTexParameteri(3553 /* GL_TEXTURE_2D */, 10240 /* GL_TEXTURE_MAG_FILTER */, EaglerAdapter.GL_NEAREST /* GL_LINEAR */);
@@ -343,11 +358,11 @@ public class RenderEngine {
 			TextureFX texturefx = (TextureFX) textureList.get(i);
 			texturefx.anaglyphEnabled = options.anaglyph;
 			texturefx.onTick();
+			texturefx.bindImage(this);
 			int tileSize = 16 * 16 * 4;
 			imageDataB1.clear();
 			imageDataB1.put(texturefx.imageData);
 			imageDataB1.position(0).limit(tileSize);
-			texturefx.bindImage(this);
 			EaglerAdapter.glTexSubImage2D(3553 /* GL_TEXTURE_2D */, 0, (texturefx.iconIndex % 16) * 16, (texturefx.iconIndex / 16) * 16, 16, 16,
 					6408 /* GL_RGBA */, 5121 /* GL_UNSIGNED_BYTE */, imageDataB1);
 		}

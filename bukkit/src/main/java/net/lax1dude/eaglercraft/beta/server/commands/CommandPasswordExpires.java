@@ -24,6 +24,10 @@ public class CommandPasswordExpires extends EaglerCommand {
 
 	@Override
 	protected void execute(CommandSender sender, String[] args) {
+		if(!EaglercraftServer.config.enablePasswordLogin()) {
+			sender.sendMessage(ChatColor.RED + "Error: password login is disabled");
+			return;
+		}
 		if(!EaglercraftServer.hasPasswordDB()) {
 			sender.sendMessage(ChatColor.RED + "Error: the password database is not initialized, it probably won't save your changes");
 		}

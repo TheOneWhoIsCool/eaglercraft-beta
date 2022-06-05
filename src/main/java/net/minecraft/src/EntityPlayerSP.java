@@ -18,10 +18,6 @@ public class EntityPlayerSP extends EntityPlayer {
 		field_21902_bL = new MouseFilter();
 		mc = minecraft;
 		dimension = i;
-		if (session != null && session.username != null && session.username.length() > 0) {
-			skinUrl = (new StringBuilder()).append("http://s3.amazonaws.com/MinecraftSkins/").append(session.username)
-					.append(".png").toString();
-		}
 		username = session.username;
 	}
 

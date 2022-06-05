@@ -169,7 +169,7 @@ public class PasswordManager {
 					continue;
 				}
 				synchronized(passwordEntries) {
-					if(pse.secondsRemaining() > 0) {
+					if(pse.secondsRemaining() > 0 && !(!EaglercraftServer.config.allowPasswordsWithoutExpire() && pse.expiresAfter == -1)) {
 						passwordEntries.put(pse.username, pse);
 					}else {
 						mustRewrite = true;
@@ -410,6 +410,10 @@ public class PasswordManager {
 	public static void create(String username, String password, int expiresAfter) {
 		discardExpiredPasswords();
 		
+		if(expiresAfter < -1) {
+			expiresAfter = -1;
+		}
+		
 		byte[] salt = new byte[9];
 		synchronized(rand) {
 			rand.nextBytes(salt);
@@ -444,12 +448,43 @@ public class PasswordManager {
 		}
 	}
 	
+	public static int changeExpires(String username, int expiresAfter) {
+		PasswordEntry et;
+		synchronized(passwordEntries) {
+			et = passwordEntries.get(username.toLowerCase());
+		}
+		if(et != null) {
+			if(expiresAfter == -1) {
+				expiresAfter = et.expiresAfter;
+			}
+			synchronized(passwordEntries) {
+				passwordEntries.put(et.username, new PasswordEntry(et.username, et.salt, et.password, System.currentTimeMillis(), expiresAfter == -2 ? -1 : expiresAfter));
+			}
+		}
+		if(discardExpiredPasswords() || et != null) {
+			try {
+				syncDatabase();
+			}catch(SyncException e) {
+				Throwable t = e.getCause();
+				System.err.println("Could not write passwords to disk!");
+				if(t != null) {
+					t.printStackTrace();
+				}else {
+					e.printStackTrace();
+				}
+			}
+		}
+		return et == null ? -1 : (expiresAfter == -1 ? -2 : expiresAfter);
+	}
+	
 	private static boolean discardExpiredPasswords() {
 		boolean flag = false;
+		boolean removePasswordsWithoutExpire = !EaglercraftServer.config.allowPasswordsWithoutExpire();
 		synchronized(passwordEntries) {
 			Iterator<PasswordEntry> itr = passwordEntries.values().iterator();
 			while(itr.hasNext()) {
-				if(itr.next().secondsRemaining() <= 0) {
+				PasswordEntry et = itr.next();
+				if(et.secondsRemaining() <= 0 || (removePasswordsWithoutExpire && et.expiresAfter == -1)) {
 					flag = true;
 					itr.remove();
 				}

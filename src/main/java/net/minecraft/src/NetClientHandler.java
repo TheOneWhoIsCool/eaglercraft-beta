@@ -6,6 +6,7 @@ package net.minecraft.src;
 
 import java.io.*;
 
+import net.lax1dude.eaglercraft.EaglerProfile;
 import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.GuiMultiplayer;
 import net.lax1dude.eaglercraft.WebsocketNetworkManager;
@@ -23,9 +24,14 @@ public class NetClientHandler extends NetHandler {
 
 	public void processReadPackets() {
 		if (disconnected) {
+			if(mc.theWorld != null) {
+				mc.changeWorld1(null);
+				mc.displayGuiScreen(new GuiConnectFailed("disconnect.disconnected", "disconnect.endOfStream", new Object[0]));
+			}
 			return;
 		} else {
 			netManager.processReadPackets();
+			disconnected = !netManager.isSocketOpen();
 			return;
 		}
 	}
@@ -336,14 +342,19 @@ public class NetClientHandler extends NetHandler {
 	}
 
 	public void handleHandshake(Packet2Handshake packet2handshake) {
-		if(packet2handshake.username.length() < 26 || mc.gameSettings.lastPasswordLength <= 0) {
+		if(packet2handshake.username.length() < 24 || mc.gameSettings.lastPasswordLength <= 0) {
 			addToSendQueue(new Packet1Login(mc.session.username, "NULL", 9));
 		}else {
-			String hsh = GuiMultiplayer.makeLoginHash(mc.gameSettings.lastPasswordHash, packet2handshake.username);
+			String hsh = (mc.gameSettings.lastPasswordHash == null || mc.gameSettings.lastPasswordHash.length() == 0 || mc.gameSettings.lastPasswordHash.equalsIgnoreCase("null")) ? 
+					null : GuiMultiplayer.makeLoginHash(mc.gameSettings.lastPasswordHash, packet2handshake.username);
 			if(hsh != null) {
 				addToSendQueue(new Packet1Login(mc.session.username, hsh, 9));
 			}else {
-				addToSendQueue(new Packet1Login(mc.session.username, "NULL", 9));
+				disconnected = true;
+				netManager.networkShutdown("disconnect.closed", new Object[0]);
+				mc.changeWorld1(null);
+				mc.displayGuiScreen(new GuiConnectFailed("disconnect.disconnected", "disconnect.genericReason",
+						new Object[] { "A password is required to join this server!" }));
 			}
 		}
 	}
@@ -520,6 +531,12 @@ public class NetClientHandler extends NetHandler {
 	public void func_21145_a(Packet54 packet54) {
 		mc.theWorld.playNoteAt(packet54.xLocation, packet54.yLocation, packet54.zLocation, packet54.instrumentType,
 				packet54.pitch);
+	}
+
+	public void handleEaglercraftData(Packet69EaglercraftData packet) {
+		if(packet.type.equals("EAG|PlayerSkin")) {
+			EaglerProfile.processSkinResponse(packet.data);
+		}
 	}
 
 	private boolean disconnected;

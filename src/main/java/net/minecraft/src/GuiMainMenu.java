@@ -9,6 +9,7 @@ import net.lax1dude.eaglercraft.ConfigConstants;
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.GuiMultiplayer;
+import net.lax1dude.eaglercraft.GuiScreenEditProfile;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 import net.lax1dude.eaglercraft.beta.GuiNoMultiplayer;
@@ -72,8 +73,8 @@ public class GuiMainMenu extends GuiScreen {
 		//	mc.displayGuiScreen(new GuiTexturePacks(this));
 		//}
 		if (guibutton.id == 4) {
-			mc.displayGuiScreen(new GuiNoMultiplayer(this));
-			//mc.displayGuiScreen(new GuiMultiplayer(this));
+			//mc.displayGuiScreen(new GuiNoMultiplayer(this));
+			mc.displayGuiScreen(new GuiScreenEditProfile(this));
 		}
 	}
 
@@ -98,6 +99,7 @@ public class GuiMainMenu extends GuiScreen {
 		drawString(fontRenderer, s, width - fontRenderer.getStringWidth(s) - 2, height - 10, 0xffffff);
 		drawString(fontRenderer, ConfigConstants.mainMenuString, 2, height - 10, 0xffffff);
 		
+		/*
 		EaglerAdapter.glPushMatrix();
 		float ff = 0.75f;
 		EaglerAdapter.glScalef(ff, ff, ff);
@@ -107,6 +109,7 @@ public class GuiMainMenu extends GuiScreen {
 		drawString(fontRenderer, str, (int)(((width / ff) - w) / 2), (int)((height / 4 + 102) / ff), 0xffeeee);
 		
 		EaglerAdapter.glPopMatrix();
+		*/
 		
 		super.drawScreen(i, j, f);
 	}

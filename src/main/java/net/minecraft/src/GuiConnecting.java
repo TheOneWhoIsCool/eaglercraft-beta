@@ -4,6 +4,7 @@ package net.minecraft.src;
 import java.io.IOException;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglerProfile;
 
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) braces deadcode 
@@ -61,6 +62,7 @@ public class GuiConnecting extends GuiScreen {
 				
 				this.clientHandler = new NetClientHandler(mc, uri, 0);
 				this.clientHandler.addToSendQueue(new Packet2Handshake(mc.session.username));
+				this.clientHandler.addToSendQueue(new Packet69EaglercraftData("EAG|MySkin", EaglerProfile.getSelfSkinPacket()));
 			} catch (IOException e) {
 				try {
 					this.clientHandler.disconnect();

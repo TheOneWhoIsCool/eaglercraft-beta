@@ -15,7 +15,7 @@ public class CommandClearPassword extends EaglerCommand {
 
 	public CommandClearPassword() {
 		super("clear-password");
-		setAliases(Arrays.asList("clear-pass"));
+		setAliases(Arrays.asList("clear-pass", "remove-password", "remove-pass", "delete-password", "delete-pass"));
 		setNeedsOp(false);
 		setTooltip("Removes a password from a username, or your own username, for Eaglercraft connections");
 		setUsage("/clear-password [username]");
@@ -23,15 +23,28 @@ public class CommandClearPassword extends EaglerCommand {
 
 	@Override
 	protected void execute(CommandSender sender, String[] args) {
+		if(!EaglercraftServer.config.enablePasswordLogin()) {
+			sender.sendMessage(ChatColor.RED + "Error: password login is disabled");
+			return;
+		}
 		if(!EaglercraftServer.hasPasswordDB()) {
 			sender.sendMessage(ChatColor.RED + "Error: the password database is not initialized, it probably won't save your changes");
 		}
 		if(sender instanceof CraftPlayer && ((CraftPlayer)sender).getHandle().a.b instanceof EaglercraftWebsocketNetworkManager && (args.length == 0 || (args.length == 1 && args[0].equalsIgnoreCase(((Player)sender).getName())))) {
-			if(PasswordManager.delete(((Player)sender).getName())) {
-				sender.sendMessage("Your password was removed.");
+			if(EaglercraftServer.config.allowSelfDeletePassword() || EaglercraftServer.config.allowSelfRegistration()) {
+				if(PasswordManager.delete(((Player)sender).getName())) {
+					if(EaglercraftServer.config.requirePasswordLogin()) {
+						((Player)sender).kickPlayer("Your password was removed.");
+					}else {
+						sender.sendMessage("Your password was removed.");
+					}
+				}else {
+					sender.sendMessage(ChatColor.RED + "You do not have a password on this account!");
+				}
 			}else {
-				sender.sendMessage(ChatColor.RED + "You do not have a password on this account!");
+				sender.sendMessage(ChatColor.RED + "You cannot remove the password from your username.");
 			}
+			return;
 		}else if(args.length != 1) {
 			throw new IncorrectUsageException("this command only takes 1 argument!");
 		}

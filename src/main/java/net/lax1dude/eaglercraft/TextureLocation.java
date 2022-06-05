@@ -22,7 +22,7 @@ public class TextureLocation {
 		}
 	}
 
-	public void bindTexture() {
+	public int getTexturePointer() {
 		RenderEngine r = Minecraft.getMinecraft().renderEngine;
 		if (glObject == -1) {
 			glObject = r.getTexture(path);
@@ -30,7 +30,15 @@ public class TextureLocation {
 				System.err.println("could not load: " + path);
 			}
 		}
-		r.bindTexture(glObject);
+		return glObject;
+	}
+	
+	public void bindTexture() {
+		RenderEngine r = Minecraft.getMinecraft().renderEngine;
+		int i = getTexturePointer();
+		if(i != -1) {
+			r.bindTexture(i);
+		}
 	}
 
 	private static final ArrayList<TextureLocation> locations = new ArrayList();
