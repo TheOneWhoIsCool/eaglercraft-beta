@@ -14,7 +14,7 @@
 
 ## Technical Details
 
-**Discord server: [https://discord.gg/KMQW9Uvjyq](https://discord.gg/KMQW9Uvjyq)**
+**Discord server: [https://discord.gg/nuhVQz5S5Q](https://discord.gg/nuhVQz5S5Q)**
 
 The game saves worlds to your browser's persistent local storage via [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API), the vanilla MCRegion chunk loader has been rewritten to store chunks as single files instead, without compression to speed up load and save times. These files are then stored in an IndexedDB table in the browser's local storage as ArrayBuffers with string keys describing the coordinates of the chunk.
 
