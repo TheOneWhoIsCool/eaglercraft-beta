@@ -180,8 +180,11 @@ public class EaglerAdapterImpl2 {
 		return identifier;
 	}
 
-	@JSBody(params = { "v" }, script = "try { return \"\"+window.eval(v); } catch(e) { return \"<error>\"; }")
-	private static native String getString(String var);
+	@JSBody(params = { }, script = "return window.navigator.userAgent;")
+	private static native String getUA();
+	
+	@JSBody(params = { }, script = "return window.navigator.platform;")
+	private static native String getPlaf();
 	
 	public static void onWindowUnload() {
 		LocalStorageManager.saveStorageG();
@@ -216,7 +219,7 @@ public class EaglerAdapterImpl2 {
 		canvasBack.setHeight(height);
 		webgl = (WebGL2RenderingContext) canvasBack.getContext("webgl2", youEagler());
 		if(webgl == null) {
-			throw new RuntimeException("WebGL 2.0 is not supported in your browser ("+getString("window.navigator.userAgent")+")");
+			throw new RuntimeException("WebGL 2.0 is not supported in your browser ("+getUA()+")");
 		}
 		setContextVar(webgl);
 		
@@ -315,31 +318,7 @@ public class EaglerAdapterImpl2 {
 			}
 		});
 		onBeforeCloseRegister();
-		execute("window.eagsFileChooser = {\r\n" + 
-				"inputElement: null,\r\n" + 
-				"openFileChooser: function(ext, mime){\r\n" + 
-				"el = window.eagsFileChooser.inputElement = document.createElement(\"input\");\r\n" + 
-				"el.type = \"file\";\r\n" + 
-				"el.multiple = false;\r\n" + 
-				"el.addEventListener(\"change\", function(evt){\r\n" + 
-				"var f = window.eagsFileChooser.inputElement.files;\r\n" + 
-				"if(f.length == 0){\r\n" + 
-				"window.eagsFileChooser.getFileChooserResult = null;\r\n" + 
-				"}else{\r\n" + 
-				"(async function(){\r\n" + 
-				"window.eagsFileChooser.getFileChooserResult = await f[0].arrayBuffer();\r\n" + 
-				"window.eagsFileChooser.getFileChooserResultName = f[0].name;\r\n" + 
-				"})();\r\n" + 
-				"}\r\n" + 
-				"});\r\n" + 
-				"window.eagsFileChooser.getFileChooserResult = null;\r\n" + 
-				"window.eagsFileChooser.getFileChooserResultName = null;\r\n" + 
-				"el.accept = mime;\r\n" + 
-				"el.click();\r\n" + 
-				"},\r\n" + 
-				"getFileChooserResult: null,\r\n" + 
-				"getFileChooserResultName: null\r\n" + 
-				"};");
+		initFileChooser();
 		
 		EarlyLoadScreen.paintScreen();
 		
@@ -378,6 +357,34 @@ public class EaglerAdapterImpl2 {
 		mouseEvents.clear();
 		keyEvents.clear();
 	}
+	
+	@JSBody(params = { }, script = 
+			"window.eagsFileChooser = {\r\n" + 
+			"inputElement: null,\r\n" + 
+			"openFileChooser: function(ext, mime){\r\n" + 
+			"var el = window.eagsFileChooser.inputElement = document.createElement(\"input\");\r\n" + 
+			"el.type = \"file\";\r\n" + 
+			"el.multiple = false;\r\n" + 
+			"el.addEventListener(\"change\", function(evt){\r\n" + 
+			"var f = window.eagsFileChooser.inputElement.files;\r\n" + 
+			"if(f.length == 0){\r\n" + 
+			"window.eagsFileChooser.getFileChooserResult = null;\r\n" + 
+			"}else{\r\n" + 
+			"(async function(){\r\n" + 
+			"window.eagsFileChooser.getFileChooserResult = await f[0].arrayBuffer();\r\n" + 
+			"window.eagsFileChooser.getFileChooserResultName = f[0].name;\r\n" + 
+			"})();\r\n" + 
+			"}\r\n" + 
+			"});\r\n" + 
+			"window.eagsFileChooser.getFileChooserResult = null;\r\n" + 
+			"window.eagsFileChooser.getFileChooserResultName = null;\r\n" + 
+			"el.accept = mime;\r\n" + 
+			"el.click();\r\n" + 
+			"},\r\n" + 
+			"getFileChooserResult: null,\r\n" + 
+			"getFileChooserResultName: null\r\n" + 
+			"};")
+	private static native void initFileChooser();
 	
 	public static final void destroyContext() {
 		
@@ -894,7 +901,7 @@ public class EaglerAdapterImpl2 {
 		return __wglGetTexParameterf(webgl, p1);
 	}
 	public static final boolean isWindows() {
-		return getString("window.navigator.platform").toLowerCase().contains("win");
+		return getPlaf().toLowerCase().contains("win");
 	}
 	private static HTMLCanvasElement imageLoadCanvas = null;
 	private static CanvasRenderingContext2D imageLoadContext = null;
@@ -1372,9 +1379,6 @@ public class EaglerAdapterImpl2 {
 	public static final void redirectTo(String url) {
 		Window.current().getLocation().setFullURL(url);
 	}
-
-	@JSBody(params = { "str" }, script = "window.eval(str);")
-	private static native void execute(String str);
 	
 	@JSBody(params = { }, script = "window.onbeforeunload = function(){javaMethods.get('net.lax1dude.eaglercraft.adapter.EaglerAdapterImpl2.onWindowUnload()V').invoke();return false;};")
 	private static native void onBeforeCloseRegister();
