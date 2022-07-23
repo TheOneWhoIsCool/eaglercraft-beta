@@ -4,7 +4,7 @@
 
 ![Eaglercraft Singleplayer Minecraft Beta 1.3 in browser](https://media.discordapp.net/attachments/378764518081429506/982903386380853258/screenshot_singleplayer_small.png)
 
-### Official Demo URL: [https://g.eags.us/eaglercraft/beta/](https://g.eags.us/eaglercraft/beta/)
+### Official Demo URL: [https://eaglercraft.us/beta/](https://eaglercraft.us/beta/)
 
 ### Download locally: [Singleplayer_Offline_Download_Version.html](https://github.com/LAX1DUDE/eaglercraft-beta/blob/main/stable-download/Singleplayer_Offline_Download_Version.html)
 
